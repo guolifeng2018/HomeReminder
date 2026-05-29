@@ -24,7 +24,7 @@
 |---|---------|------|---------|
 | DB-01 | Drift 表定义 + 代码生成 | done | 2026-05-29 |
 | DB-02 | GroupRepository 实现 | done | 2026-05-29 |
-| DB-03 | ReminderRepository 实现 | pending | - |
+| DB-03 | ReminderRepository 实现 | done | 2026-05-29 |
 | DB-04 | 索引验证 + 事务回滚 + barrel file + 最终验收 | pending | - |
 
 ---
