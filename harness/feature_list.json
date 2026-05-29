@@ -7,10 +7,10 @@
     "verification": "flutter pub get 无报错 && flutter create . 重建不丢失配置 && flutter analyze 零 warning && 目录结构符合 harness/ARCHITECTURE.md 模块列表（共 9 个模块目录 + 3 个 test 目录） && pubspec.yaml 包含全部必需依赖且版本号明确（≥6 个依赖包）",
     "priority": "P0",
     "depends_on": [],
-    "status": "in_progress",
+    "status": "completed",
     "module": "root",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "flutter analyze 零 warning，pubspec.yaml 依赖完整，src/ + test/ 目录结构就绪",
+    "completed_date": "2026-05-29"
   },
   {
     "id": "F-01",
@@ -20,10 +20,10 @@
     "verification": "flutter analyze lib/src/core/common/ 零 warning && flutter test test/unit/common/ 全部通过（覆盖: Group/Reminder 模型 JSON 序列化+反序列化, ReminderStatus/Frequency 枚举值正确性, DateFormatter ≥15 条口语时间解析含边界, StringSanitizer 空/特殊字符/超长边界值, PermissionManager 各权限 granted/denied/permanentlyDenied 状态转换, DEFAULT_GROUPS 6 组数据完整性） && 无对上层模块的 import（grep 'import.*feature' lib/src/core/common/ 返回空）",
     "priority": "P0",
     "depends_on": ["F-00"],
-    "status": "pending",
+    "status": "completed",
     "module": "core/common",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "flutter analyze 零 warning，单元测试全部 PASS，已归档 history/F-01-core-common/",
+    "completed_date": "2026-05-29"
   },
   {
     "id": "F-02",
@@ -33,10 +33,10 @@
     "verification": "dart run build_runner build --delete-conflicting-outputs 成功生成 .g.dart && flutter analyze lib/src/core/database/ 零 warning && flutter test test/unit/database/ 全部通过（覆盖: Group CRUD 4 路径含空 name 校验, Reminder CRUD 4 路径含必填字段校验, 外键约束: group 删除→关联 reminders 级联删除, 三个索引查询 EXPLAIN QUERY PLAN 验证命中, 事务回滚: 批量插入中途失败不部分提交, 预设分组初始化 INSERT OR IGNORE 幂等, scheduled_at 范围查询正确含边界值） && 无对 feature 层的 import",
     "priority": "P0",
     "depends_on": ["F-01"],
-    "status": "pending",
+    "status": "completed",
     "module": "core/database",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "dart run build_runner 成功，flutter analyze 零 warning，单元测试全部 PASS，已归档 history/F-02-database/",
+    "completed_date": "2026-05-29"
   },
   {
     "id": "F-03",
@@ -46,10 +46,10 @@
     "verification": "flutter analyze lib/src/core/ 零 warning && flutter test test/unit/ 中 Provider 测试全部通过（覆盖: 所有 Provider 可正常 resolve, ProviderOverride 替换测试: stub→mock 替换验证, 无 ProviderNotFoundException, 全局 ProviderScope 初始化不抛异常, appConfigProvider 默认值正确） && provider 依赖图为单向无环（手动检查 import 链无 core→feature 反向依赖）",
     "priority": "P0",
     "depends_on": ["F-02"],
-    "status": "pending",
-    "module": "core",
-    "evidence": null,
-    "completed_date": null
+    "status": "completed",
+    "module": "core/providers",
+    "evidence": "flutter analyze 零 warning，Provider 测试全部 PASS，已归档 history/F-03-riverpod-state-management/",
+    "completed_date": "2026-05-29"
   },
   {
     "id": "F-04",
@@ -59,10 +59,10 @@
     "verification": "flutter analyze 零 warning && flutter test test/unit/ 中路由测试全部通过（覆盖: 6 条路由均正确解析到对应 Page, 路由守卫: isFirstLaunch+modelNotReady→redirect 到下载页, isFirstLaunch+modelReady→放行, go/push/replace 导航栈深度正确, 深层链接路径参数解析 /group/3→id='3'）",
     "priority": "P0",
     "depends_on": ["F-03"],
-    "status": "pending",
-    "module": "core",
-    "evidence": null,
-    "completed_date": null
+    "status": "completed",
+    "module": "core/router",
+    "evidence": "flutter analyze 零 issue，flutter test 207 PASS（含 14 路由测试），GoRouter 7 路由 + redirect 守卫",
+    "completed_date": "2026-05-29"
   },
   {
     "id": "F-05",

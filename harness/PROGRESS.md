@@ -7,10 +7,10 @@
 
 ## 当前状态
 
-- **当前功能**：F-01（工程初始化 + 基础核心层）
-- **状态**：待启动 — 环境初始化已完成，等待 planner 进入
-- **当前模块**：core/common, core/database
-- **最后更新**：2026-05-29
+- **当前功能**：F-05（core/reminder 提醒核心）
+- **状态**：pending — F-04 已实现完成，等待 reviewer 验证后进入下一功能
+- **当前模块**：core/reminder
+- **最后更新**：2026-05-29（implementer 完成 F-04，交 reviewer）
 
 ---
 
@@ -18,17 +18,20 @@
 
 | 功能 ID | 名称 | 完成日期 |
 |---------|------|---------|
-| INIT | 环境探测 | 2026-05-29 |
-| INIT | tools/init.sh 生成（6 阶段，幂等设计） | 2026-05-29 |
-| INIT | tools/verify.sh 生成（三层验证 + 环境自检） | 2026-05-29 |
-| INIT | init.sh 运行通过（含权限配置修复） | 2026-05-29 |
-| INIT | verify.sh 运行通过（L1 PASS，L2/L3 SKIP） | 2026-05-29 |
+| INIT | 环境探测 + tools/init.sh + tools/verify.sh | 2026-05-29 |
+| F-00 | Flutter 工程脚手架 | 2026-05-29 |
+| F-01 | core/common 通用模块 | 2026-05-29 |
+| F-02 | core/database 数据库模块 | 2026-05-29 |
+| F-03 | Riverpod 状态管理 + 依赖注入 | 2026-05-29 |
+| F-04 | 路由系统（GoRouter） | 2026-05-29 |
 
 ---
 
 ## 进行中
 
-（无）
+| 功能 ID | 名称 | 状态 |
+|---------|------|------|
+| F-04 | 路由系统 | reviewer 审查中 |
 
 ---
 
@@ -53,5 +56,5 @@
 
 ## 下一步
 
-1. 启动 planner agent，进入 F-01（工程初始化 + 基础核心层）
-2. F-01 任务：core/common（通用模块）+ core/database（Drift SQLite）
+1. reviewer agent 对 F-04 执行 L1/L2/L3 三层验证
+2. F-04 审核通过后归档 history/F-04-router/，进入 F-05（core/reminder）
