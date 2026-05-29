@@ -24,7 +24,7 @@
 | 6 | StringSanitizer | 输入清洗 | done |
 | 7 | PermissionManager | 抽象类 + Stub 实现 | done |
 | 8 | Barrel file | common.dart 统一导出 | done |
-| 9 | 单元测试 | 全部模型/工具/枚举测试 | pending |
+| 9 | 单元测试 | 全部模型/工具/枚举测试 | done |
 | 10 | 最终验证 | flutter analyze + flutter test | pending |
 
 ---
@@ -33,10 +33,10 @@
 
 | 测试文件 | 覆盖目标 | 状态 |
 |---------|---------|------|
-| test/unit/common/group_model_test.dart | Group 模型 | pending |
-| test/unit/common/reminder_model_test.dart | Reminder 模型 | pending |
-| test/unit/common/enums_test.dart | 枚举 | pending |
+| test/unit/common/group_model_test.dart | Group 模型 | done |
+| test/unit/common/reminder_model_test.dart | Reminder 模型 | done |
+| test/unit/common/enums_test.dart | 枚举 | done |
 | test/unit/common/date_formatter_test.dart | DateFormatter | done |
 | test/unit/common/string_sanitizer_test.dart | StringSanitizer | done |
 | test/unit/common/permission_manager_test.dart | PermissionManager | done |
-| test/unit/common/app_constants_test.dart | 常量 | pending |
+| test/unit/common/app_constants_test.dart | 常量 | done |
