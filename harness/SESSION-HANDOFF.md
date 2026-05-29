@@ -7,63 +7,73 @@
 ## 下一个 Agent
 
 - **角色**：reviewer
-- **任务摘要**：验证 F-01（core/common 通用模块）交付物。所有 10 个工作单元已完成，136 个单元测试全部通过，flutter analyze 零 warning，无 feature 层 import。
+- **任务摘要**：验证 F-02（core/database 数据库模块）交付物
 - **技能文件**：agents/reviewer/SKILL.md
 
 ---
 
 ## 仓库状态
 
-- **最后 commit**：F-01 #9: 单元测试全覆盖
-- **构建状态**：`flutter analyze` 0 warning（30 info-level style suggestions）
-- **测试状态**：`flutter test test/unit/common/` — 136 个测试全部通过
-- **交付物**：7 个 Dart 源文件 + 7 个测试文件 + Barrel file
+- **最后 commit**：F-02 DB-04 完成（待 commit）
+- **构建状态**：`flutter analyze src/core/database/` — 0 issues
+- **测试状态**：`flutter test test/unit/database/` — 31 个测试全部通过
+- **F-01 归档**：`history/F-01-core-common/`
 
 ---
 
-## 已完成工作
+## 当前功能
 
-### F-01 core/common 模块实现
-
-| # | 单元 | 文件 | 状态 |
-|---|------|------|------|
-| 1 | 常量 | `src/core/common/code/constants/app_constants.dart` | done |
-| 2 | 枚举 | `src/core/common/code/models/enums.dart` | done |
-| 3 | Group 模型 | `src/core/common/code/models/group_model.dart` | done |
-| 4 | Reminder 模型 | `src/core/common/code/models/reminder_model.dart` | done |
-| 5 | DateFormatter | `src/core/common/code/utils/date_formatter.dart` | done |
-| 6 | StringSanitizer | `src/core/common/code/utils/string_sanitizer.dart` | done |
-| 7 | PermissionManager | `src/core/common/code/permissions/permission_manager.dart` + `_stub.dart` | done |
-| 8 | Barrel file | `src/core/common/common.dart` | done |
-| 9 | 单元测试 | 7 个测试文件，136 个测试 | done |
-| 10 | 最终验证 | flutter analyze (0 warning) + flutter test (136 passed) + grep feature import (empty) | done |
-
-### 验收标准达标
-
-```
-flutter analyze → 0 errors, 0 warnings ✓
-flutter test test/unit/common/ → 136 passed ✓
-grep 'import.*feature' src/core/common/ → 仅 CONSTRAINTS.md 文档提及，0 代码 import ✓
-```
-
-### 模块文档
-
-- `src/core/common/ARCHITECTURE.md` — 模块架构
-- `src/core/common/CONSTRAINTS.md` — 模块硬约束
-- `src/core/common/PROGRESS.md` — 全部 10 单元 done
+- **功能 ID**：F-02
+- **名称**：core/database 数据库模块
+- **状态**：done — 所有工作单元已完成，待 reviewer 验证
+- **交付物**：
+  - `src/core/database/database.dart` — barrel file
+  - `src/core/database/code/database.dart` — Drift 表定义
+  - `src/core/database/code/database.g.dart` — 自动生成
+  - `src/core/database/code/group_repository.dart` — GroupRepository（6 方法）
+  - `src/core/database/code/reminder_repository.dart` — ReminderRepository（11 方法）
+  - `test/unit/database/group_repository_test.dart` — 8 tests
+  - `test/unit/database/reminder_repository_test.dart` — 17 tests
+  - `test/unit/database/database_schema_test.dart` — 6 tests
 
 ---
 
-## 关键决策
+## 已完成功能
 
-- DateFormatter 采用「时刻提取 + 日期提取」两阶段解析策略，先提取时间片（上午/下午+点+分），再从剩余文本提取日期
-- StringSanitizer 将零宽字符移除放在 \s 合并之前，避免 U+FEFF 被误转为空格
-- PermissionManager 仅提供抽象接口 + Stub，不涉及 Method Channel
-- 测试文件使用相对 import（`../../../src/core/common/...`），因源文件在 `src/` 而非 `lib/src/`
+| 功能 ID | 名称 | 状态 | 归档 |
+|---------|------|------|------|
+| INIT | 环境初始化 + 工具脚本 | completed | — |
+| F-00 | Flutter 工程脚手架 | completed | — |
+| F-01 | core/common 通用模块 | completed | history/F-01-core-common/ |
+| F-02 | core/database 数据库模块 | done | — |
 
 ---
 
-## 下一步
+## 待处理功能（按优先级）
 
-- reviewer 启动验证 F-01，参照 `agents/reviewer/SKILL.md`
-- 通过后进入 F-02（core/database Drift SQLite）
+| 功能 ID | 名称 | 优先级 | 状态 |
+|---------|------|--------|------|
+| F-03 | Riverpod 状态管理 + 依赖注入 | P0 | pending |
+| ... | 其余见 `harness/feature_list.json` | — | pending |
+
+---
+
+## 工作单元速查
+
+| # | 名称 | 状态 |
+|---|------|------|
+| DB-01 | Drift 表定义 + 代码生成 | done |
+| DB-02 | GroupRepository 实现 | done |
+| DB-03 | ReminderRepository 实现 | done |
+| DB-04 | 索引验证 + 事务回滚 + barrel file + 最终验收 | done |
+
+---
+
+## 交接前自检
+
+- [x] 构建通过（`flutter analyze src/core/database/` 零 issue）
+- [x] 全部测试通过（`flutter test test/unit/database/` 31/31）
+- [x] 无调试代码残留（no print/debugger/TODO）
+- [x] `src/core/database/PROGRESS.md` 全部单元 `done`
+- [x] 无 feature 层 import
+- [x] 所有日志已追加
