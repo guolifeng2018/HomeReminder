@@ -252,6 +252,17 @@ bash tools/verify.sh
 - `harness/SESSION-HANDOFF.md` — 已记录交接信息
 - `work/logs/log.json` — 全部操作日志已追加
 
+## 会话要求
+
+initer 是独立 agent，**必须在新建的空白对话中运行**：
+
+- 不允许与 planner / implementer / reviewer 同会话执行
+- 不允许在已有业务上下文（如 work/planner/ 有残留产出）的会话中运行
+- 启动时应读 `harness/SESSION-HANDOFF.md`，如果没有 initer 的未完成工作记录，则正常开始；如果有，优先从中断点续接
+- 完成交付后，后续的 planner / implementer / reviewer 必须各自在新会话中执行
+
+这确保 initer 的环境操作和业务开发的代码修改完全隔离，上下文不会互相污染。
+
 ## 交付
 
 initer 是独立运行的 agent，不参与业务功能循环。`tools/init.sh` 和 `tools/verify.sh` 全部通过即视为任务完成，**不向 planner 交接**。交付物就位后，人可以启动 planner 开始 F-01。

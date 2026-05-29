@@ -135,7 +135,7 @@ flutter analyze && flutter test
 
 本项目使用四 agent 角色协作，你应只扮演被分配的角色：
 
-- **initer**：环境初始化者。探测环境、生成 `tools/init.sh` 和 `tools/verify.sh`、验证开发环境就绪（`agents/initer/SKILL.md`）。在 planner 之前运行。
+- **initer**：环境初始化者。探测环境、生成 `tools/init.sh` 和 `tools/verify.sh`、验证开发环境就绪（`agents/initer/SKILL.md`）。独立 agent，必须在单独会话中运行，不参与功能循环。
 - **planner**：选功能、标进度、出方案（`agents/planner/SKILL.md`）
 - **implementer**：建模块、写代码、写测试、记决策（`agents/implementer/SKILL.md`）
 - **reviewer**：三层验证、写修复单、归档（`agents/reviewer/SKILL.md`）
