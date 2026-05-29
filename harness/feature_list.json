@@ -1,13 +1,71 @@
 [
   {
     "id": "F-01",
-    "name": "",
-    "description": "",
-    "verification": "",
+    "name": "工程初始化 + 基础核心层",
+    "description": "初始化 Flutter 工程，搭建分层目录结构，实现 core:common（通用模块）和 core:database（Drift SQLite 数据库），完成 groups/reminders 表设计和 CRUD 操作。",
+    "verification": "flutter analyze 零报错 && flutter test test/unit/common/ test/unit/database/ 全部通过 && Drift 代码生成成功",
     "priority": "P0",
     "depends_on": [],
     "status": "pending",
-    "module": "",
+    "module": "core/common, core/database",
+    "evidence": null,
+    "completed_date": null
+  },
+  {
+    "id": "F-02",
+    "name": "手动录入 + 系统通知",
+    "description": "实现手动新增提醒功能（暂不接入语音），完成提醒列表展示，实现 core:reminder（时间解析+定时调度）和 core:notification（系统通知推送），完成 feature:home 首页概览。跑通「新增提醒→列表展示→到点通知」全核心流程。",
+    "verification": "flutter analyze 零报错 && flutter test test/unit/reminder/ test/unit/notification/ 全部通过 && flutter test test/integration/ 集成测试通过 && 系统通知可正常触发",
+    "priority": "P0",
+    "depends_on": [
+      "F-01"
+    ],
+    "status": "pending",
+    "module": "core/reminder, core/notification, feature/home",
+    "evidence": null,
+    "completed_date": null
+  },
+  {
+    "id": "F-03",
+    "name": "语音录入（ASR + 语义解析）",
+    "description": "集成 SenseVoice-Tiny 离线 ASR 和 Qwen-140M 语义解析模型，实现 core:voice（录音+识别+解析）和 feature:voice_input（语音录入页）。完成「录音→语音转文字→语义提取→确认创建提醒」全流程。模型文件首次启动后断点续传下载，不入安装包。",
+    "verification": "flutter analyze 零报错 && flutter test test/unit/voice/ 全部通过 && 语音录入流程端到端可跑通 && 模型下载+推理正常",
+    "priority": "P0",
+    "depends_on": [
+      "F-01"
+    ],
+    "status": "pending",
+    "module": "core/voice, feature/voice_input",
+    "evidence": null,
+    "completed_date": null
+  },
+  {
+    "id": "F-04",
+    "name": "分组管理 + 批量清理",
+    "description": "实现 feature:group_manage（分组CRUD+筛选查看）和 feature:cleanup（批量标记已完成+补货提醒）。支持预设分组（客厅/卧室/厨房/冰箱/扫地机/地面）和自定义分组。",
+    "verification": "flutter analyze 零报错 && flutter test test/unit/group_manage/ test/unit/cleanup/ 全部通过 && 分组增删改查正常 && 批量标记+补货提醒正常",
+    "priority": "P1",
+    "depends_on": [
+      "F-01"
+    ],
+    "status": "pending",
+    "module": "feature/group_manage, feature/cleanup",
+    "evidence": null,
+    "completed_date": null
+  },
+  {
+    "id": "F-05",
+    "name": "优化完善 + 测试联调 + 打包上架",
+    "description": "优化提醒推迟/重试逻辑、UI 交互打磨、Android 10+ / iOS 15+ 全机型适配、模型断点续传下载完善。整体联调，补全端到端测试，完成应用商店上架适配。",
+    "verification": "flutter analyze 零报错 && flutter test 全量通过（单元+集成+E2E） && Android/iOS 双端真机测试通过 && 构建产物可用",
+    "priority": "P1",
+    "depends_on": [
+      "F-02",
+      "F-03",
+      "F-04"
+    ],
+    "status": "pending",
+    "module": "all",
     "evidence": null,
     "completed_date": null
   }

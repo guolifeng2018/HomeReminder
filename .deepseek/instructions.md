@@ -9,8 +9,8 @@
 
 <!-- 一句话说清楚这是什么项目，给 agent 建立全局认知。来源：L02 "给地图不给说明书" -->
 
-**项目名称**：<!-- 如 HomeReminder — 家庭事务提醒应用 -->
-**一句话描述**：<!-- 如 基于 Flutter 的跨平台提醒工具，支持语音录入和智能调度 -->
+**项目名称**：居净清单 (JuJingList) — 家庭事务提醒应用
+**一句话描述**：基于 Flutter 的纯本地离线家庭清洁事务管理工具，支持语音录入、智能语义解析、分组管理和定时提醒调度。全程无云端上传，保障用户隐私。
 
 ---
 
@@ -18,11 +18,14 @@
 
 <!-- agent 需要知道用什么语言、什么框架、什么版本。来源：L02 指令子系统 -->
 
-- **语言**：<!-- 如 Dart 3.x -->
-- **框架**：<!-- 如 Flutter 3.x -->
-- **构建工具**：<!-- 如 flutter build -->
-- **包管理**：<!-- 如 flutter pub -->
-- **运行时**：<!-- 如 iOS 15+, Android 12+ -->
+- **语言**：Dart 3.x
+- **框架**：Flutter 3.22+
+- **构建工具**：flutter build
+- **包管理**：flutter pub
+- **运行时**：Android 10+, iOS 15+
+- **状态管理**：Riverpod
+- **数据库**：Drift (SQLite)
+- **测试框架**：flutter_test
 
 ---
 
@@ -32,13 +35,16 @@
 
 ```bash
 # 安装依赖
-<!-- 如 flutter pub get -->
+flutter pub get
+
+# 代码生成 (Drift 数据库)
+dart run build_runner build
 
 # 启动开发环境
-<!-- 如 flutter run -->
+flutter run
 
 # 运行全部验证
-<!-- 如 make check -->
+flutter analyze && flutter test
 ```
 
 ---
@@ -68,16 +74,19 @@
 
 ```bash
 # L1 静态分析
-<!-- 如 dart analyze -->
+flutter analyze
 
-# L2 运行时验证（单元 + 集成）
-<!-- 如 flutter test test/unit/ test/integration/ -->
+# L2 运行时验证（单元测试）
+flutter test test/unit/
+
+# L2 运行时验证（集成测试）
+flutter test test/integration/
 
 # L3 端到端验证
-<!-- 如 flutter test test/e2e/ -->
+flutter test test/e2e/
 
 # 一键全量验证
-<!-- 如 make check -->
+flutter analyze && flutter test
 ```
 
 ---
@@ -88,9 +97,11 @@
 
 > 以下为最关键的约束摘要，**全量约束请见 `harness/CONSTRAINTS.md`**。
 
-1. <!-- 如 必须使用 Provider 做状态管理，禁止引入其他状态管理库 -->
-2. <!-- 如 禁止在 Widget 中直接访问数据库，必须通过 Repository 层 -->
-3. <!-- 如 所有公开 API 必须有文档注释 -->
+1. **纯本地离线**：禁止任何形式的网络请求、数据上传、日志上报。所有数据全程本地处理。
+2. **权限最小化**：仅申请麦克风、通知、存储权限，按需申请，禁止多余权限。
+3. **系统闹钟强制**：定时提醒必须基于系统闹钟/日历实现，禁止纯应用层定时器。
+4. **模型不入包**：ASR/LLM 模型文件不打包进安装包，首次启动后断点续传下载。
+5. **最低适配**：Android 10+、iOS 15+，平台 API 调用须做版本兼容检查。
 
 ---
 
@@ -105,14 +116,14 @@
 3. 读 `harness/PROGRESS.md`
 4. 读 `harness/feature_list.json`
 5. 读 `harness/SESSION-HANDOFF.md`（如有未完成工作）
-6. 运行验证命令确认仓库处于一致状态
+6. 运行 `flutter analyze` 确认仓库处于一致状态
 
 ### 每次会话结束
 
 1. 更新 `harness/PROGRESS.md`
 2. 更新 `harness/feature_list.json`（如状态有变化）
 3. 写 `harness/SESSION-HANDOFF.md`
-4. 运行全量验证确认一致状态
+4. 运行 `flutter analyze && flutter test` 确认一致状态
 5. 清理临时文件、调试代码
 6. 提交所有已完成的工作
 
@@ -143,3 +154,24 @@
   - `templates/work/` — work 目录模板（planner/implementer/reviewer 的空白产出文件）
   - `templates/src/` — src 模块模板（implementer 新建模块时的脚手架）
 - `history/` — 已完成功能归档
+
+---
+
+## 模块地图
+
+<!-- 项目 src/ 模块分布，agent 快速了解代码组织 -->
+
+```
+src/
+├── core/
+│   ├── common/         # 通用模块：常量、数据模型、工具类、权限管理
+│   ├── database/       # 数据库模块：Drift(SQLite) 分组+提醒 CRUD
+│   ├── voice/          # 语音模块：录音、离线ASR、语义解析
+│   ├── reminder/       # 提醒模块：时间解析、定时调度、推迟重试
+│   └── notification/   # 通知模块：系统原生通知推送
+└── feature/
+    ├── home/           # 首页模块：分组概览、今日待办
+    ├── voice_input/    # 语音录入页：录音→识别→确认创建
+    ├── group_manage/   # 分组管理页：预设+自定义分组 CRUD
+    └── cleanup/        # 批量清理页：标记完成、补货提醒
+```
