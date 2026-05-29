@@ -100,11 +100,15 @@ flutter pub get
 echo "[OK] flutter pub get"
 
 # ============================================================
-# 4. Drift 代码生成
+# 4. Drift 代码生成（条件执行，仅存在 Drift 依赖时运行）
 # ============================================================
-echo "[RUN] build_runner 代码生成 ..."
-dart run build_runner build --delete-conflicting-outputs
-echo "[OK] build_runner 代码生成"
+echo "[CHECK] build_runner 代码生成 ..."
+if grep -q "build_runner\|drift_dev" pubspec.yaml 2>/dev/null && grep -q "drift" pubspec.yaml 2>/dev/null; then
+    dart run build_runner build --delete-conflicting-outputs
+    echo "[OK] build_runner 代码生成"
+else
+    echo "[SKIP] 代码生成（未检测到 Drift 依赖，将在添加数据库模块后自动运行）"
+fi
 
 # ============================================================
 # 5. 平台权限配置检查
