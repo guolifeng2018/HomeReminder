@@ -3,3 +3,5 @@
 {"timestamp":"2026-05-29T19:00:00Z","agent":"implementer","action":"resume_progress","feature":"F-01","module":"core/common","unit":"DateFormatter","detail":"定位到中断单元 #5"}
 {"timestamp":"2026-05-29T19:05:00Z","agent":"implementer","action":"unit_code_done","feature":"F-01","unit":"DateFormatter","module":"core/common","detail":"完成自然语言口语时间解析器，支持≥15种中文口语表达，含闰年/月末边界处理"}
 {"timestamp":"2026-05-29T19:10:00Z","agent":"implementer","action":"unit_test_done","feature":"F-01","unit":"DateFormatter","module":"core/common","detail":"完成 test/unit/common/date_formatter_test.dart，29个测试全部通过"}
+{"timestamp":"2026-05-29T19:15:00Z","agent":"implementer","action":"unit_code_done","feature":"F-01","unit":"StringSanitizer","module":"core/common","detail":"完成输入清洗工具：trim/空白合并/控制字符移除/零宽字符移除/超长截断"}
+{"timestamp":"2026-05-29T19:20:00Z","agent":"implementer","action":"unit_test_done","feature":"F-01","unit":"StringSanitizer","module":"core/common","detail":"完成 test/unit/common/string_sanitizer_test.dart，27个测试全部通过"}

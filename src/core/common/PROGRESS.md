@@ -21,7 +21,7 @@
 | 3 | Group 模型 group_model.dart | Group 实体 + 序列化 | done |
 | 4 | Reminder 模型 reminder_model.dart | Reminder 实体 + 枚举序列化 | done |
 | 5 | DateFormatter | 自然语言口语时间解析 | done |
-| 6 | StringSanitizer | 输入清洗 | pending |
+| 6 | StringSanitizer | 输入清洗 | done |
 | 7 | PermissionManager | 抽象类 + Stub 实现 | pending |
 | 8 | Barrel file | common.dart 统一导出 | pending |
 | 9 | 单元测试 | 全部模型/工具/枚举测试 | pending |
@@ -37,6 +37,6 @@
 | test/unit/common/reminder_model_test.dart | Reminder 模型 | pending |
 | test/unit/common/enums_test.dart | 枚举 | pending |
 | test/unit/common/date_formatter_test.dart | DateFormatter | done |
-| test/unit/common/string_sanitizer_test.dart | StringSanitizer | pending |
+| test/unit/common/string_sanitizer_test.dart | StringSanitizer | done |
 | test/unit/common/permission_manager_test.dart | PermissionManager | pending |
 | test/unit/common/app_constants_test.dart | 常量 | pending |
