@@ -1,0 +1,33 @@
+00:01 +26: All tests passed!
+
+=== test/unit/core/app_config_provider_test.dart ===
+AppConfig defaults isFirstLaunch defaults to true
+AppConfig defaults modelDownloadStatus defaults to idle
+setFirstLaunch setFirstLaunch(false) updates isFirstLaunch to false
+setFirstLaunch setFirstLaunch(true) keeps isFirstLaunch true
+setFirstLaunch setFirstLaunch does not affect modelDownloadStatus
+setModelDownloadStatus setModelDownloadStatus(downloading) updates status
+setModelDownloadStatus setModelDownloadStatus(completed) updates status
+setModelDownloadStatus setModelDownloadStatus(failed) updates status
+setModelDownloadStatus full status lifecycle: idle -> downloading -> completed
+setModelDownloadStatus full status lifecycle: idle -> downloading -> failed
+setModelDownloadStatus setModelDownloadStatus does not affect isFirstLaunch
+AppConfig copyWith copyWith preserves unmodified fields
+AppConfig copyWith copyWith creates new instance
+
+=== test/unit/core/provider_resolution_test.dart ===
+Provider resolution databaseProvider resolves without error
+Provider resolution groupRepositoryProvider resolves without error
+Provider resolution reminderRepositoryProvider resolves without error
+Provider resolution reminderServiceProvider resolves without error
+Provider resolution notificationServiceProvider resolves without error
+Provider resolution voiceServiceProvider resolves without error
+Provider resolution appConfigProvider resolves without error
+Provider resolution all providers resolve without exception
+
+=== test/unit/core/provider_override_test.dart ===
+Provider override reminderServiceProvider override with mock
+Provider override notificationServiceProvider override with mock
+Provider override voiceServiceProvider override with mock
+Provider override mock ReminderService methods can be called
+Provider override override is scoped -- does not leak to another container

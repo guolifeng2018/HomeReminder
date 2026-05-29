@@ -9,7 +9,6 @@ import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 
 import 'package:home_reminder/src/core/database/code/database.dart';
-import 'package:home_reminder/src/core/database/code/group_repository.dart';
 
 void main() {
   late AppDatabase db;

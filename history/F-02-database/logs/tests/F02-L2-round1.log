@@ -1,0 +1,29 @@
+=== F-02 L2 运行时验证 — round 1 ===
+timestamp: 2026-05-29T15:12:00Z
+
+--- flutter test test/unit/database/ ---
+00:00 +31: All tests passed!
+
+Test breakdown:
+  group_repository_test.dart: 8 tests (insert×2, getAll, getById, update×2, delete, initPresetGroups)
+  reminder_repository_test.dart: 17 tests (insert×4, getById, getAll, getByGroupId, getByStatus, getByDateRange×2, getToday, getOverdue, update, delete, batchUpdateStatus, FK cascade, transaction)
+  database_schema_test.dart: 6 tests (index_list reminders, index_list groups, EXPLAIN QUERY PLAN×3, transaction rollback)
+
+Total: 31 tests, 0 failures, 0 errors.
+
+--- acceptance criteria per BREAKDOWN.md ---
+DB-01: build_runner 生成 .g.dart ✓, 文件存在 ✓
+DB-02: insert 空 name→throws ✓, getAll sort_order ASC ✓, initPresetGroups 幂等✓
+DB-03: 必填字段校验×3 ✓, getByGroupId ✓, getByStatus ✓, getByDateRange 含边界 ✓, getToday ✓, getOverdue ✓, batchUpdateStatus ✓, FK cascade ✓
+DB-04: EXPLAIN QUERY PLAN 索引命中×3 ✓, 事务回滚 ✓, barrel file ✓
+
+--- exclusion check ---
+✓ 无数据库迁移逻辑
+✓ 无独立 DAO 层
+✓ 无 Riverpod Provider
+✓ 无数据库实例单例
+✓ 无 drift_db_viewer
+✓ 无 pubspec.yaml 修改
+✓ 无 .moor/.drift DSL 文件
+
+RESULT: PASS

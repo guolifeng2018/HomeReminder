@@ -1,0 +1,39 @@
+=== F-02 L1 静态分析 — round 1 ===
+timestamp: 2026-05-29T15:10:00Z
+
+--- flutter analyze src/core/database/ ---
+Analyzing database...
+No issues found! (ran in 0.4s)
+
+--- grep import.*feature src/core/database/ ---
+Only hit in CONSTRAINTS.md (rule description), zero hits in .dart files.
+PASS: no feature layer imports.
+
+--- grep print|debugger|TODO src/core/database/ ---
+Only hit in CONSTRAINTS.md (rule description), zero hits in .dart files.
+PASS: no debug code.
+
+--- build.yaml ---
+sources include: lib/**, src/**, test/**
+PASS: src/ directory covered.
+
+--- architecture boundary check ---
+- core/database → core/common: ALLOWED ✓
+- feature → core/database: NOT PRESENT ✓
+- No reversed dependency found.
+
+--- module constraints check (src/core/database/CONSTRAINTS.md) ---
+1. 数据约束1: Group name empty → ArgumentError ✓
+2. 数据约束2: Reminder title/groupId/scheduledAt validation ✓
+3. 数据约束3: 时间字段毫秒时间戳 ✓
+4. 数据约束4: status/frequency 字符串name存储 ✓
+5. 接口约束1: 无 feature import ✓
+6. 接口约束2: Repository 外部无直接 AppDatabase 访问 ✓
+7. 接口约束3: 返回 domain 模型 ✓
+8. 接口约束4: 无 print/debugger/TODO ✓
+9. 接口约束5: 无 schema_version 迁移逻辑 ✓
+10. 接口约束6: 无单例/工厂 (构造接受 QueryExecutor) ✓
+11. 性能约束1: initPresetGroups/batchUpdateStatus 均使用事务 ✓
+12. 性能约束2: scheduled_at/group_id/status/sort_order 均已建索引 ✓
+
+RESULT: PASS

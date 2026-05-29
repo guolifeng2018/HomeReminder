@@ -10,7 +10,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_reminder/src/core/providers/code/database_providers.dart';
 import 'package:home_reminder/src/core/providers/code/service_providers.dart';
 import 'package:home_reminder/src/core/providers/code/app_config_provider.dart';
-import 'package:home_reminder/src/core/providers/code/app_config.dart';
 
 void main() {
   late ProviderContainer container;

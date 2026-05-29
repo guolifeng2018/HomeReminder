@@ -34,7 +34,7 @@ void main() {
     await db.close();
   });
 
-  Future<Group> _createGroup(String name) async {
+  Future<Group> createTestGroup(String name) async {
     return groupRepo.insert(
       Group(name: name, sortOrder: 0, createdAt: DateTime(2026, 1, 1)),
     );
@@ -81,7 +81,7 @@ void main() {
     });
 
     test('valid reminder → getById retrieves it', () async {
-      final group = await _createGroup('TestGroup');
+      final group = await createTestGroup('TestGroup');
       final reminder = Reminder(
         groupId: group.id,
         title: 'Buy milk',
@@ -115,7 +115,7 @@ void main() {
 
   group('getAll', () {
     test('returns all reminders ordered by scheduledAt', () async {
-      final group = await _createGroup('G');
+      final group = await createTestGroup('G');
       await reminderRepo.insert(Reminder(
         groupId: group.id, title: 'Second',
         scheduledAt: DateTime(2026, 6, 16),
@@ -135,8 +135,8 @@ void main() {
 
   group('getByGroupId', () {
     test('returns correct subset', () async {
-      final g1 = await _createGroup('G1');
-      final g2 = await _createGroup('G2');
+      final g1 = await createTestGroup('G1');
+      final g2 = await createTestGroup('G2');
 
       await reminderRepo.insert(Reminder(
         groupId: g1.id, title: 'R1',
@@ -161,7 +161,7 @@ void main() {
 
   group('getByStatus', () {
     test('filters by status correctly', () async {
-      final group = await _createGroup('G');
+      final group = await createTestGroup('G');
       await reminderRepo.insert(Reminder(
         groupId: group.id, title: 'Pending',
         scheduledAt: DateTime(2026, 6, 1),
@@ -187,7 +187,7 @@ void main() {
 
   group('getByDateRange', () {
     test('returns reminders within range inclusive of boundaries', () async {
-      final group = await _createGroup('G');
+      final group = await createTestGroup('G');
       await reminderRepo.insert(Reminder(
         groupId: group.id, title: 'Exact',
         scheduledAt: DateTime(2026, 6, 15),
@@ -204,7 +204,7 @@ void main() {
     });
 
     test('excludes reminders outside range', () async {
-      final group = await _createGroup('G');
+      final group = await createTestGroup('G');
       await reminderRepo.insert(Reminder(
         groupId: group.id, title: 'Before',
         scheduledAt: DateTime(2026, 6, 1),
@@ -226,7 +226,7 @@ void main() {
 
   group('getToday', () {
     test('returns only today reminders', () async {
-      final group = await _createGroup('G');
+      final group = await createTestGroup('G');
       final now = DateTime.now();
       final todayStart = DateTime(now.year, now.month, now.day);
 
@@ -254,7 +254,7 @@ void main() {
 
   group('getOverdue', () {
     test('returns only overdue pending reminders', () async {
-      final group = await _createGroup('G');
+      final group = await createTestGroup('G');
       final now = DateTime.now();
       final yesterday = now.subtract(const Duration(days: 1));
       final twoDaysAgo = now.subtract(const Duration(days: 2));
@@ -289,7 +289,7 @@ void main() {
 
   group('update', () {
     test('modifies fields → getById verifies', () async {
-      final group = await _createGroup('G');
+      final group = await createTestGroup('G');
       final inserted = await reminderRepo.insert(Reminder(
         groupId: group.id, title: 'Old',
         scheduledAt: DateTime(2026, 6, 1),
@@ -310,7 +310,7 @@ void main() {
 
   group('delete', () {
     test('after delete → getById returns null', () async {
-      final group = await _createGroup('G');
+      final group = await createTestGroup('G');
       final inserted = await reminderRepo.insert(Reminder(
         groupId: group.id, title: 'DeleteMe',
         scheduledAt: DateTime(2026, 6, 1),
@@ -325,7 +325,7 @@ void main() {
 
   group('batchUpdateStatus', () {
     test('updates status for all given ids', () async {
-      final group = await _createGroup('G');
+      final group = await createTestGroup('G');
       final r1 = await reminderRepo.insert(Reminder(
         groupId: group.id, title: 'R1',
         scheduledAt: DateTime(2026, 6, 1),
@@ -351,7 +351,7 @@ void main() {
 
   group('FK cascade delete', () {
     test('deleting group → associated reminders disappear', () async {
-      final group = await _createGroup('ToDelete');
+      final group = await createTestGroup('ToDelete');
       await reminderRepo.insert(Reminder(
         groupId: group.id, title: 'Orphan',
         scheduledAt: DateTime(2026, 6, 1),
@@ -377,7 +377,7 @@ void main() {
 
   group('transaction', () {
     test('generic transaction wrapper works', () async {
-      final group = await _createGroup('G');
+      final group = await createTestGroup('G');
       final result = await reminderRepo.transaction(() async {
         final r = await reminderRepo.insert(Reminder(
           groupId: group.id, title: 'TxReminder',
