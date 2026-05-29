@@ -131,15 +131,18 @@ flutter analyze && flutter test
 
 ## 角色
 
-<!-- 来源：L09 "干活和检查分开"、L11 三角色架构 -->
+<!-- 来源：L09 "干活和检查分开"、L11 多角色架构 -->
 
-本项目使用三 agent 角色协作，你应只扮演被分配的角色：
+本项目使用四 agent 角色协作，你应只扮演被分配的角色：
 
+- **initer**：环境初始化者。探测环境、生成 `tools/init.sh` 和 `tools/verify.sh`、验证开发环境就绪（`agents/initer/SKILL.md`）。在 planner 之前运行。
 - **planner**：选功能、标进度、出方案（`agents/planner/SKILL.md`）
 - **implementer**：建模块、写代码、写测试、记决策（`agents/implementer/SKILL.md`）
 - **reviewer**：三层验证、写修复单、归档（`agents/reviewer/SKILL.md`）
 
 干活和检查必须是不同 agent，不允许自己评估自己的工作。
+
+**执行流程**：initer（一次性）→ planner → implementer → reviewer → 下一个功能循环。
 
 **每次执行角色任务时，必须新建一个独立对话。** 不要在同一个对话中切换角色，避免上下文污染和角色越界。
 
