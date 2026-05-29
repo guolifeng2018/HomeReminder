@@ -101,11 +101,15 @@ mkdir -p test/unit/<module-name>/
 
 ### 5. 交给 reviewer
 
-交接前更新 `harness/SESSION-HANDOFF.md`，必须包含：
-- `## 下一个 Agent` 节：
-  - `- **角色**：reviewer`
-  - `- **任务摘要**：验证 <功能ID> 交付物`
-  - `- **技能文件**：agents/reviewer/SKILL.md`
+交接前更新以下全局进度文件：
+
+1. **`harness/PROGRESS.md`**：更新当前功能、已完成列表、进行中状态、下一步
+2. **`harness/feature_list.json`**：将已完成功能的 `status` 改为 `"completed"`，补 `evidence` 和 `completed_date`
+3. **`harness/SESSION-HANDOFF.md`**，必须包含：
+   - `## 下一个 Agent` 节：
+     - `- **角色**：reviewer`
+     - `- **任务摘要**：验证 <功能ID> 交付物`
+     - `- **技能文件**：agents/reviewer/SKILL.md`
 
 交接前执行自检：
 
@@ -113,6 +117,8 @@ mkdir -p test/unit/<module-name>/
 - [ ] 全部测试通过
 - [ ] 无调试代码残留（`console.log`、`debugger`、`TODO` 注释）
 - [ ] `src/<module>/PROGRESS.md` 全部单元 `done`
+- [ ] `harness/PROGRESS.md` 已更新（当前功能、已完成列表、下一步）
+- [ ] `harness/feature_list.json` 已更新（功能 status → completed，补 evidence 和 completed_date）
 - [ ] 所有日志已追加
 
 > 记录日志：`{"timestamp":"","agent":"implementer","action":"handoff_to_reviewer","feature":"<id>","detail":"全部单元完成，交给 reviewer"}`
@@ -231,7 +237,7 @@ mkdir -p test/unit/<module-name>/
 
 - **禁止评估代码质量**：那是 reviewer 的活
 - **禁止更新计划**：那是 planner 的活
-- **可写范围**：仅允许修改 `src/<module>/`、`test/`、`work/implementer/`、`work/logs/log.json`、`harness/decisions/`。其余文件全部只读
+- **可写范围**：仅允许修改 `src/<module>/`、`test/`、`work/implementer/`、`work/logs/log.json`、`harness/decisions/`、`harness/PROGRESS.md`、`harness/feature_list.json`。其余文件全部只读
 - **WIP=1**：一次只做一个工作单元
 - **代码和测试同步写**：不允许先写完所有代码再补测试
 - **每个单元原子提交**：代码 + 测试通过后 commit 一次，commit message 含单元名称和功能 ID
