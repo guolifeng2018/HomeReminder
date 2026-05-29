@@ -6,10 +6,10 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../src/core/providers/code/service_providers.dart';
-import '../../../src/core/providers/code/reminder_service.dart';
-import '../../../src/core/providers/code/notification_service.dart';
-import '../../../src/core/providers/code/voice_service.dart';
+import 'package:home_reminder/src/core/providers/code/service_providers.dart';
+import 'package:home_reminder/src/core/providers/code/reminder_service.dart';
+import 'package:home_reminder/src/core/providers/code/notification_service.dart';
+import 'package:home_reminder/src/core/providers/code/voice_service.dart';
 
 /// Mock ReminderService — 记录方法调用而非抛出异常
 class MockReminderService implements ReminderService {

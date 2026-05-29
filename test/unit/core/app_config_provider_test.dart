@@ -6,8 +6,8 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../src/core/providers/code/app_config_provider.dart';
-import '../../../src/core/providers/code/app_config.dart';
+import 'package:home_reminder/src/core/providers/code/app_config_provider.dart';
+import 'package:home_reminder/src/core/providers/code/app_config.dart';
 
 void main() {
   late ProviderContainer container;

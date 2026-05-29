@@ -8,8 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/drift.dart' hide isNull, isNotNull;
 import 'package:drift/native.dart';
 
-import '../../../src/core/database/code/database.dart';
-import '../../../src/core/database/code/group_repository.dart';
+import 'package:home_reminder/src/core/database/code/database.dart';
+import 'package:home_reminder/src/core/database/code/group_repository.dart';
 
 void main() {
   late AppDatabase db;

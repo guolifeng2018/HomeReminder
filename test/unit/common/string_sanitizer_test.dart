@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../../src/core/common/code/utils/string_sanitizer.dart';
+import 'package:home_reminder/src/core/common/code/utils/string_sanitizer.dart';
 
 void main() {
   group('StringSanitizer.sanitize', () {

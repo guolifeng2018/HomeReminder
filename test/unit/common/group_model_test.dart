@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../../src/core/common/code/models/group_model.dart';
+import 'package:home_reminder/src/core/common/code/models/group_model.dart';
 
 void main() {
   final testDate = DateTime(2026, 6, 15, 10, 0, 0);

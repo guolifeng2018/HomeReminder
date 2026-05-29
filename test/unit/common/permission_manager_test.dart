@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../../src/core/common/code/permissions/permission_manager.dart';
-import '../../../src/core/common/code/permissions/permission_manager_stub.dart';
+import 'package:home_reminder/src/core/common/code/permissions/permission_manager.dart';
+import 'package:home_reminder/src/core/common/code/permissions/permission_manager_stub.dart';
 
 void main() {
   group('PermissionType', () {

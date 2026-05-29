@@ -8,12 +8,12 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:drift/native.dart';
 
-import '../../../src/core/database/code/database.dart';
-import '../../../src/core/database/code/group_repository.dart';
-import '../../../src/core/database/code/reminder_repository.dart';
-import '../../../src/core/common/code/models/group_model.dart';
-import '../../../src/core/common/code/models/reminder_model.dart';
-import '../../../src/core/common/code/models/enums.dart';
+import 'package:home_reminder/src/core/database/code/database.dart';
+import 'package:home_reminder/src/core/database/code/group_repository.dart';
+import 'package:home_reminder/src/core/database/code/reminder_repository.dart';
+import 'package:home_reminder/src/core/common/code/models/group_model.dart';
+import 'package:home_reminder/src/core/common/code/models/reminder_model.dart';
+import 'package:home_reminder/src/core/common/code/models/enums.dart';
 
 void main() {
   late AppDatabase db;

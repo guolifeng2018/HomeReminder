@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../../src/core/common/code/models/enums.dart';
+import 'package:home_reminder/src/core/common/code/models/enums.dart';
 
 void main() {
   group('ReminderStatus', () {

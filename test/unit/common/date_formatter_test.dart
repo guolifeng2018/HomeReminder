@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import '../../../src/core/common/code/utils/date_formatter.dart';
+import 'package:home_reminder/src/core/common/code/utils/date_formatter.dart';
 
 void main() {
   group('DateFormatter.parseNaturalLanguage', () {
