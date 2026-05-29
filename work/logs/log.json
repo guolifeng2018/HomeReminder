@@ -26,3 +26,8 @@
 {"timestamp":"2026-05-29T15:25:00Z","agent":"implementer","action":"verify","feature":"F-04","command":"flutter analyze","result":"No issues found"}
 {"timestamp":"2026-05-29T15:25:00Z","agent":"implementer","action":"verify","feature":"F-04","command":"flutter test test/unit/router/","result":"14/14 PASS"}
 {"timestamp":"2026-05-29T15:26:00Z","agent":"implementer","action":"handoff_to_reviewer","feature":"F-04","detail":"修复完成：core/router → lib/src/router/，flutter analyze 零 issue，14/14 PASS，待 reviewer L1+L2+L3 重新审查"}
+{"timestamp":"2026-05-29T16:00:00Z","agent":"reviewer","action":"verify","feature":"F-04","layer":"L1","result":"pass","detail":"round 2: flutter analyze 零 issue，无调试残留，lib/src/core/router/ 已移除，router 位于应用胶水层，import 全部合法"}
+{"timestamp":"2026-05-29T16:05:00Z","agent":"reviewer","action":"verify","feature":"F-04","layer":"L2","result":"pass","detail":"round 2: flutter test 14/14 PASS，EVALUATOR-RUBRIC 四维度全 A（正确性/架构合规/测试覆盖/代码质量）"}
+{"timestamp":"2026-05-29T16:10:00Z","agent":"reviewer","action":"verify","feature":"F-04","layer":"L3","result":"pass","detail":"round 2: 构建通过，测试通过，无调试残留，routerConfig 注入正确，交付物完整"}
+{"timestamp":"2026-05-29T16:15:00Z","agent":"reviewer","action":"complete","feature":"F-04","detail":"L1+L2+L3 全部 PASS，已更新 PROGRESS.md + feature_list.json，已归档 history/F-04-router/，建议固化为规则：组合根作为显式架构概念"}
+{"timestamp":"2026-05-29T16:30:00Z","agent":"planner","action":"select","feature":"F-05","detail":"标记 in_progress，输出 BREAKDOWN.md + PLAN.md（6 单元：REM-01~REM-04 可并行，REM-05 集成，REM-06 测试）"}

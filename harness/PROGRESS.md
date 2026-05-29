@@ -7,10 +7,10 @@
 
 ## 当前状态
 
-- **当前功能**：F-04（路由系统）
-- **状态**：implementer 修复完成，待 reviewer 重新审查
-- **当前模块**：router（已从 core/router 迁移至 lib/src/router/，应用胶水层）
-- **最后更新**：2026-05-29（implementer 修复 L1 架构违规：core/router → lib/src/router）
+- **当前功能**：F-05（core/reminder）
+- **状态**：in_progress（planner 已完成 BREAKDOWN + PLAN）
+- **当前模块**：core/reminder（REM-01~REM-04 待 implementer 并行实现）
+- **最后更新**：2026-05-29（planner：BREAKDOWN.md + PLAN.md 已输出）
 
 ---
 
@@ -23,14 +23,15 @@
 | F-01 | core/common 通用模块 | 2026-05-29 |
 | F-02 | core/database 数据库模块 | 2026-05-29 |
 | F-03 | Riverpod 状态管理 + 依赖注入 | 2026-05-29 |
+| F-04 | 路由系统 | 2026-05-29 |
 
 ---
 
 ## 进行中
 
-| 功能 ID | 名称 | 状态 |
-|---------|------|------|
-| F-04 | 路由系统 | implementer 修复完成（core/router → lib/src/router，待 reviewer 重新审查） |
+| 功能 ID | 名称 | 当前单元 | 开始日期 |
+|---------|------|---------|---------|
+| F-05 | core/reminder 提醒核心 | planner 完成，待 implementer 实现 REM-01~REM-04 | 2026-05-29 |
 
 ---
 
@@ -55,5 +56,4 @@
 
 ## 下一步
 
-1. reviewer 重新审查 F-04（L1 + L2 + L3）
-2. F-04 通过后进入 F-05（core/reminder）
+1. implementer 按 `work/planner/BREAKDOWN.md` 实现 F-05，优先并行 REM-01~REM-04，再集成 REM-05，最后 REM-06 测试

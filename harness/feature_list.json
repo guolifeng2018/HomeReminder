@@ -60,8 +60,8 @@
     "priority": "P0",
     "depends_on": ["F-03"],
     "status": "completed",
-    "module": "core/router",
-    "evidence": "flutter analyze 零 issue，flutter test 207 PASS（含 14 路由测试），GoRouter 7 路由 + redirect 守卫",
+    "module": "router",
+    "evidence": "reviewer round 2: L1+L2+L3 全部 PASS，flutter analyze 零 issue，flutter test 14/14 PASS，GoRouter 7 路由 + redirect 守卫，路由位于应用胶水层（lib/src/router/），已归档 history/F-04-router/",
     "completed_date": "2026-05-29"
   },
   {
@@ -72,7 +72,7 @@
     "verification": "flutter analyze lib/src/core/reminder/ 零 warning && flutter test test/unit/reminder/ 全部通过（覆盖: ≥20 条口语时间解析用例含「下周末→下周六」「月底→本月最后一天」「隔天→后天」歧义处理, daily/weekly/monthly 重复调度 nextTriggerTime 计算正确, 推迟 1h/3h/明天 DateTime 偏移精确, 重试退避间隔 5/15/45 min 计算, ReminderService 通过 mock repository 验证 CRUD 调用路径, 到期提醒 overdue 自动标记逻辑, 已完成/dismissed 提醒不重新调度） && 无对 feature 层 import",
     "priority": "P0",
     "depends_on": ["F-02", "F-03"],
-    "status": "pending",
+    "status": "in_progress",
     "module": "core/reminder",
     "evidence": null,
     "completed_date": null
