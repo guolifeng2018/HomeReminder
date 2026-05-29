@@ -1,75 +1,77 @@
-# L2 运行时验证报告 — F-04 路由系统
+# L2 运行时验证报告 — F-05 core/reminder
 
-- **功能 ID**：F-04
-- **验证日期**：2026-05-29
-- **轮次**：round 2
+- **日期**：2026-05-30
+- **验证层**：L2 运行时验证
+- **轮次**：round 1
+- **结果**：**FAIL** ❌
 
----
+## 测试执行
 
-## 测试结果
+| 命令 | 结果 |
+|------|------|
+| `flutter test test/unit/reminder/` | 57/57 PASS ✅ |
 
-| 测试类型 | 通过/总数 | 失败清单 |
-|---------|----------|---------|
-| `flutter test test/unit/router/` | 14/14 ✅ | 无 |
+### 测试明细
 
-### 测试用例明细
+| 测试文件 | 测试数 | 结果 |
+|----------|--------|------|
+| `spoken_time_parser_test.dart` | 31 | PASS |
+| `reminder_scheduler_test.dart` | 13 | PASS |
+| `postpone_logic_test.dart` | 7 | PASS |
+| `retry_policy_test.dart` | 6 | PASS |
+| **合计** | **57** | **全部 PASS** |
 
-| # | 测试用例 | 结果 |
-|---|---------|------|
-| 1 | GET `/` 路由到 HomePage | ✅ PASS |
-| 2 | GET `/add` 路由到 AddReminderPage | ✅ PASS |
-| 3 | GET `/voice` 路由到 VoiceInputPage | ✅ PASS |
-| 4 | GET `/groups` 路由到 GroupManagePage | ✅ PASS |
-| 5 | GET `/group/:id` 路由到 GroupDetailPage + pathParameters | ✅ PASS |
-| 6 | GET `/cleanup` 路由到 CleanupPage | ✅ PASS |
-| 7 | GET `/download` 路由到 ModelDownloadPage | ✅ PASS |
-| 8 | 首次+未就绪 → redirect `/download` | ✅ PASS |
-| 9 | 首次+已就绪 → 放行（不重定向） | ✅ PASS |
-| 10 | 非首次+未就绪 → 放行（不重定向） | ✅ PASS |
-| 11 | 非首次+已就绪 → 放行（不重定向） | ✅ PASS |
-| 12 | `/group/3` → pathParameters['id'] == '3' | ✅ PASS |
-| 13 | go → push → canPop == true | ✅ PASS |
-| 14 | 在 `/download` 时守卫不重定向 | ✅ PASS |
+## 验收标准对照 (BREAKDOWN.md)
 
----
+| 单元 | 验收标准 | 状态 |
+|------|---------|------|
+| REM-01 | `flutter analyze` 零 warning + ≥20 种口语模式解析 | ✅ 通过（31 tests） |
+| REM-02 | `flutter analyze` 零 warning + once/daily/weekly/biweekly/monthly nextTriggerTime + overdue 扫描 | ⚠️ 见问题 2 |
+| REM-03 | `flutter analyze` 零 warning + 1h/3h/明天/自定义推迟 | ✅ 通过（7 tests） |
+| REM-04 | `flutter analyze` 零 warning + 5/15/45min 退避 + 超限 null | ✅ 通过（6 tests） |
+| REM-05 | `flutter analyze` 零 warning + 无 feature import + 无 flutter/material import | ✅ L1 通过；⚠️ 见问题 3、4 |
+| REM-06 | ≥50 tests PASS + `reminder_service_test.dart` ≥8 tests | ❌ 见问题 1（缺 `reminder_service_test.dart`） |
 
-## 验收标准对照（BREAKDOWN.md）
+## EVALUATOR-RUBRIC 四维度评分
 
-| 工作单元 | 验收标准 | 结果 |
-|---------|---------|------|
-| #1 占位页面 | `flutter analyze lib/ src/feature/` 零 warning，7 个占位页面均可 import | ✅ |
-| #2 路由模块 | `flutter analyze lib/src/router/` 零 warning，GoRouter 实例化不抛异常 | ✅ |
-| #3 main.dart 集成 | `flutter analyze lib/main.dart` 零 warning，routerConfig 注入正确 | ✅ |
-| #4 路由单元测试 | `flutter test test/unit/router/` 14/14 PASS，覆盖守卫全分支 + 全部路由匹配 | ✅ |
+### 正确性：C
 
----
+- REM-01~04 的纯计算逻辑测试全部通过，核心算法正确 ✅
+- **但** REM-02 缺少 `findOverdue` 方法（BREAKDOWN 明确要求的核心职责），该逻辑被移至 `ReminderServiceImpl.checkOverdue()`，`ReminderScheduler` 测试未覆盖 overdue 扫描 ❌
+- REM-05 `ReminderServiceImpl` 缺少集成测试，`createReminder` / `postponeReminder` / `checkOverdue` 等关键路径无测试覆盖 ❌
 
-## 排除项检查（PLAN.md）
+### 架构合规：C
 
-| 排除项 | 是否被实现 | 判定 |
-|--------|----------|------|
-| 页面 UI 实现（仅占位） | 否（仅 Scaffold+Text） | ✅ |
-| 自定义转场动画 | 否（全部默认 Material） | ✅ |
-| 模型下载管理器实现 | 否（仅占位页） | ✅ |
-| ShellRoute / 嵌套路由 | 否（全部平铺） | ✅ |
-| 平台深度链接配置 | 否 | ✅ |
-| 路由日志 / 分析 | 否 | ✅ |
-| 自定义错误页 | 否（GoRouter 默认 error page） | ✅ |
+- 依赖方向正确（core → core，无 feature import） ✅
+- 无 Widget/UI import ✅
+- **但** `ReminderService` 抽象接口未按 BREAKDOWN 扩展（仍仅 2 个方法），`ReminderServiceImpl` 新增方法不在接口契约中 ❌
+- `service_providers.dart` 未添加真实 Provider 或 stub 替换指引 ❌
+- `PostponeLogic` 实例方法 vs PLAN 规定的静态方法（轻微偏离） ⚠️
 
----
+### 测试覆盖：C
 
-## 四维度评分（EVALUATOR-RUBRIC.md）
+- 4 个测试文件覆盖 REM-01~04，57 tests PASS，≥50 达标 ✅
+- **但** 缺少 REM-06 规定的第 5 个测试文件 `reminder_service_test.dart`（≥8 个集成/服务测试） ❌
+- `ReminderScheduler.findOverdue` 未被测试（方法不存在于 scheduler 中） ❌
+- `ReminderServiceImpl` 全部公共方法（createReminder / postponeReminder / checkOverdue / cancelReminder / scheduleReminder）无直接测试 ❌
 
-| 维度 | 评分 | 说明 |
+### 代码质量：B
+
+- 命名清晰、结构合理、文档注释齐全 ✅
+- 纯计算逻辑与 DB 操作分离 ✅
+- 无明显反模式 ✅
+
+## 判断
+
+L2 **不通过**。测试覆盖和架构合规两个维度为 C，存在 4 个需修复问题（详见 FIX-QUEUE.md）。
+
+**四维度汇总**：
+
+| 维度 | 评分 | 判定 |
 |------|------|------|
-| 正确性 | **A** | 全部验收标准通过，7 路由 + 4 守卫场景 + 深层链接 + 导航栈 + 防无限重定向全部覆盖，边界条件正确处理 |
-| 架构合规 | **A** | 完全合规：router 位于应用胶水层（组合根），ARCHITECTURE.md 正确反映层级，无硬约束违规，旧 core/router 已移除 |
-| 测试覆盖 | **A** | 主流程全覆盖 + 边界条件覆盖（防无限重定向、导航栈深度）+ 异常路径覆盖（redirect 拦截场景），14 条测试用例 |
-| 代码质量 | **A** | 命名清晰（`_guardRedirect`、`appRouterProvider`），结构合理（单文件路由定义 + barrel file），无重复代码，无反模式 |
+| 正确性 | C | ❌ |
+| 架构合规 | C | ❌ |
+| 测试覆盖 | C | ❌ |
+| 代码质量 | B | ✅ |
 
----
-
-## 结果
-
-- **判定**：**PASS** ✅
-- **问题数量**：0
+> 规则：任一维度 C 或 D → 整体不通过。两个维度 C → L2 FAIL。

@@ -8,6 +8,7 @@
 library;
 
 import 'package:home_reminder/src/core/common/code/models/enums.dart';
+import 'package:home_reminder/src/core/database/code/reminder_repository.dart';
 
 class ReminderScheduler {
   const ReminderScheduler();
@@ -71,5 +72,29 @@ class ReminderScheduler {
   bool shouldSkip(ReminderStatus status) {
     return status == ReminderStatus.completed ||
         status == ReminderStatus.dismissed;
+  }
+
+  /// 扫描过期提醒并标记为 overdue
+  ///
+  /// 查询 status=pending 且 scheduledAt < now 的提醒，
+  /// 批量更新状态为 overdue。返回更新的提醒数量。
+  Future<int> findOverdue(ReminderRepository repo) async {
+    final overdue = await repo.getOverdue();
+    int count = 0;
+
+    for (final r in overdue) {
+      if (shouldSkip(r.status)) continue;
+
+      if (r.status == ReminderStatus.pending) {
+        final updated = r.copyWith(
+          status: ReminderStatus.overdue,
+          updatedAt: DateTime.now(),
+        );
+        await repo.update(updated);
+        count++;
+      }
+    }
+
+    return count;
   }
 }

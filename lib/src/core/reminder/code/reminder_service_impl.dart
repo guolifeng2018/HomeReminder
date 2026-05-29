@@ -34,6 +34,7 @@ class ReminderServiceImpl implements ReminderService {
         _retryPolicy = retryPolicy ?? const RetryPolicy();
 
   /// 解析口语时间字符串（委托静态解析器）
+  @override
   DateTime? parseTime(String input, {DateTime? referenceDate}) {
     return SpokenTimeParser.parse(input, referenceDate: referenceDate);
   }
@@ -45,7 +46,8 @@ class ReminderServiceImpl implements ReminderService {
   }
 
   /// 获取下次重试时间
-  DateTime? getNextRetry(int attemptNumber, DateTime originalTime) {
+  @override
+  DateTime? getNextRetryTime(int attemptNumber, DateTime originalTime) {
     return _retryPolicy.nextRetryTime(attemptNumber, originalTime);
   }
 
@@ -53,6 +55,7 @@ class ReminderServiceImpl implements ReminderService {
   ///
   /// [groupId] 为 0 时抛出 [ArgumentError]。
   /// [title] 为空时抛出 [ArgumentError]。
+  @override
   Future<Reminder> createReminder({
     required int groupId,
     required String title,
@@ -81,34 +84,16 @@ class ReminderServiceImpl implements ReminderService {
     return _reminderRepo.insert(reminder);
   }
 
-  /// 扫描并标记过期提醒
-  ///
-  /// 查询 status=pending + scheduledAt < now 的提醒，
-  /// 批量标记为 overdue，返回已更新的提醒列表。
-  Future<List<Reminder>> checkOverdue() async {
-    final overdue = await _reminderRepo.getOverdue();
-    final updated = <Reminder>[];
-
-    for (final r in overdue) {
-      if (_scheduler.shouldSkip(r.status)) continue;
-
-      // 标记为 overdue
-      if (r.status == ReminderStatus.pending) {
-        final updatedReminder = r.copyWith(
-          status: ReminderStatus.overdue,
-          updatedAt: DateTime.now(),
-        );
-        await _reminderRepo.update(updatedReminder);
-        updated.add(updatedReminder);
-      }
-    }
-
-    return updated;
+  /// 扫描并标记过期提醒（委托调度器）
+  @override
+  Future<int> checkOverdue() async {
+    return _scheduler.findOverdue(_reminderRepo);
   }
 
   /// 推迟提醒
   ///
   /// 更新 scheduledAt，重置状态为 pending。
+  @override
   Future<void> postponeReminder(int id, PostponePreset preset,
       {Duration? custom}) async {
     final reminder = await _reminderRepo.getById(id);

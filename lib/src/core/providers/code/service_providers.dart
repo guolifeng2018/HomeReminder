@@ -6,6 +6,9 @@ library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../reminder/code/reminder_service_impl.dart';
+import '../../database/code/reminder_repository.dart';
+import 'database_providers.dart';
 import 'reminder_service.dart';
 import 'notification_service.dart';
 import 'voice_service.dart';
@@ -16,6 +19,21 @@ import 'voice_service.dart';
 /// ProviderScope.overrides 替换为真实实现。
 final reminderServiceProvider = Provider<ReminderService>((ref) {
   return StubReminderService();
+});
+
+/// 提醒服务真实实现 Provider
+///
+/// 注入 [ReminderRepository]，可在启动时通过 override 替换：
+/// ```dart
+///   reminderServiceProvider.overrideWith((ref) {
+///     return ReminderServiceImpl(
+///       reminderRepo: ref.watch(reminderRepositoryProvider),
+///     );
+///   }),
+/// ```
+final reminderServiceImplProvider = Provider<ReminderService>((ref) {
+  final repo = ref.watch(reminderRepositoryProvider);
+  return ReminderServiceImpl(reminderRepo: repo);
 });
 
 /// 通知服务 Provider
