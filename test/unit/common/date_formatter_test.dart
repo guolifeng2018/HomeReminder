@@ -4,13 +4,13 @@ import '../../../src/core/common/code/utils/date_formatter.dart';
 void main() {
   group('DateFormatter.parseNaturalLanguage', () {
     // 固定参考时间：2026-06-15 10:00（周一）
-    final refDate = DateTime(2026, 6, 15, 10, 0, 0);
+    final refDate = DateTime(2026, 6, 15, 10);
 
     // ─── 相对日期 ───
 
     test('"今天下午三点" → 今天 15:00', () {
       final result = DateFormatter.parseNaturalLanguage('今天下午三点', referenceDate: refDate);
-      expect(result, DateTime(2026, 6, 15, 15, 0));
+      expect(result, DateTime(2026, 6, 15, 15));
     });
 
     test('"明天上午九点" → 明天 09:00', () {
@@ -68,7 +68,7 @@ void main() {
 
     test('"每天晚上八点" → 今天 20:00', () {
       final result = DateFormatter.parseNaturalLanguage('每天晚上八点', referenceDate: refDate);
-      expect(result, DateTime(2026, 6, 15, 20, 0));
+      expect(result, DateTime(2026, 6, 15, 20));
     });
 
     // ─── 相对偏移 ───
@@ -111,7 +111,7 @@ void main() {
 
     test('上午12点 → 0:00', () {
       final result = DateFormatter.parseNaturalLanguage('明天上午十二点', referenceDate: refDate);
-      expect(result, DateTime(2026, 6, 16, 0, 0));
+      expect(result, DateTime(2026, 6, 16));
     });
 
     test('下午12点 → 12:00', () {
@@ -121,11 +121,11 @@ void main() {
 
     test('晚上12点 → 0:00（零点）', () {
       final result = DateFormatter.parseNaturalLanguage('今天晚上十二点', referenceDate: refDate);
-      expect(result, DateTime(2026, 6, 15, 0, 0));
+      expect(result, DateTime(2026, 6, 15));
     });
 
     test('闰年 2月29日（2028年）', () {
-      final feb28 = DateTime(2028, 2, 28, 10, 0);
+      final feb28 = DateTime(2028, 2, 28, 10);
       final result = DateFormatter.parseNaturalLanguage('明天', referenceDate: feb28);
       expect(result, DateTime(2028, 2, 29, 9, 0));
     });

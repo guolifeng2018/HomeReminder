@@ -25,7 +25,7 @@
 | 7 | PermissionManager | 抽象类 + Stub 实现 | done |
 | 8 | Barrel file | common.dart 统一导出 | done |
 | 9 | 单元测试 | 全部模型/工具/枚举测试 | done |
-| 10 | 最终验证 | flutter analyze + flutter test | pending |
+| 10 | 最终验证 | flutter analyze + flutter test | done |
 
 ---
 

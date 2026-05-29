@@ -36,7 +36,7 @@ void main() {
 
     test('移除控制字符（0x00-0x1F，换行除外）', () {
       // 0x01 (SOH), 0x7F (DEL) are control chars
-      final input = 'hello\x01\x7F world';
+      const input = 'hello\x01\x7F world';
       expect(StringSanitizer.sanitize(input), equals('hello world'));
     });
 
@@ -47,7 +47,7 @@ void main() {
 
     test('移除零宽字符', () {
       // U+200B zero-width space
-      final input = 'he\u200Bllo\u200C world\uFEFF';
+      const input = 'he\u200Bllo\u200C world\uFEFF';
       expect(StringSanitizer.sanitize(input), equals('hello world'));
     });
 
@@ -81,7 +81,7 @@ void main() {
     });
 
     test('控制字符和零宽字符混合', () {
-      final input = '\x01he\u200Bllo\x02 \x7Fworld\uFEFF!';
+      const input = '\x01he\u200Bllo\x02 \x7Fworld\uFEFF!';
       expect(StringSanitizer.sanitize(input), equals('hello world!'));
     });
   });
