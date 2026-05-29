@@ -234,9 +234,12 @@ bash tools/verify.sh
 - 在"已完成"表中记录初始化完成
 - 更新"最后更新"时间
 
-**更新 `harness/SESSION-HANDOFF.md`**：
+**更新 `harness/SESSION-HANDOFF.md`**，必须包含：
+- `## 下一个 Agent` 节：
+  - `- **角色**：planner`
+  - `- **任务摘要**：启动 F-01，功能和方案规划`
+  - `- **技能文件**：agents/planner/SKILL.md`
 - 记录环境就绪状态、已安装的工具版本
-- 下一步：启动 planner 开始 F-01
 
 > 日志：
 > ```json

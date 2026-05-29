@@ -66,6 +66,12 @@
 
 你的工作在补全 BREAKDOWN.md 和 PLAN.md 后结束。**不要尝试自己实现或验证**。
 
+更新 `harness/SESSION-HANDOFF.md`，必须包含：
+- `## 下一个 Agent` 节：
+  - `- **角色**：implementer`
+  - `- **任务摘要**：按方案实现 <功能ID>`
+  - `- **技能文件**：agents/implementer/SKILL.md`
+
 方案完成后直接交给 **implementer** 接手，无需等待用户审阅。
 
 ## 约束

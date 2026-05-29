@@ -34,15 +34,15 @@ Anthropic 实验表明，评估 agent 具有系统性偏宽松的倾向，会说
 implementer 交付
     │
     ▼
-L1 静态分析 ──不通过──→ 写 FIX-QUEUE + L1-REPORT → 退 implementer
+L1 静态分析 ──不通过──→ 写 FIX-QUEUE + L1-REPORT → 更新 SESSION-HANDOFF（next_agent: implementer）→ 退 implementer
     │
    通过
     ▼
-L2 运行时验证 ──不通过──→ 写 FIX-QUEUE + L2-REPORT → 退 implementer
+L2 运行时验证 ──不通过──→ 写 FIX-QUEUE + L2-REPORT → 更新 SESSION-HANDOFF（next_agent: implementer）→ 退 implementer
     │
    通过
     ▼
-L3 系统级确认 ──不通过──→ 写 FIX-QUEUE + L3-REPORT → 退 implementer
+L3 系统级确认 ──不通过──→ 写 FIX-QUEUE + L3-REPORT → 更新 SESSION-HANDOFF（next_agent: implementer）→ 退 implementer
     │
    通过
     ▼
@@ -203,6 +203,12 @@ cp -r templates/work/ work/   # 重建空白 work 目录
 ```
 
 更新 `harness/PROGRESS.md` 和 `harness/feature_list.json`（当前功能 status → `completed`）。
+
+更新 `harness/SESSION-HANDOFF.md`，必须包含：
+- `## 下一个 Agent` 节：
+  - `- **角色**：planner`
+  - `- **任务摘要**：选择下一个 pending 功能，开始新方案规划`
+  - `- **技能文件**：agents/planner/SKILL.md`
 
 > 记录日志：`{"timestamp":"","agent":"reviewer","action":"archive","feature":"<id>","detail":"归档到 history/<id>-<name>/"}`
 

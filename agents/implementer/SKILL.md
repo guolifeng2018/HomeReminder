@@ -90,6 +90,12 @@ mkdir -p test/unit/<module-name>/
 
 ### 5. 交给 reviewer
 
+交接前更新 `harness/SESSION-HANDOFF.md`，必须包含：
+- `## 下一个 Agent` 节：
+  - `- **角色**：reviewer`
+  - `- **任务摘要**：验证 <功能ID> 交付物`
+  - `- **技能文件**：agents/reviewer/SKILL.md`
+
 交接前执行自检：
 
 - [ ] 构建通过
