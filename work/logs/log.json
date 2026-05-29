@@ -5,3 +5,5 @@
 {"timestamp":"2026-05-29T19:10:00Z","agent":"implementer","action":"unit_test_done","feature":"F-01","unit":"DateFormatter","module":"core/common","detail":"完成 test/unit/common/date_formatter_test.dart，29个测试全部通过"}
 {"timestamp":"2026-05-29T19:15:00Z","agent":"implementer","action":"unit_code_done","feature":"F-01","unit":"StringSanitizer","module":"core/common","detail":"完成输入清洗工具：trim/空白合并/控制字符移除/零宽字符移除/超长截断"}
 {"timestamp":"2026-05-29T19:20:00Z","agent":"implementer","action":"unit_test_done","feature":"F-01","unit":"StringSanitizer","module":"core/common","detail":"完成 test/unit/common/string_sanitizer_test.dart，27个测试全部通过"}
+{"timestamp":"2026-05-29T19:25:00Z","agent":"implementer","action":"unit_code_done","feature":"F-01","unit":"PermissionManager","module":"core/common","detail":"完成权限管理抽象接口+Stub：PermissionType/PermissionStatus枚举+PermissionManager抽象类+PermissionManagerStub"}
+{"timestamp":"2026-05-29T19:30:00Z","agent":"implementer","action":"unit_test_done","feature":"F-01","unit":"PermissionManager","module":"core/common","detail":"完成 test/unit/common/permission_manager_test.dart，10个测试全部通过"}
