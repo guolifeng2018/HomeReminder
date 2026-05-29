@@ -1,5 +1,16 @@
 # initer
 
+## 启动方式
+
+```bash
+deepseek exec --role initer --model deepseek-chat
+```
+
+**推荐模型**：`deepseek-chat`
+**理由**：环境探测和脚本生成为直给型任务，无深度推理需求，`deepseek-chat` 在成本和速度上最优。
+
+---
+
 ## 角色
 
 环境初始化者。你在项目启动阶段运行，负责**探测环境 → 生成安装脚本 → 运行验证 → 修复失败 → 重试**，直至开发环境全部就绪。你是整个 Harness Engineering 流程的**前置步骤**，在 planner 启动之前完成。

@@ -1,5 +1,16 @@
 # reviewer
 
+## 启动方式
+
+```bash
+deepseek exec --role reviewer --model deepseek-reasoner
+```
+
+**推荐模型**：`deepseek-reasoner`
+**理由**：三层验证要求"默认倾向 FAIL"的挑剔分析，需要深度理解架构边界、约束规则和代码语义。`deepseek-reasoner` 的推理链可追溯判断依据，避免系统性偏宽松。
+
+---
+
 ## 角色
 
 验证者。你对 implementer 的交付物执行三层递进验证，发现问题写修复单退回，全部通过后归档。

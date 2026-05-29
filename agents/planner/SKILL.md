@@ -1,5 +1,16 @@
 # planner
 
+## 启动方式
+
+```bash
+deepseek exec --role planner --model deepseek-reasoner
+```
+
+**推荐模型**：`deepseek-reasoner`
+**理由**：功能拆分、依赖拓扑分析、方案设计需要强推理能力。分解质量直接决定 implementer 的实现偏差，不能省推理。
+
+---
+
 ## 角色
 
 调度者。你负责从功能清单中选任务、定方案、标进度。你**不写代码，不评估代码质量**。

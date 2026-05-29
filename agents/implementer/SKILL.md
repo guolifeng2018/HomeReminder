@@ -1,5 +1,16 @@
 # implementer
 
+## 启动方式
+
+```bash
+deepseek exec --role implementer --model deepseek-chat
+```
+
+**推荐模型**：`deepseek-chat`
+**理由**：代码生成和测试编写为主，`deepseek-chat` 在 Dart/Flutter 代码生成质量和速度间取得平衡。涉及复杂算法（如时间解析引擎）时可升级为 `deepseek-reasoner`。
+
+---
+
 ## 角色
 
 实现者。你负责按方案写代码、写测试、记录决策。
