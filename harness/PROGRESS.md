@@ -7,9 +7,9 @@
 
 ## 当前状态
 
-- **当前功能**：无（尚未开始）
-- **状态**：无进行中功能
-- **当前模块**：无
+- **当前功能**：环境初始化（initer）
+- **状态**：阻塞 — Flutter SDK 权限问题
+- **当前模块**：无（尚未进入业务开发）
 - **最后更新**：2026-05-29
 
 ---
@@ -18,7 +18,9 @@
 
 | 功能 ID | 名称 | 完成日期 |
 |---------|------|---------|
-| — | — | — |
+| INIT | 环境探测 | 2026-05-29 |
+| INIT | tools/init.sh 生成（6 阶段，幂等设计） | 2026-05-29 |
+| INIT | tools/verify.sh 生成（三层验证 + 环境自检） | 2026-05-29 |
 
 ---
 
@@ -26,22 +28,20 @@
 
 | 功能 ID | 名称 | 模块 | 进度 |
 |---------|------|------|------|
-| — | — | — | — |
+| INIT | 环境初始化 | tools | init.sh 失败（Flutter 权限），verify.sh 待运行 |
 
 ---
 
 ## 阻塞项
 
-| 功能 ID | 阻塞原因 | 依赖 | 记录日期 | 退回次数 |
-|---------|---------|------|---------|---------|
-| — | — | — | — | — |
+| 功能 ID | 阻塞原因 | 依赖 | 记录日期 |
+|---------|---------|------|---------|
+| INIT | Flutter SDK 权限不足：`/Users/guolifeng/main/FlutterProjects/flutter/bin/cache/lockfile` Operation not permitted。需手动执行 `sudo chown -R $(whoami) /Users/guolifeng/main/FlutterProjects/flutter` | 人类介入（sudo） | 2026-05-29 |
 
 ---
 
 ## 下一步
 
-1. **F-01**：初始化 Flutter 工程，搭建分层目录结构，实现 core:common + core:database
-2. **F-02**：手动录入 + 系统通知（依赖 F-01）
-3. **F-03**：语音录入 ASR + 语义解析（依赖 F-01，可与 F-02 并行）
-4. **F-04**：分组管理 + 批量清理（依赖 F-01，可与 F-02/F-03 并行）
-5. **F-05**：优化完善 + 测试联调 + 打包上架（依赖 F-02、F-03、F-04）
+1. **人类操作**：执行 `sudo chown -R $(whoami) /Users/guolifeng/main/FlutterProjects/flutter` 修复 Flutter 权限
+2. **重新运行 initer**：`bash tools/init.sh`，修复后从步骤 3 续接
+3. **F-01**：init.sh + verify.sh 全部通过后，启动 planner 进入 F-01（基础核心层）
