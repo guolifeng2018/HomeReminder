@@ -2,8 +2,8 @@
 
 ## 模块概述
 
-- **模块名**：core/router
-- **职责**：基于 GoRouter 的应用路由管理，包含路由表定义、redirect 守卫（首次启动 → 模型下载拦截）和导航配置。
+- **模块名**：router（应用胶水层/组合根）
+- **职责**：基于 GoRouter 的应用路由管理，包含路由表定义、redirect 守卫（首次启动 → 模型下载拦截）和导航配置。路由模块位于应用组合根层级，可同时引用 core 和 feature 层。
 
 ---
 
@@ -35,3 +35,5 @@ router.dart          — barrel file
 | feature/group_manage | 分组管理、分组详情页面引用 |
 | feature/cleanup | 清理页面引用 |
 | feature/model_download | 模型下载页面引用 |
+
+> **分层说明**：router 属于应用胶水层（组合根），不处于 core 层或 feature 层。它可以合法引用 core 层和 feature 层，不违反 CONSTRAINTS.md §1 分层依赖规则。该约束仅禁止 core 层逆依赖 feature 层，组合根不受此限制。

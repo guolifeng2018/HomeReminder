@@ -39,6 +39,12 @@
 | core/reminder | 时间解析、定时调度、推迟重试逻辑 | 未开始 |
 | core/notification | 系统原生通知推送、到期提醒 | 未开始 |
 
+### 应用胶水层（组合根）
+
+| 模块 | 职责 | 状态 |
+|------|------|------|
+| router | 基于 GoRouter 的应用路由管理、redirect 守卫 | F-04 修复中 |
+
 ### 功能页面层（UI 交互）
 
 | 模块 | 职责 | 状态 |
@@ -55,6 +61,8 @@
 <!-- 模块间的依赖规则，箭头表示"可依赖" -->
 
 ```
+router ───────────────→ core/providers, feature/* (组合根，可引用所有层)
+
 feature/home ─────────→ core/database, core/reminder
 feature/voice_input ──→ core/voice, core/database, core/reminder
 feature/group_manage ─→ core/database
@@ -67,7 +75,7 @@ core/database ────────→ core/common
 core/common ──────────→ 无依赖
 ```
 
-**规则**：feature 层可依赖 core 层，core 层可依赖同层或下层。依赖方向不可逆，下层禁止 import 上层模块。
+**规则**：feature 层可依赖 core 层，core 层可依赖同层或下层。依赖方向不可逆，下层禁止 import 上层模块。router 属于应用胶水层（组合根），可合法引用 core 和 feature 层。
 
 ---
 

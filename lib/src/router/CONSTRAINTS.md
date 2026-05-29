@@ -3,7 +3,7 @@
 ## 路由约束
 
 1. **必须**使用 go_router 默认 Material 转场动画，禁止自定义 PageTransitionsBuilder
-2. **禁止**在路由模块中引入除 core/providers 外的 core 层模块
+2. **允许**引入 core 层和 feature 层模块（路由模块位于应用组合根，不受分层依赖限制）
 3. **必须**保证 `/download` 不被 redirect 守卫拦截（避免无限重定向循环）
 
 ## 守卫约束

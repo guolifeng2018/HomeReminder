@@ -7,10 +7,10 @@
 
 ## 当前状态
 
-- **当前功能**：F-05（core/reminder 提醒核心）
-- **状态**：pending — F-04 已实现完成，等待 reviewer 验证后进入下一功能
-- **当前模块**：core/reminder
-- **最后更新**：2026-05-29（implementer 完成 F-04，交 reviewer）
+- **当前功能**：F-04（路由系统）
+- **状态**：implementer 修复完成，待 reviewer 重新审查
+- **当前模块**：router（已从 core/router 迁移至 lib/src/router/，应用胶水层）
+- **最后更新**：2026-05-29（implementer 修复 L1 架构违规：core/router → lib/src/router）
 
 ---
 
@@ -23,7 +23,6 @@
 | F-01 | core/common 通用模块 | 2026-05-29 |
 | F-02 | core/database 数据库模块 | 2026-05-29 |
 | F-03 | Riverpod 状态管理 + 依赖注入 | 2026-05-29 |
-| F-04 | 路由系统（GoRouter） | 2026-05-29 |
 
 ---
 
@@ -31,7 +30,7 @@
 
 | 功能 ID | 名称 | 状态 |
 |---------|------|------|
-| F-04 | 路由系统 | reviewer 审查中 |
+| F-04 | 路由系统 | implementer 修复完成（core/router → lib/src/router，待 reviewer 重新审查） |
 
 ---
 
@@ -49,12 +48,12 @@
 | Dart SDK | 3.6.0 | OK |
 | Git | 2.18.0 | OK |
 | Xcode CLI | /Library/Developer/CommandLineTools | OK |
-| Android SDK | 35.0.0 | ⚠️ 需接受 licenses（`flutter doctor --android-licenses`），不影响 iOS |
-| Xcode (完整) | 未安装 | ⚠️ 仅 CLI tools，完整 iOS/macOS 构建需安装 Xcode |
+| Android SDK | 35.0.0 | ⚠️ 需接受 licenses，不影响 iOS |
+| Xcode (完整) | 未安装 | ⚠️ 仅 CLI tools |
 
 ---
 
 ## 下一步
 
-1. reviewer agent 对 F-04 执行 L1/L2/L3 三层验证
-2. F-04 审核通过后归档 history/F-04-router/，进入 F-05（core/reminder）
+1. reviewer 重新审查 F-04（L1 + L2 + L3）
+2. F-04 通过后进入 F-05（core/reminder）

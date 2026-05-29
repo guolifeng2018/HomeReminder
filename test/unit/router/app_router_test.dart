@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:home_reminder/src/core/router/router.dart';
+import 'package:home_reminder/src/router/router.dart';
 import 'package:home_reminder/src/core/providers/providers.dart';
 
 /// 辅助函数：构建已配置 ProviderScope + MaterialApp.router 的 widget。

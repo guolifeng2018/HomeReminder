@@ -13,3 +13,16 @@
 {"timestamp":"2026-05-29T14:50:00Z","agent":"implementer","action":"unit_code_done","feature":"F-02","unit":"DB-04","module":"core/database","detail":"完成 barrel file + EXPLAIN QUERY PLAN 索引验证 + 事务回滚测试"}
 {"timestamp":"2026-05-29T14:55:00Z","agent":"implementer","action":"unit_test_done","feature":"F-02","unit":"DB-04","module":"core/database","detail":"完成 test/unit/database/database_schema_test.dart（6 tests 全部通过）"}
 {"timestamp":"2026-05-29T15:00:00Z","agent":"implementer","action":"handoff_to_reviewer","feature":"F-02","detail":"全部单元完成，交给 reviewer"}
+{"timestamp":"2026-05-29T15:10:00Z","agent":"reviewer","action":"verify","feature":"F-04","layer":"L1","result":"fail","detail":"core/router import 5 个 feature/* 模块，违反 CONSTRAINTS.md §1 分层依赖规则，见 work/reviewer/FIX-QUEUE.md 问题 1"}
+{"timestamp":"2026-05-29T15:20:00Z","agent":"implementer","action":"fix","feature":"F-04","detail":"开始修复 L1 架构违规：mv lib/src/core/router/ → lib/src/router/（应用胶水层）"}
+{"timestamp":"2026-05-29T15:21:00Z","agent":"implementer","action":"fix","feature":"F-04","file":"lib/main.dart","detail":"import 'src/core/router/router.dart' → import 'src/router/router.dart'"}
+{"timestamp":"2026-05-29T15:21:00Z","agent":"implementer","action":"fix","feature":"F-04","file":"test/unit/router/app_router_test.dart","detail":"import 路径更新：core/router → router"}
+{"timestamp":"2026-05-29T15:22:00Z","agent":"implementer","action":"fix","feature":"F-04","file":"lib/src/router/code/app_router.dart","detail":"相对 import 从 ../../../ 调整为 ../../（适配新路径深度）"}
+{"timestamp":"2026-05-29T15:22:00Z","agent":"implementer","action":"fix","feature":"F-04","file":"lib/src/router/router.dart","detail":"barrel 注释更新：core/router → router（应用胶水层）"}
+{"timestamp":"2026-05-29T15:23:00Z","agent":"implementer","action":"fix","feature":"F-04","file":"lib/src/router/ARCHITECTURE.md","detail":"模块名 core/router → router，新增分层说明（组合根可引用 core + feature）"}
+{"timestamp":"2026-05-29T15:23:00Z","agent":"implementer","action":"fix","feature":"F-04","file":"lib/src/router/CONSTRAINTS.md","detail":"约束 #2 更新：禁止引入其他 core → 允许引入 core 和 feature"}
+{"timestamp":"2026-05-29T15:24:00Z","agent":"implementer","action":"fix","feature":"F-04","file":"harness/ARCHITECTURE.md","detail":"新增「应用胶水层（组合根）」section，移除 core/router，更新依赖方向图含 router"}
+{"timestamp":"2026-05-29T15:24:00Z","agent":"implementer","action":"fix","feature":"F-04","file":"lib/src/router/PROGRESS.md","detail":"模块名 core/router → router（应用胶水层）"}
+{"timestamp":"2026-05-29T15:25:00Z","agent":"implementer","action":"verify","feature":"F-04","command":"flutter analyze","result":"No issues found"}
+{"timestamp":"2026-05-29T15:25:00Z","agent":"implementer","action":"verify","feature":"F-04","command":"flutter test test/unit/router/","result":"14/14 PASS"}
+{"timestamp":"2026-05-29T15:26:00Z","agent":"implementer","action":"handoff_to_reviewer","feature":"F-04","detail":"修复完成：core/router → lib/src/router/，flutter analyze 零 issue，14/14 PASS，待 reviewer L1+L2+L3 重新审查"}
