@@ -23,7 +23,7 @@
 | 5 | DateFormatter | 自然语言口语时间解析 | done |
 | 6 | StringSanitizer | 输入清洗 | done |
 | 7 | PermissionManager | 抽象类 + Stub 实现 | done |
-| 8 | Barrel file | common.dart 统一导出 | pending |
+| 8 | Barrel file | common.dart 统一导出 | done |
 | 9 | 单元测试 | 全部模型/工具/枚举测试 | pending |
 | 10 | 最终验证 | flutter analyze + flutter test | pending |
 
