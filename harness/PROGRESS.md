@@ -4,10 +4,10 @@
 
 ## 当前状态
 
-- **当前功能**：F-09（模型下载管理）
+- **当前功能**：F-04（路由系统）
 - **状态**：待 planner 制定方案
-- **上一功能**：F-08（implementer 完成，待 reviewer 验证）
-- **最后更新**：2026-05-30（implementer 完成 F-08 全部 7 个单元）
+- **上一功能**：F-03（Riverpod 状态管理 + 依赖注入，已完成并归档）
+- **最后更新**：2026-05-30（状态重置，从 F-04 重新开始）
 
 ---
 
@@ -20,11 +20,6 @@
 | F-01 | core/common 通用模块 | 2026-05-29 |
 | F-02 | core/database 数据库模块 | 2026-05-29 |
 | F-03 | Riverpod 状态管理 + 依赖注入 | 2026-05-29 |
-| F-04 | 路由系统 | 2026-05-29 |
-| F-05 | core/reminder 提醒核心 | 2026-05-30 |
-| F-06 | core/notification 通知模块 | 2026-05-30 |
-| F-07 | feature/home 首页 | 2026-05-30 |
-| F-08 | 手动录入流程 | 2026-05-30 |
 
 ---
 
@@ -40,7 +35,20 @@
 
 | 功能 ID | 名称 | 优先级 |
 |---------|------|--------|
+| F-04 | 路由系统 | P0 |
+| F-05 | core/reminder 提醒核心 | P0 |
+| F-06 | core/notification 通知模块 | P0 |
+| F-07 | feature/home 首页 | P0 |
+| F-08 | 手动录入流程 | P0 |
 | F-09 | 模型下载管理 | P0 |
-| F-10 | feature/voice_input 语音录入 | P0 |
-| F-11 | feature/group_manage 分组管理 | P0 |
-| F-12 | feature/cleanup 批量清理 | P0 |
+| F-10 | core/voice 录音模块 | P0 |
+| F-11 | core/voice ASR 离线识别 | P0 |
+| F-12 | core/voice 语义解析 | P0 |
+| F-13 | feature/voice_input 语音录入页 | P0 |
+| F-14 | feature/group_manage 分组管理 | P0 |
+| F-15 | feature/cleanup 批量清理 | P1 |
+| F-16 | UI 打磨 | P1 |
+| F-17 | Android 平台适配 | P1 |
+| F-18 | iOS 平台适配 | P1 |
+| F-19 | 端到端测试 + 性能优化 | P1 |
+| F-20 | 打包上架 | P1 |

@@ -59,10 +59,10 @@
     "verification": "flutter analyze 零 warning && flutter test test/unit/ 中路由测试全部通过（覆盖: 6 条路由均正确解析到对应 Page, 路由守卫: isFirstLaunch+modelNotReady→redirect 到下载页, isFirstLaunch+modelReady→放行, go/push/replace 导航栈深度正确, 深层链接路径参数解析 /group/3→id='3'）",
     "priority": "P0",
     "depends_on": ["F-03"],
-    "status": "completed",
+    "status": "pending",
     "module": "router",
-    "evidence": "reviewer round 2: L1+L2+L3 全部 PASS，flutter analyze 零 issue，flutter test 14/14 PASS，GoRouter 7 路由 + redirect 守卫，路由位于应用胶水层（lib/src/router/），已归档 history/F-04-router/",
-    "completed_date": "2026-05-29"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-05",
@@ -72,10 +72,10 @@
     "verification": "flutter analyze lib/src/core/reminder/ 零 warning && flutter test test/unit/reminder/ 全部通过（覆盖: ≥20 条口语时间解析用例含「下周末→下周六」「月底→本月最后一天」「隔天→后天」歧义处理, daily/weekly/monthly 重复调度 nextTriggerTime 计算正确, 推迟 1h/3h/明天 DateTime 偏移精确, 重试退避间隔 5/15/45 min 计算, ReminderService 通过 mock repository 验证 CRUD 调用路径, 到期提醒 overdue 自动标记逻辑, 已完成/dismissed 提醒不重新调度） && 无对 feature 层 import",
     "priority": "P0",
     "depends_on": ["F-02", "F-03"],
-    "status": "completed",
+    "status": "pending",
     "module": "core/reminder",
-    "evidence": "reviewer round 4: L1+L2+L3 全部 PASS，flutter analyze 零 error 零 warning（reminder 模块），全量 275 tests PASS，已归档 history/F-05-core-reminder/",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-06",
@@ -85,10 +85,10 @@
     "verification": "flutter analyze lib/src/core/notification/ 零 warning && flutter test test/unit/notification/ 全部通过（覆盖: Android channel 创建参数 id/name/importance 正确, iOS 权限请求三项 option, 通知模板渲染含分组名+标题+内容, Badge 计数逻辑: 0/N/max 场景分别验证, 通知点击 payload 反序列化→reminder_id 提取正确, NotificationService.onReminderDue 监听触发→通知已调度, 更新提醒后旧通知取消再注册新通知） && flutter test test/integration/ 中通知触发集成测试通过",
     "priority": "P0",
     "depends_on": ["F-02", "F-05"],
-    "status": "completed",
+    "status": "pending",
     "module": "core/notification",
-    "evidence": "L1/L2/L3 第二轮全部 PASS，52 tests，四维度评分全 A，_buildBodyText 截断修复完成",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-07",
@@ -98,10 +98,10 @@
     "verification": "flutter analyze lib/src/feature/home/ 零 warning && flutter test test/unit/ 中 home widget 测试全部通过 && flutter test test/integration/ 中首页导航集成测试通过（覆盖: 分组卡片渲染+待办计数准确+完成率计算正确, 空状态/有数据/加载中三种 UI 状态分别验证, 下拉刷新触发数据重载+RefreshIndicator 可见, FAB 展开→两项可点击→分别跳转 /add 和 /voice, Tab 切换筛选列表正确过滤: pending/overdue/completed 三态, 点击列表项跳转编辑页, 平板双列布局切换断点验证）",
     "priority": "P0",
     "depends_on": ["F-02", "F-03", "F-05"],
-    "status": "completed",
+    "status": "pending",
     "module": "feature/home",
-    "evidence": "reviewer L1/L2/L3 全部 PASS：flutter analyze 模块零问题，63 new unit tests PASS，390 total tests PASS，四维度评分 正确性A 架构合规A 测试覆盖B 代码质量A，10 个工作单元全部 done",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-08",
@@ -111,10 +111,10 @@
     "verification": "flutter analyze lib/src/feature/home/ 零 warning && flutter test test/unit/ 中表单 widget 测试全部通过 && flutter test test/integration/ 中录入集成测试通过（覆盖: 标题为空→提交按钮 disabled+errorText, 过去时间→提交时 SnackBar 提示'时间不能是过去', 正常提交→Navigator.pop+首页列表新增一条, 编辑预填充: 标题/内容/分组/时间/频率 5 字段完全一致, 编辑保存后→列表项更新, 滑动删除→确认弹窗→确认删除列表-1, 滑动删除→确认弹窗→取消列表不变, 重复提醒选项保存后再次编辑仍正确显示）",
     "priority": "P0",
     "depends_on": ["F-02", "F-05", "F-07"],
-    "status": "completed",
+    "status": "pending",
     "module": "feature/home",
-    "evidence": "flutter analyze lib/src/feature/home/ 零 warning；97 unit tests PASS；7 工作单元全部 done；ReminderFormPage 完整表单+验证+新建/编辑提交+删除 Dismissible+频率 SegmentedButton；barrel file 已更新",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-09",

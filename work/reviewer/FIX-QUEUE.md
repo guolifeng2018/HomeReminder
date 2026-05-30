@@ -1,26 +1,16 @@
-# FIX-QUEUE — F-06（core/notification）
+# 修复队列
 
-<!-- reviewer L1 发现问题，implementer 逐条修复后交还 reviewer。 -->
+<!-- 由 reviewer 填写，implementer 读取并逐条修复。 -->
+<!-- 模板：每条问题复制以下 block -->
 
----
+<!--
+## 问题 <序号>
 
-## 问题 1 ✅ 已解决（round 2）
-
-- **验证层**：L1
-- **评分维度**：正确性
-- **位置**：`lib/src/core/notification/code/notification_service_impl.dart:_buildBodyText`
-- **状态**：**已修复**
-- **修复摘要**：implementer 添加了 `_maxBodyLength = 200` 常量和截断逻辑，body > 200 字符时截断至 199 + '…'。新增 4 个测试覆盖全场景。
-- **验证结果**：L1 flutter analyze 零 error/warning（F-06 范围），L2 52/52 PASS，含 4 个新增截断测试。
-
----
-
-## 附注 A ✅ 已处理
-
-- `analysis_options.yaml` 排除 `history/` — implementer 已添加。当前全量 `flutter analyze` 仅有 1 info（F-05 范围），history/ 归档代码不再干扰。
-
----
-
-## 附注 B（非阻塞）
-
-- `flutter_app_badger` 版本当前为 `^1.5.0`，PLAN.md 指定 `^2.1.0`。当前功能正常（BadgeManager 13 tests PASS），版本差异不阻塞。建议在后续功能中统一升级依赖。
+- **验证层**：L1 / L2 / L3
+- **评分维度**：<正确性 / 架构合规 / 测试覆盖 / 代码质量>（L2 时必填）
+- **位置**：<文件路径:行号>
+- **实际结果**：<当前代码 / 测试输出是什么>
+- **根因**：<为什么这是错误的>
+- **期望行为**：<正确的结果应该是什么>
+- **修复指引**：<具体怎么改，包含文件路径和方向>
+-->
