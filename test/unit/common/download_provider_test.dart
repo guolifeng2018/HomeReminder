@@ -4,9 +4,12 @@
 /// modelListProvider 的基本行为。
 library;
 
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:home_reminder/src/core/common/code/download/download_providers.dart';
+import 'package:home_reminder/src/core/common/code/download/download_state.dart';
 
 void main() {
   test('downloadServiceProvider 可解析', () {
@@ -29,30 +32,53 @@ void main() {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    // 确保服务初始化
-    container.read(downloadServiceProvider);
+    // 先订阅再触发事件，确保 stream 事件被捕获
+    final completer = Completer<DownloadProgress>();
+    final sub = container.listen(
+      modelDownloadProgressProvider('sensevoice-tiny-v1'),
+      (prev, next) {
+        if (next.hasValue && !completer.isCompleted) {
+          completer.complete(next.value);
+        }
+      },
+    );
 
-    // 等待 stream 首次发射
-    await Future.delayed(Duration.zero);
+    // 重新触发 initialize 以向已激活的 stream 订阅者推送事件
+    final service = container.read(downloadServiceProvider);
+    service.initialize();
 
-    // 订阅进度
-    final asyncProgress =
-        container.read(modelDownloadProgressProvider('sensevoice-tiny-v1'));
-    expect(asyncProgress, isNotNull);
-    // AsyncValue 可能仍在 loading，使用 requireValue 或检查状态
-    expect(asyncProgress.hasValue || asyncProgress.isLoading, isTrue);
+    final progress = await completer.future;
+    sub.close();
+
+    expect(progress, isNotNull);
+    expect(progress.modelId, 'sensevoice-tiny-v1');
+    expect(progress.state, DownloadState.idle);
   });
 
   test('allModelsProgressProvider 返回非空 Map', () async {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
-    container.read(downloadServiceProvider);
+    // 先订阅再触发事件
+    final completer = Completer<Map<String, DownloadProgress>>();
+    final sub = container.listen(
+      allModelsProgressProvider,
+      (prev, next) {
+        if (next.hasValue && !completer.isCompleted) {
+          completer.complete(next.value);
+        }
+      },
+    );
 
-    await Future.delayed(Duration.zero);
+    // 重新触发 initialize 以推送事件
+    final service = container.read(downloadServiceProvider);
+    service.initialize();
 
-    final asyncProgress = container.read(allModelsProgressProvider);
-    expect(asyncProgress, isNotNull);
-    expect(asyncProgress.hasValue || asyncProgress.isLoading, isTrue);
+    final allProgress = await completer.future;
+    sub.close();
+
+    expect(allProgress, isNotNull);
+    expect(allProgress, isA<Map<String, DownloadProgress>>());
+    expect(allProgress.length, 2);
   });
 }

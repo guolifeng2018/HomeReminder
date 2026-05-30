@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-- **状态**：核心功能 F-00 ~ F-09 已完成，F-10 ~ F-15 待开发
-- **最后更新**：2026-05-30（F-09 代码完成，交 reviewer）
+- **状态**：F-00 ~ F-08 已完成；F-09 `pending_review`，implementer 修复完成，待 reviewer 进行 L2 round 4
+- **最后更新**：2026-05-30（implementer 修复 2 项测试基础设施问题，16/16 tests pass + flutter analyze 零 issue）
 
 ---
 
@@ -23,7 +23,14 @@
 | F-06 | core/notification 通知模块 | 2026-05-30 | 已归档 history/F-06-notification/ |
 | F-07 | feature/home 首页 | 2026-05-30 | 已归档 history/F-07-home/ |
 | F-08 | 手动录入流程 | 2026-05-30 | 代码在 F-07 模块中（reminder_form_page.dart, 319 行），未独立归档 |
-| F-09 | 模型下载管理 | 2026-05-30 | 8 文件 + UI 页完成，编码完成待 reviewer 验证 |
+
+---
+
+## 在途（待验证）
+
+| 功能 ID | 名称 | status | 验证进度 | 备注 |
+|---------|------|--------|---------|------|
+| F-09 | 模型下载管理 | pending_review | L1 PASS / L2 待 reviewer round 4 / L3 未执行 | implementer 修复完成，16/16 tests pass |
 
 ---
 
@@ -54,6 +61,6 @@
 
 ## 验证状态
 
-- **静态分析**：`flutter analyze` 暂时无法运行（Flutter SDK 权限问题）
-- **单元测试**：`flutter test` 暂时无法运行（同上）
-- **F-09 代码审查**：8 个 dart 核心文件 + UI 页，待 reviewer 三层验证
+- **F-09 L1**：PASS（round 3，flutter analyze 零 issue）
+- **F-09 L2**：待 reviewer round 4（implementer 修复完成，16/16 tests pass）
+- **F-09 L3**：未执行
