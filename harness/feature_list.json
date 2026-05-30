@@ -99,10 +99,10 @@
       "F-02",
       "F-05"
     ],
-    "status": "pending",
+    "status": "completed",
     "module": "core/notification",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "flutter analyze 零 warning，52 个单元测试全部 PASS，notification 模块已实现",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-07",
