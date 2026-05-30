@@ -1,0 +1,16 @@
+flutter test test/unit/
+Result: 478/478 All tests passed!
+
+F-09 related (54 tests):
+- test/unit/common/model_registry_test.dart: 12 PASS
+- test/unit/common/downloader_test.dart: 7 PASS
+- test/unit/common/sha256_validator_test.dart: 7 PASS
+- test/unit/common/storage_checker_test.dart: 3 PASS
+- test/unit/common/download_state_test.dart: 10 PASS
+- test/unit/common/model_download_service_test.dart: 8 PASS
+- test/unit/common/download_provider_test.dart: 4 PASS
+- test/unit/common/download_ui_test.dart: 3 PASS
+
+Other modules: 424 tests PASS (home, database, common, reminder, notification, router)
+
+Full output available in prior tool call.

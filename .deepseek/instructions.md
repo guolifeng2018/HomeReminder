@@ -140,7 +140,7 @@ flutter analyze && flutter test
 
 - 若 SESSION-HANDOFF 明确指定角色 → 使用该角色
 - 若 SESSION-HANDOFF 不存在或指向已完成的循环 → 从 `planner` 开始新功能（扫描 `feature_list.json` 中第一个 `pending` 功能）
-- 若 reviewer 刚完成归档 → SESSION-HANDOFF 已指向 planner → 开始下一功能循环
+- 若 reviewer 刚完成归档 → SESSION-HANDOFF 已指向 planner → **须先通过步骤 7b 归档验证** → 再开始下一功能循环
 
 **步骤 2 — 更新交接文件**
 
@@ -167,6 +167,7 @@ agent_open(
 - **`fork_context` 必须为 `false`**：子 agent 与会话之间**不共享**编排者上下文；子 agent 通过 prompt + 读文件获取信息
 - **`type`** 使用 `planner` / `implementer` / `reviewer`，不要用 `general`
 - prompt 必须自包含，至少包含：角色、SKILL 路径、feature-id、当前任务摘要、`harness/SESSION-HANDOFF.md` 关键字段
+- **reviewer 专用 prompt 追加**：「L3 PASS 后必须实际执行 `mv` 归档并通过归档验证（见 SKILL 归档节步骤 1~2），验证通过前禁止写 archive 日志、禁止改 feature_list 为 completed、禁止 SESSION-HANDOFF 指向 planner」
 - 在 `work/logs/log.json` 中追加一行编排日志：`{"timestamp":"<ISO 8601>","agent":"orchestrator","action":"agent_open","role":"<role>","feature":"<id>","detail":"启动子 agent"}`
 - `agent_open` 立即返回 `agent_id`，子 agent 在后台异步运行
 
@@ -190,7 +191,8 @@ agent_eval(agent_id: "<id>", block: true, timeout_ms: 1800000)
    - `harness/SESSION-HANDOFF.md` — 下一个角色是否已更新
    - `work/logs/log.json` — 该 role 最后一条业务日志
    - 角色产出目录（`work/planner/`、`work/implementer/`、`work/reviewer/`）
-4. **若文件显示子 agent 实际已完成** → 记 `agent_close` 日志，当作 success，跳到步骤 7
+   - **reviewer 专用**：`history/<feature-id>-*/reviewer/COMPLETION.md` 是否存在（见下方「归档验证」）
+4. **若文件显示子 agent 实际已完成** → 对 reviewer 额外执行「归档验证」；验证通过才记 success 并跳到步骤 7，否则按未完成处理
 5. **若未完成** → 同 role 重开（`fork_context: false`，缩小 prompt，只写未完成部分）
 6. **同 role 连续 eval 失败 > 2 次** → **阻塞**，输出阻塞报告，停止循环
 
@@ -206,6 +208,30 @@ agent_close(agent_id: "<id>")
 
 重新读取 `harness/SESSION-HANDOFF.md`，获取子 agent 更新后的「下一个 Agent」信息。
 
+**步骤 7b — 归档验证（reviewer 关闭后强制执行）**
+
+当刚关闭的子 agent 为 **reviewer** 时，在步骤 8 之前必须验证物理归档已完成。**不得**仅凭 `log.json` 中的 `action: archive` 或 `feature_list.json` 的 `completed` 判定归档成功。
+
+从 `work/logs/log.json` 或 SESSION-HANDOFF 获取刚完成功能的 `<feature-id>`（如 `F-09`），执行：
+
+```bash
+FEATURE_ID="F-09"   # 替换为实际 id
+
+# 1. history 目录存在且含 COMPLETION
+test -n "$(find history -maxdepth 1 -type d -name "${FEATURE_ID}-*" | head -1)"
+ARCHIVE_DIR="$(find history -maxdepth 1 -type d -name "${FEATURE_ID}-*" | head -1)"
+test -f "${ARCHIVE_DIR}/reviewer/COMPLETION.md"
+grep -q "验证通过" "${ARCHIVE_DIR}/reviewer/COMPLETION.md"
+
+# 2. work/ 已重建为模板（不含上一功能 COMPLETION 正文）
+! grep -q "验证通过" work/reviewer/COMPLETION.md 2>/dev/null || test ! -f work/reviewer/COMPLETION.md
+```
+
+| 验证结果 | 动作 |
+|---------|------|
+| 全部通过 | 继续步骤 8，允许进入 planner |
+| 任一失败 | **阻塞**：禁止启动 planner；输出归档异常报告（含 feature-id、缺失项：`history/` 或 `work/` 重建）；等待人类介入。在 `work/logs/log.json` 追加 `archive_verify_fail` 日志 |
+
 **步骤 8 — 判定循环方向**
 
 根据子 agent 的输出，确定下一步：
@@ -214,7 +240,8 @@ agent_close(agent_id: "<id>")
 |-----------|------|-------------|------|
 | planner | 完成 BREAKDOWN + PLAN | implementer | 正常流程 |
 | implementer | 全部单元 done | reviewer | 正常流程 |
-| reviewer | L1/L2/L3 全部 PASS | （reviewer 自动归档，然后）planner | 功能完成，进入下一功能循环 |
+| reviewer | L1/L2/L3 PASS **且步骤 7b 归档验证通过** | planner | 功能完成，进入下一功能循环 |
+| reviewer | L1/L2/L3 PASS 但步骤 7b 归档验证失败 | **阻塞** | 禁止启动 planner，输出归档异常报告，等待人类介入 |
 | reviewer | 任一层 FAIL（FIX-QUEUE 非空） | implementer | 修复循环 |
 | reviewer | 同功能退回 > 3 次 | **阻塞** | 停止循环，输出阻塞报告，等待人工介入 |
 | 任意 | 子 agent 失败（status: failed）或 eval 超时 | 执行 eval 失败/超时恢复；同 role 重试 ≤2 次，否则阻塞 |

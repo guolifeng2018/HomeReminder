@@ -103,8 +103,8 @@ mkdir -p test/unit/<module-name>/
 
 交接前更新以下全局进度文件：
 
-1. **`harness/PROGRESS.md`**：更新当前功能、已完成列表、进行中状态、下一步
-2. **`harness/feature_list.json`**：将已完成功能的 `status` 改为 `"completed"`，补 `evidence` 和 `completed_date`
+1. **`harness/PROGRESS.md`**：更新当前功能为「编码完成，待 reviewer 验证」，**不要**写入已完成列表
+2. **`harness/feature_list.json`**：将当前功能的 `status` 改为 `"pending_review"`，补 `evidence`（编码交付摘要）；**不要**填 `completed_date`，**不要**改为 `"completed"`
 3. **`harness/SESSION-HANDOFF.md`**，必须包含：
    - `## 下一个 Agent` 节：
      - `- **角色**：reviewer`
@@ -117,8 +117,8 @@ mkdir -p test/unit/<module-name>/
 - [ ] 全部测试通过
 - [ ] 无调试代码残留（`console.log`、`debugger`、`TODO` 注释）
 - [ ] `src/<module>/PROGRESS.md` 全部单元 `done`
-- [ ] `harness/PROGRESS.md` 已更新（当前功能、已完成列表、下一步）
-- [ ] `harness/feature_list.json` 已更新（功能 status → completed，补 evidence 和 completed_date）
+- [ ] `harness/PROGRESS.md` 已更新（当前功能、待验证状态、下一步）
+- [ ] `harness/feature_list.json` 已更新（功能 status → `pending_review`，补 evidence，completed_date 留 null）
 - [ ] 所有日志已追加
 
 > 记录日志：`{"timestamp":"","agent":"implementer","action":"handoff_to_reviewer","feature":"<id>","detail":"全部单元完成，交给 reviewer"}`
@@ -183,7 +183,7 @@ mkdir -p test/unit/<module-name>/
 
 ### 4. 交还 reviewer
 
-执行交接前自检，然后交还 reviewer。
+执行交接前自检，然后交还 reviewer。`feature_list.json` 保持 `"pending_review"`（若被误改回 `in_progress` 则改回 `pending_review`）。
 
 > 记录日志：`{"timestamp":"","agent":"implementer","action":"handoff_to_reviewer","feature":"<id>","detail":"修复完成，交还 reviewer 进行下一轮验证"}`
 
@@ -236,6 +236,7 @@ mkdir -p test/unit/<module-name>/
 ## 约束
 
 - **禁止评估代码质量**：那是 reviewer 的活
+- **禁止标记 completed**：`feature_list.json` 的 `"completed"` 和 `completed_date` 只能由 reviewer 归档时写入；implementer 最高只能标记 `"pending_review"`
 - **禁止更新计划**：那是 planner 的活
 - **可写范围**：仅允许修改 `src/<module>/`、`test/`、`work/implementer/`、`work/logs/log.json`、`harness/decisions/`、`harness/PROGRESS.md`、`harness/feature_list.json`。其余文件全部只读
 - **WIP=1**：一次只做一个工作单元

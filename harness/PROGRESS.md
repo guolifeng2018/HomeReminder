@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-- **状态**：F-00 ~ F-08 已完成；F-09 `pending_review`，implementer 修复完成，待 reviewer 进行 L2 round 4
-- **最后更新**：2026-05-30（implementer 修复 2 项测试基础设施问题，16/16 tests pass + flutter analyze 零 issue）
+- **状态**：F-00 ~ F-07 已完成；F-08 ~ F-20 已重置为未开始，待重跑
+- **最后更新**：2026-05-30（人工重置 F-08 起全部 feature 为 pending）
 
 ---
 
@@ -22,45 +22,36 @@
 | F-05 | core/reminder 提醒核心 | 2026-05-30 | 已归档 history/F-05-core-reminder/ |
 | F-06 | core/notification 通知模块 | 2026-05-30 | 已归档 history/F-06-notification/ |
 | F-07 | feature/home 首页 | 2026-05-30 | 已归档 history/F-07-home/ |
-| F-08 | 手动录入流程 | 2026-05-30 | 代码在 F-07 模块中（reminder_form_page.dart, 319 行），未独立归档 |
-
----
-
-## 在途（待验证）
-
-| 功能 ID | 名称 | status | 验证进度 | 备注 |
-|---------|------|--------|---------|------|
-| F-09 | 模型下载管理 | pending_review | L1 PASS / L2 待 reviewer round 4 / L3 未执行 | implementer 修复完成，16/16 tests pass |
 
 ---
 
 ## 待开发（P0）
 
-| 功能 ID | 名称 | 优先级 |
-|---------|------|--------|
-| F-10 | core/voice 录音模块 | P0 |
-| F-11 | core/voice ASR 离线识别 | P0 |
-| F-12 | core/voice 语义解析 | P0 |
-| F-13 | feature/voice_input 语音录入页 | P0 |
-| F-14 | feature/group_manage 分组管理 | P1 |
-| F-15 | feature/cleanup 批量清理 | P1 |
+| 功能 ID | 名称 | 优先级 | status |
+|---------|------|--------|--------|
+| F-08 | 手动录入流程 | P0 | pending |
+| F-09 | 模型下载管理 | P0 | pending |
+| F-10 | core/voice 录音模块 | P0 | pending |
+| F-11 | core/voice ASR 离线识别 | P0 | pending |
+| F-12 | core/voice 语义解析 | P0 | pending |
+| F-13 | feature/voice_input 语音录入页 | P0 | pending |
+| F-14 | feature/group_manage 分组管理 | P1 | pending |
+| F-15 | feature/cleanup 批量清理 | P1 | pending |
 
 ---
 
 ## 待开发（P1）
 
-| 功能 ID | 名称 | 优先级 |
-|---------|------|--------|
-| F-16 | UI 打磨 | P1 |
-| F-17 | Android 平台适配 | P1 |
-| F-18 | iOS 平台适配 | P1 |
-| F-19 | 端到端测试 + 性能优化 | P1 |
-| F-20 | 打包上架 | P1 |
+| 功能 ID | 名称 | 优先级 | status |
+|---------|------|--------|--------|
+| F-16 | UI 打磨 | P1 | pending |
+| F-17 | Android 平台适配 | P1 | pending |
+| F-18 | iOS 平台适配 | P1 | pending |
+| F-19 | 端到端测试 + 性能优化 | P1 | pending |
+| F-20 | 打包上架 | P1 | pending |
 
 ---
 
 ## 验证状态
 
-- **F-09 L1**：PASS（round 3，flutter analyze 零 issue）
-- **F-09 L2**：待 reviewer round 4（implementer 修复完成，16/16 tests pass）
-- **F-09 L3**：未执行
+- **下一功能**：F-08（手动录入流程），待 planner 启动

@@ -133,10 +133,10 @@
       "F-05",
       "F-07"
     ],
-    "status": "completed",
+    "status": "pending",
     "module": "feature/home",
-    "evidence": "97 个 home 测试全部 PASS，手动录入表单完整（标题/内容/分组/时间/频率+验证+编辑+删除）",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-09",
@@ -148,10 +148,10 @@
     "depends_on": [
       "F-01"
     ],
-    "status": "completed",
+    "status": "pending",
     "module": "core/common",
-    "evidence": "8 个 dart 文件（model_registry / downloader / sha256_validator / storage_checker / download_state / model_download_service / download_providers / barrel），feature/model_download UI 页替换占位符（ConsumerStatefulWidget + 双卡片 + 5 状态按钮)，Flutter SDK 权限问题暂无法运行 analyze/test",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-10",

@@ -36,6 +36,16 @@ Anthropic 实验表明，评估 agent 具有系统性偏宽松的倾向，会说
 7. `work/planner/PLAN.md` — 实现方案和**排除项**
 8. `work/implementer/DECISIONS.md` — 模块内决策记录（如有）
 9. implementer 交付清单（`src/<module>/`、`test/`、`work/logs/log.json`）
+10. `harness/feature_list.json` — 确认当前功能 `status` 为 `"pending_review"`
+
+## 启动门禁
+
+开始验证前必须确认：
+
+- `feature_list.json` 中当前功能 `status` 为 `"pending_review"`（不是 `"completed"` 或 `"pending"`）
+- `work/reviewer/COMPLETION.md` 尚未填写验证通过内容（无重复验证已归档功能）
+- 若 `status` 为 `"completed"` 但 `history/<feature-id>-*/` 不存在 → **停止**，在 `harness/PROGRESS.md` 标记「归档异常，需人类介入」，**不得**自行补归档
+- 若 `status` 不是 `"pending_review"` → **停止**，不开始 L1
 
 ## 验证流程
 
@@ -45,20 +55,31 @@ Anthropic 实验表明，评估 agent 具有系统性偏宽松的倾向，会说
 implementer 交付
     │
     ▼
-L1 静态分析 ──不通过──→ 写 FIX-QUEUE + L1-REPORT → 更新 SESSION-HANDOFF（next_agent: implementer）→ 退 implementer
+L1 静态分析 ──不通过──→ 写 FIX-QUEUE + L1-REPORT → status 保持 pending_review → 更新 SESSION-HANDOFF（next_agent: implementer）→ 退 implementer
     │
    通过
     ▼
-L2 运行时验证 ──不通过──→ 写 FIX-QUEUE + L2-REPORT → 更新 SESSION-HANDOFF（next_agent: implementer）→ 退 implementer
+L2 运行时验证 ──不通过──→ 写 FIX-QUEUE + L2-REPORT → status 保持 pending_review → 更新 SESSION-HANDOFF（next_agent: implementer）→ 退 implementer
     │
    通过
     ▼
-L3 系统级确认 ──不通过──→ 写 FIX-QUEUE + L3-REPORT → 更新 SESSION-HANDOFF（next_agent: implementer）→ 退 implementer
+L3 系统级确认 ──不通过──→ 写 FIX-QUEUE + L3-REPORT → status 保持 pending_review → 更新 SESSION-HANDOFF（next_agent: implementer）→ 退 implementer
     │
    通过
     ▼
-写 COMPLETION → 归档 → 更新 PROGRESS + feature_list
+写 COMPLETION → 执行 mv 归档 → 归档验证通过 → feature_list completed → 更新 PROGRESS → SESSION-HANDOFF → planner
 ```
+
+**归档未完成前，禁止**写 `log.json` 的 `archive` 动作、禁止改 `feature_list` 为 `completed`、禁止将 SESSION-HANDOFF 指向 planner。
+
+### 退回 implementer 时的 SESSION-HANDOFF 格式
+
+任一层 FAIL 后，更新 `harness/SESSION-HANDOFF.md`：
+
+- `- **角色**：implementer`
+- `- **任务摘要**：修复 <功能ID> <验证层> 问题（见 work/reviewer/FIX-QUEUE.md）`
+- `- **技能文件**：agents/implementer/SKILL.md`
+- **禁止**在此刻将 next_agent 设为 planner 或提及下一功能
 
 ## L1 — 静态分析
 
@@ -206,29 +227,72 @@ L1 / L2 / L3 全部通过后，写 `work/reviewer/COMPLETION.md`：
 
 ## 归档
 
-COMPLETION 写完后，执行归档：
+COMPLETION 写完后、清空 FIX-QUEUE 后，**必须按以下顺序执行，不得跳步或颠倒**。
+
+### 步骤 1 — 执行 mv（必须实际运行 shell）
+
+从 `feature_list.json` 读取当前功能的 `id` 和 `name`，生成目录 slug（小写、空格和 `/` 替换为 `-`）：
 
 ```bash
-mv work/planner work/implementer work/reviewer work/logs → history/<feature-id>-<name>/
-cp -r templates/work/ work/   # 重建空白 work 目录
+FEATURE_ID="F-09"                          # 替换为实际 id
+FEATURE_SLUG="model-download"                # 替换为实际 slug
+ARCHIVE_DIR="history/${FEATURE_ID}-${FEATURE_SLUG}"
+
+mkdir -p "$ARCHIVE_DIR"
+mv work/planner work/implementer work/reviewer work/logs "$ARCHIVE_DIR/"
+cp -r templates/work/ work/
 ```
 
-更新 `harness/PROGRESS.md` 和 `harness/feature_list.json`（当前功能 status → `completed`）。
+### 步骤 2 — 归档验证（必须通过才能继续）
 
-更新 `harness/SESSION-HANDOFF.md`，必须包含：
+```bash
+test -d "$ARCHIVE_DIR/planner"
+test -d "$ARCHIVE_DIR/implementer"
+test -d "$ARCHIVE_DIR/reviewer"
+test -f "$ARCHIVE_DIR/reviewer/COMPLETION.md"
+grep -q "验证通过" "$ARCHIVE_DIR/reviewer/COMPLETION.md"
+test -d work/planner
+test -d work/reviewer
+# work/ 已重建为模板，不应再含上一功能的 COMPLETION 正文
+! grep -q "验证通过" work/reviewer/COMPLETION.md
+```
+
+任一检查失败 → **归档未完成**。不得执行步骤 3~6。在 `harness/PROGRESS.md` 标记阻塞，SESSION-HANDOFF 保持指向 **reviewer**（任务摘要：完成归档 mv + 验证）。
+
+### 步骤 3 — 更新 feature_list（验证通过后）
+
+- `status` → `"completed"`
+- 补全 `evidence`（验证摘要：测试数、关键结论）
+- 补全 `completed_date`（ISO 8601 日期）
+
+**只有步骤 2 全部通过后，才允许将 status 从 `pending_review` 改为 `completed`。**
+
+### 步骤 4 — 更新 PROGRESS
+
+将功能移入已完成列表。
+
+### 步骤 5 — 更新 SESSION-HANDOFF
+
+必须包含：
 - `## 下一个 Agent` 节：
   - `- **角色**：planner`
   - `- **任务摘要**：选择下一个 pending 功能，开始新方案规划`
   - `- **技能文件**：agents/planner/SKILL.md`
 
-> 记录日志：`{"timestamp":"","agent":"reviewer","action":"archive","feature":"<id>","detail":"归档到 history/<id>-<name>/"}`
+### 步骤 6 — 记录日志（最后一步）
 
-## 约束
+> 记录日志：`{"timestamp":"","agent":"reviewer","action":"archive","feature":"<id>","detail":"归档到 history/<id>-<slug>/，验证通过"}`
+
+**禁止**在步骤 2 通过之前写入 `action: archive` 日志。
 
 - **禁止修改 src/ 和 test/**：只读验证，不修改代码。发现问题写入 FIX-QUEUE，让 implementer 修
+- **status 生命周期**：`in_progress`（planner）→ `pending_review`（implementer 交付）→ `completed`（reviewer 归档验证通过后）
+- **禁止假归档**：写 COMPLETION / 改 feature_list / 写 archive 日志 / 指向 planner，均必须在 `mv` + 归档验证通过之后
 - **禁止跳过层级**：L1 不通过不能进 L2，L2 不通过不能进 L3
+- **禁止提前归档**：无 COMPLETION.md 或 L3 未 PASS，不得执行归档步骤
+- **禁止提前放行**：归档验证未通过，不得更新 SESSION-HANDOFF 指向 planner
 - **禁止模糊反馈**：FIX-QUEUE 每条必须包含"什么出错 + 为什么 + 怎么修"
 - **默认倾向 FAIL**：有疑问时退回，不是放过
 - **每层必记日志**：测试输出写入 `work/logs/tests/`，操作写入 `work/logs/log.json`
 - **同功能退回 > 3 次**：不写 FIX-QUEUE，直接在 PROGRESS.md 中标记为阻塞项，需人类介入
-- **上下文焦虑预防**：上下文使用达到 ~70% 时，主动交接不要硬撑。交接前将当前验证状态写入 `harness/SESSION-HANDOFF.md`
+- **上下文焦虑预防**：上下文使用达到 ~70% 时，若 L3 已通过但归档未完成，**优先完成归档步骤 1~6**；若来不及，SESSION-HANDOFF 必须指向 **reviewer**（任务：完成归档 mv + 验证），**禁止**指向 planner
