@@ -22,11 +22,17 @@ class TodayTimeline extends StatelessWidget {
   /// 点击回调
   final void Function(int reminderId)? onTap;
 
+  /// 删除回调
+  ///
+  /// 返回 true 表示确认删除，false 表示取消。
+  final Future<bool> Function(int reminderId)? onDelete;
+
   const TodayTimeline({
     super.key,
     required this.reminders,
     required this.groupMap,
     this.onTap,
+    this.onDelete,
   });
 
   /// 根据 groupId 生成 HSL 颜色
@@ -59,12 +65,51 @@ class TodayTimeline extends StatelessWidget {
         final reminder = reminders[index];
         final isFirst = index == 0;
         final isLast = index == reminders.length - 1;
-        return _TimelineItem(
+
+        final timelineItem = _TimelineItem(
           reminder: reminder,
           groupColor: _colorForGroup(reminder.groupId),
           isFirst: isFirst,
           isLast: isLast,
           onTap: onTap != null ? () => onTap!(reminder.id) : null,
+        );
+
+        // If no delete callback, return item without Dismissible
+        if (onDelete == null) {
+          return timelineItem;
+        }
+
+        return Dismissible(
+          key: ValueKey(reminder.id),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            color: Colors.red,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+          confirmDismiss: (direction) async {
+            return await showDialog<bool>(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('确定删除该提醒？'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx, false),
+                    child: const Text('取消'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx, true),
+                    child: const Text('确认删除'),
+                  ),
+                ],
+              ),
+            );
+          },
+          onDismissed: (_) {
+            onDelete!(reminder.id);
+          },
+          child: timelineItem,
         );
       },
     );
