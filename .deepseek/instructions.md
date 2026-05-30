@@ -111,12 +111,13 @@ flutter analyze && flutter test
 
 ### 每次会话开始
 
-1. 读 `harness/CONSTRAINTS.md`
-2. 读 `harness/ARCHITECTURE.md`
-3. 读 `harness/PROGRESS.md`
-4. 读 `harness/feature_list.json`
-5. 读 `harness/SESSION-HANDOFF.md`（如有未完成工作）
-6. 运行 `flutter analyze` 确认仓库处于一致状态
+1. 运行 `bash tools/harness-cleanup.sh` 清理僵尸 subagent 状态（编排者模式必须）
+2. 读 `harness/CONSTRAINTS.md`
+3. 读 `harness/ARCHITECTURE.md`
+4. 读 `harness/PROGRESS.md`
+5. 读 `harness/feature_list.json`
+6. 读 `harness/SESSION-HANDOFF.md`（如有未完成工作）
+7. 运行 `flutter analyze` 确认仓库处于一致状态
 
 ### 角色判定
 
@@ -145,33 +146,55 @@ flutter analyze && flutter test
 
 在启动子 agent 前，确保 `harness/SESSION-HANDOFF.md` 中的「下一个 Agent」节正确指向即将启动的角色。子 agent 启动后会读取该文件自动识别自身角色。
 
-**步骤 3 — 启动子 agent**
+**步骤 3 — 上下文检查（编排者）**
+
+每轮循环开始前检查当前会话上下文使用率：
+
+- **≥ 70%（上下文焦虑）** → **禁止**继续 `agent_open`。立即执行「编排者会话重启」流程（见下方「上下文管理」），然后**停止当前会话**，等待新会话接管
+- **< 70%** → 继续步骤 4
+
+**步骤 4 — 启动子 agent**
 
 ```
 agent_open(
   name: "<role>-<feature-id>",
-  prompt: "你是 <role>。读取 agents/<role>/SKILL.md，按其中定义的工作流程完成 <feature-id> 的全部工作。",
-  fork_context: true
+  type: "<role>",
+  prompt: "<自包含 prompt：角色 + agents/<role>/SKILL.md 路径 + feature-id + 任务摘要 + harness/SESSION-HANDOFF.md 要点>",
+  fork_context: false
 )
 ```
 
-- `fork_context: true` 让子 agent 继承当前项目的完整上下文（instructions.md、harness/ 文件等），子 agent 通过 SESSION-HANDOFF 自动识别自身角色
+- **`fork_context` 必须为 `false`**：子 agent 与会话之间**不共享**编排者上下文；子 agent 通过 prompt + 读文件获取信息
+- **`type`** 使用 `planner` / `implementer` / `reviewer`，不要用 `general`
+- prompt 必须自包含，至少包含：角色、SKILL 路径、feature-id、当前任务摘要、`harness/SESSION-HANDOFF.md` 关键字段
 - 在 `work/logs/log.json` 中追加一行编排日志：`{"timestamp":"<ISO 8601>","agent":"orchestrator","action":"agent_open","role":"<role>","feature":"<id>","detail":"启动子 agent"}`
 - `agent_open` 立即返回 `agent_id`，子 agent 在后台异步运行
 
-**步骤 4 — 等待完成**
+**步骤 5 — 等待完成**
 
 ```
-agent_eval(agent_id: "<id>", block: true, timeout_ms: 3600000)
+agent_eval(agent_id: "<id>", block: true, timeout_ms: 1800000)
 ```
 
 - `block: true` 阻塞等待子 agent 完成全部工作
-- 超时时间设为 60 分钟（3600000ms），适用于大型功能实现
+- 超时时间 **30 分钟**（1800000ms）
 - 当收到 `<codewhale:subagent.done>` 事件时，读取摘要行确认子 agent 状态：
-  - `"completed"` → 子 agent 正常完成，继续步骤 5
-  - `"failed"` → 子 agent 执行失败，读取错误信息，判定是否可重试或需人工介入
+  - `"completed"` → 子 agent 正常完成，继续步骤 6
+  - `"failed"` → 执行「eval 失败/超时恢复」（见下方），再决定是否重试
 
-**步骤 5 — 关闭子 agent**
+**eval 失败 / 超时恢复**（`agent_eval` 超时、返回 failed、或长时间无 `<codewhale:subagent.done>`）：
+
+1. **强制** `agent_close(agent_id: "<id>")`，释放 subagent 槽位（即使 eval 已超时也必须 close）
+2. 在 `work/logs/log.json` 追加：`{"action":"agent_eval_timeout","role":"<role>","feature":"<id>","detail":"..."}`
+3. 读文件系统判定实际进度（**以文件为准，不以 subagent 摘要为准**）：
+   - `harness/SESSION-HANDOFF.md` — 下一个角色是否已更新
+   - `work/logs/log.json` — 该 role 最后一条业务日志
+   - 角色产出目录（`work/planner/`、`work/implementer/`、`work/reviewer/`）
+4. **若文件显示子 agent 实际已完成** → 记 `agent_close` 日志，当作 success，跳到步骤 7
+5. **若未完成** → 同 role 重开（`fork_context: false`，缩小 prompt，只写未完成部分）
+6. **同 role 连续 eval 失败 > 2 次** → **阻塞**，输出阻塞报告，停止循环
+
+**步骤 6 — 关闭子 agent**
 
 ```
 agent_close(agent_id: "<id>")
@@ -179,11 +202,11 @@ agent_close(agent_id: "<id>")
 
 释放子 agent 资源。在 `work/logs/log.json` 中追加一行：`{"timestamp":"<ISO 8601>","agent":"orchestrator","action":"agent_close","role":"<role>","feature":"<id>","detail":"子 agent 完成"}`
 
-**步骤 6 — 读取交接信息**
+**步骤 7 — 读取交接信息**
 
 重新读取 `harness/SESSION-HANDOFF.md`，获取子 agent 更新后的「下一个 Agent」信息。
 
-**步骤 7 — 判定循环方向**
+**步骤 8 — 判定循环方向**
 
 根据子 agent 的输出，确定下一步：
 
@@ -194,11 +217,11 @@ agent_close(agent_id: "<id>")
 | reviewer | L1/L2/L3 全部 PASS | （reviewer 自动归档，然后）planner | 功能完成，进入下一功能循环 |
 | reviewer | 任一层 FAIL（FIX-QUEUE 非空） | implementer | 修复循环 |
 | reviewer | 同功能退回 > 3 次 | **阻塞** | 停止循环，输出阻塞报告，等待人工介入 |
-| 任意 | 子 agent 失败（status: failed） | 视情况重试或阻塞 | 读取错误原因后判定 |
+| 任意 | 子 agent 失败（status: failed）或 eval 超时 | 执行 eval 失败/超时恢复；同 role 重试 ≤2 次，否则阻塞 |
 
-**步骤 8 — 循环继续**
+**步骤 9 — 循环继续**
 
-回到步骤 2，更新 SESSION-HANDOFF 指向下一个角色，继续循环。
+回到步骤 3（先做上下文检查），再进入步骤 4 启动下一个子 agent。
 
 **终止条件**：
 
@@ -209,15 +232,23 @@ agent_close(agent_id: "<id>")
 **串行执行约束**：
 
 - 同一时间只允许一个子 agent 运行
-- 必须等待 `agent_eval(block=true)` 返回后再执行 `agent_close`
+- `agent_eval` 正常返回后执行 `agent_close`；**超时/失败时也必须 `agent_close`**
 - `agent_close` 完成后才能启动下一个 `agent_open`
 - 禁止并行启动多个 agent_open（planner/implementer/reviewer 之间有严格依赖关系）
+- **`fork_context` 永远为 `false`**，禁止会话间共享上下文
 
 **上下文管理**：
 
-- 编排者自身上下文较轻（只做调度和文件读取），预期可支撑多个功能循环
-- 当上下文使用达到 ~60% 时，在当前功能循环完成后执行 `/compact` 压缩历史
-- 压缩前确保 `SESSION-HANDOFF.md` 准确反映当前进度
+- 编排者、子 agent、不同角色之间**均不共享上下文**；状态只通过 `harness/` 和 `work/` 文件传递
+- 每轮循环开始前检查上下文使用率（步骤 3）
+- **≥ 70% 时禁止 `/compact` 硬撑**，必须执行「编排者会话重启」：
+  1. 确保 `harness/SESSION-HANDOFF.md` 准确反映：当前 feature-id、当前/下一个 role、进行中的单元或验证层、阻塞项
+  2. 更新 `harness/PROGRESS.md`（如有状态变化）
+  3. 在 `work/logs/log.json` 追加：`{"action":"orchestrator_handoff","detail":"上下文≥70%，编排者会话即将结束，请新会话读取 SESSION-HANDOFF 继续"}`
+  4. 若有运行中的 subagent → `agent_close` 全部关闭
+  5. 运行 `bash tools/harness-cleanup.sh`
+  6. **结束当前 deepseek 会话**；新会话从「每次会话开始」流程接管
+- reviewer 完成功能归档后，若上下文仍 < 70%，可继续；若已 ≥ 70%，同样走重启流程
 
 ### 每次会话结束
 
@@ -227,7 +258,8 @@ agent_close(agent_id: "<id>")
 3. 更新 `harness/feature_list.json`（如状态有变化）
 4. 运行 `flutter analyze && flutter test` 确认一致状态
 5. 清理临时文件、调试代码
-6. 提交所有已完成的工作
+6. 运行 `bash tools/harness-cleanup.sh`
+7. 提交所有已完成的工作
 
 ---
 
@@ -266,7 +298,7 @@ agent_close(agent_id: "<id>")
 
 **执行流程**：initer（一次性）→ planner → implementer → reviewer → 下一个功能循环。
 
-**编排者模式下**：由编排者通过 `agent_open` 以子 agent 形式启动各角色，每个子 agent 天然拥有独立上下文，避免角色污染。子 agent 之间、子 agent 与编排者之间严格隔离。
+**编排者模式下**：由编排者通过 `agent_open`（`fork_context: false`）启动各角色子 agent。子 agent 与编排者、彼此之间的上下文**完全隔离**，仅通过 harness 文件衔接。
 
 **非编排者模式**（直接扮演具体角色时）：必须新建独立对话启动该角色，不要在同一个对话中切换角色。
 
