@@ -19,8 +19,9 @@
 
 ```
 code/
-  app_router.dart    — GoRouter 定义、redirect 守卫、appRouterProvider
-router.dart          — barrel file
+  app_router.dart         — GoRouter 定义、redirect 守卫、appRouterProvider
+  placeholder_pages.dart  — 7 个最小 StatelessWidget stub，供路由配置编译使用
+router.dart               — barrel file，导出 app_router.dart
 ```
 
 ---
@@ -30,10 +31,6 @@ router.dart          — barrel file
 | 依赖模块 | 用途 |
 |---------|------|
 | core/providers | 读取 appConfigProvider（首次启动标记 + 模型下载状态） |
-| feature/home | 首页、添加提醒页面引用 |
-| feature/voice_input | 语音录入页面引用 |
-| feature/group_manage | 分组管理、分组详情页面引用 |
-| feature/cleanup | 清理页面引用 |
-| feature/model_download | 模型下载页面引用 |
+| 无 feature 层依赖 | 当前使用占位页面 stub，后续功能完成时替换为真实页面 import |
 
 > **分层说明**：router 属于应用胶水层（组合根），不处于 core 层或 feature 层。它可以合法引用 core 层和 feature 层，不违反 CONSTRAINTS.md §1 分层依赖规则。该约束仅禁止 core 层逆依赖 feature 层，组合根不受此限制。
