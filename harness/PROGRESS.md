@@ -5,9 +5,9 @@
 ## 当前状态
 
 - **当前功能**：F-05（core/reminder）
-- **状态**：implementer 完成，待 reviewer 审查
+- **状态**：implementer 修复完成 round 2，待 reviewer 审查（L3）
 - **当前模块**：core/reminder
-- **最后更新**：2026-05-29（implementer 完成全部 6 个工作单元，57 tests PASS）
+- **最后更新**：2026-05-30（implementer 修复 round 2: MockReminderService 补全 5 个方法，275 tests PASS）
 
 ---
 
@@ -28,4 +28,4 @@
 
 | 功能 ID | 名称 | 状态 |
 |---------|------|------|
-| F-05 | core/reminder | implementer 完成，待 reviewer 审查（L1 + L2 + L3） |
+| F-05 | core/reminder | implementer 修复完成（round 2），待 reviewer 审查（L1 PASS, L2 PASS, L3 pending） |
