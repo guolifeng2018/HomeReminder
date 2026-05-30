@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../reminder/code/reminder_service_impl.dart';
 import '../../database/code/reminder_repository.dart';
+import '../../notification/code/notification_service_impl.dart';
 import 'database_providers.dart';
 import 'reminder_service.dart';
 import 'notification_service.dart';
@@ -42,6 +43,18 @@ final reminderServiceImplProvider = Provider<ReminderService>((ref) {
 /// ProviderScope.overrides 替换为真实实现。
 final notificationServiceProvider = Provider<NotificationService>((ref) {
   return StubNotificationService();
+});
+
+/// 通知服务真实实现 Provider
+///
+/// 注入 [NotificationServiceImpl]，可在启动时通过 override 替换：
+/// ```dart
+///   notificationServiceProvider.overrideWith((ref) {
+///     return NotificationServiceImpl();
+///   }),
+/// ```
+final notificationServiceImplProvider = Provider<NotificationService>((ref) {
+  return NotificationServiceImpl();
 });
 
 /// 语音服务 Provider

@@ -5,45 +5,41 @@
 ## 下一个 Agent
 
 - **角色**：reviewer
-- **任务摘要**：重新验证 F-05（core/reminder）— L1 和 L2 已在 round 1 通过，round 2 修复了 L3 编译错误（MockReminderService），当前需重点验证 L3 系统级确认（全量 flutter test 275/275 PASS，flutter analyze 确认一致）
+- **任务摘要**：验证 F-06（core/notification）交付物 — 6 个工作单元已完成，48 tests PASS
+  1. NOT-01：本地通知初始化（7 tests）
+  2. NOT-02：通知内容模板（6 tests）
+  3. NOT-03：通知点击处理（13 tests）
+  4. NOT-04：应用角标管理（12 tests）
+  5. NOT-05：NotificationServiceImpl（10 tests）
+  6. NOT-06：barrel file + pubspec.yaml 依赖更新
 - **技能文件**：agents/reviewer/SKILL.md
-
----
-
-## 修复记录
-
-### Round 1（L2 review）
-- ✅ 问题 1: 新建 `reminder_service_test.dart`（11 tests）
-- ✅ 问题 2: 补充 `ReminderScheduler.findOverdue` 方法 + 测试
-- ✅ 问题 3: 扩展 `ReminderService` 抽象接口（+5 方法签名）
-- ✅ 问题 4: 在 `service_providers.dart` 中添加 `reminderServiceImplProvider`
-
-### Round 2（L3 review）
-- ✅ 问题 5: 修复 `MockReminderService` 缺 5 个方法实现（`test/unit/core/provider_override_test.dart`）
 
 ---
 
 ## 仓库状态
 
-- **最后 commit**：`404c246` — fix(F-05): MockReminderService 补全 ReminderService 新增 5 个方法实现
-- **构建状态**：`flutter analyze` — 20 issues（16 个来自 history/F-04-router/，4 个来自 test warnings，无新增错误）
-- **测试状态**：`flutter test` — 275/275 PASS
+- **最后 commit**：待 implementer 提交
+- **构建状态**：`flutter analyze lib/src/core/notification/` — No issues found
+- **测试状态**：`flutter test test/unit/notification/` — 48/48 PASS
 
 ---
-
-## 审查状态
-
-- **L1 静态分析**：PASS ✅（2026-05-30 round 1）
-- **L2 运行时验证**：PASS ✅（2026-05-30 round 1，57+11=68 tests + FIX-QUEUE 问题 1-4 已修复）
-- **L3 系统级确认**：待验证（round 2 修复后 275 tests PASS，需 reviewer 最终确认 + 归档）
 
 ## 交付物
 
 | 单元 | 文件 | 测试 |
 |------|------|------|
-| REM-01 | `spoken_time_parser.dart` | 31 tests PASS |
-| REM-02 | `reminder_scheduler.dart` | 13 tests PASS（含 findOverdue） |
-| REM-03 | `postpone_logic.dart` | 7 tests PASS |
-| REM-04 | `retry_policy.dart` | 6 tests PASS |
-| REM-05 | `reminder_service_impl.dart` | 11 tests PASS |
-| REM-06 | barrel file `reminder.dart` | service_providers 已注册 |
+| NOT-01 | `notification_initializer.dart` | 7 tests PASS |
+| NOT-02 | `notification_content_builder.dart` | 6 tests PASS |
+| NOT-03 | `notification_payload_handler.dart` | 13 tests PASS |
+| NOT-04 | `badge_manager.dart` | 12 tests PASS |
+| NOT-05 | `notification_service_impl.dart` | 10 tests PASS |
+| NOT-06 | barrel file `notification.dart` + `service_providers.dart` + `pubspec.yaml` | — |
+
+## 新增依赖
+
+- `flutter_app_badger: ^1.5.0`（pubspec.yaml）
+
+## 修改的文件（非模块）
+
+- `lib/src/core/providers/code/service_providers.dart` — 新增 `notificationServiceImplProvider`
+- `pubspec.yaml` — 新增 `flutter_app_badger` 依赖
