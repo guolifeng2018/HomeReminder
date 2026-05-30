@@ -178,9 +178,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           TodayTimeline(
             reminders: reminders,
             groupMap: groupMap,
-            onTap: (reminderId) {
-              // TODO: 导航到编辑页（F-08 实现）
-            },
+            onTap: null,
           ),
         ],
       ),
@@ -229,9 +227,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: TodayTimeline(
             reminders: reminders,
             groupMap: groupMap,
-            onTap: (reminderId) {
-              // TODO: 导航到编辑页（F-08 实现）
-            },
+            onTap: null,
           ),
         ),
       ],
