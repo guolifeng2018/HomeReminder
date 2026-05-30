@@ -1,60 +1,63 @@
 # L3 系统级确认报告
 
+<!-- 由 reviewer 填写。 -->
+
 ---
 
 ## 基本信息
 
-- **功能 ID**：F-04
-- **验证日期**：2026-05-30
-- **轮次**：round 2（重新验证）
+- **功能 ID**：<!-- F-xx -->
+- **验证日期**：<!-- YYYY-MM-DD -->
+- **轮次**：round <!-- n -->
 
 ---
 
-## 验证命令
+## 端到端测试
 
-```bash
-flutter analyze
-flutter test
-ls history/F-04-router/
-grep -rn "print\(\|debugger\|TODO\|FIXME\|HACK" lib/src/router/ test/unit/router/
-```
+| 测试场景 | 结果 | 失败原因 |
+|---------|------|---------|
+| <!-- --> | ✅ / ❌ | <!-- 如有 --> |
 
-## 结果摘要
+---
 
-| 检查项 | 命令 | 结果 |
-|--------|------|------|
-| 全局静态分析 | `flutter analyze` | 0 errors, 5 warnings + 1 info（均在 test/unit/home/ 和 test/unit/reminder/，非 router 模块） |
-| 全量测试 | `flutter test` | **424 tests passed**（含 router 14 条） |
-| 遗留清理 | `ls history/F-04-router/` | **No such file or directory** ✅ |
-| 调试代码残留 | grep router 目录 | **0 matches** |
-| e2e 测试 | `ls test/e2e/` | 仅有 .gitkeep（无 e2e 测试，符合 PLAN 排除项 #6） |
-| integration 测试 | `ls test/integration/` | 仅有 .gitkeep（无集成测试，符合 PLAN 排除项 #6） |
+## 用户场景模拟
 
-## 全局 flutter analyze 详情
+| 场景 | 步骤 | 预期结果 | 实际结果 |
+|------|------|---------|---------|
+| <!-- --> | <!-- 1. xx 2. xx --> | <!-- --> | ✅ / ❌ |
 
-```
-warning • unnecessary_non_null_assertion • test/unit/home/reminder_form_edit_test.dart:185
-warning • unused_import • test/unit/home/reminder_form_submit_test.dart:16
-warning • unused_element • test/unit/home/reminder_form_submit_test.dart:55
-warning • unused_local_variable • test/unit/home/reminder_frequency_test.dart:69
-warning • unused_local_variable • test/unit/home/reminder_frequency_test.dart:90
-info • no_leading_underscores_for_local_identifiers • test/unit/reminder/reminder_service_test.dart:15
-```
+---
 
-> 全部 6 条 issue 均来自非 router 模块的测试文件，为预存问题，不属于 F-04 范围。
+## 资源清理检查
 
-## 清洁状态确认
+- **调试代码残留**：<!-- 无 / 有（列出） -->
+- **临时文件**：<!-- 无 / 有（列出） -->
 
-| 条件 | 状态 |
-|------|------|
-| 构建通过（flutter analyze 零 error） | ✅ |
-| 测试通过（424/424） | ✅ |
-| 无 router 模块调试残留 | ✅ |
-| history/F-04-router/ 已清理 | ✅ |
-| 无未归档 work 残留 | ✅ |
+---
+
+## 清洁状态
+
+- **构建**：<!-- ✅ / ❌ -->
+- **全部测试**：<!-- ✅ / ❌ -->
+- **无调试残留**：<!-- ✅ / ❌ -->
 
 ---
 
 ## 结果
 
-**PASS**
+- **判定**：<!-- PASS / FAIL -->
+- **问题数量**：<!-- N -->
+
+---
+
+## 问题清单
+
+| # | 场景 | 实际结果 | 根因 |
+|---|------|---------|------|
+| 1 | <!-- --> | <!-- --> | <!-- --> |
+
+---
+
+## 建议固化为规则
+
+<!-- 本次发现的可固化检查类型 -->

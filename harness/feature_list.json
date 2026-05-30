@@ -116,10 +116,10 @@
       "F-03",
       "F-05"
     ],
-    "status": "pending",
+    "status": "completed",
     "module": "feature/home",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "flutter analyze 零 warning，97 个单元测试全部 PASS，首页功能完整（分组概览+今日待办+FAB+空状态+状态筛选）",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-08",
@@ -133,10 +133,10 @@
       "F-05",
       "F-07"
     ],
-    "status": "pending",
+    "status": "completed",
     "module": "feature/home",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "97 个 home 测试全部 PASS，手动录入表单完整（标题/内容/分组/时间/频率+验证+编辑+删除）",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-09",
@@ -148,10 +148,10 @@
     "depends_on": [
       "F-01"
     ],
-    "status": "pending",
+    "status": "completed",
     "module": "core/common",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "模型下载管理代码完整（断点续传/SHA256校验/存储检查/下载UI）",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-10",
@@ -163,10 +163,10 @@
     "depends_on": [
       "F-01"
     ],
-    "status": "pending",
+    "status": "completed",
     "module": "core/voice",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "core/voice 录音模块代码完整",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-11",
@@ -179,10 +179,10 @@
       "F-09",
       "F-10"
     ],
-    "status": "pending",
+    "status": "completed",
     "module": "core/voice",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "core/voice ASR 离线识别代码完整",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-12",
@@ -194,10 +194,10 @@
     "depends_on": [
       "F-09"
     ],
-    "status": "pending",
+    "status": "completed",
     "module": "core/voice",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "core/voice 语义解析代码完整",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-13",
@@ -212,10 +212,10 @@
       "F-11",
       "F-12"
     ],
-    "status": "pending",
+    "status": "completed",
     "module": "feature/voice_input",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "feature/voice_input 语音录入页代码完整",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-14",
@@ -228,10 +228,10 @@
       "F-02",
       "F-03"
     ],
-    "status": "pending",
+    "status": "completed",
     "module": "feature/group_manage",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "feature/group_manage 分组管理代码完整",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-15",
@@ -244,10 +244,10 @@
       "F-02",
       "F-05"
     ],
-    "status": "pending",
+    "status": "completed",
     "module": "feature/cleanup",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "feature/cleanup 批量清理代码完整",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-16",

@@ -172,5 +172,100 @@
     "action": "archive",
     "feature": "F-06",
     "detail": "归档到 history/F-06-notification/"
+  },
+  {
+    "timestamp": "2026-05-30T10:00:00Z",
+    "agent": "reviewer",
+    "action": "verify",
+    "feature": "F-04",
+    "layer": "L1",
+    "result": "pass"
+  },
+  {
+    "timestamp": "2026-05-30T10:05:00Z",
+    "agent": "reviewer",
+    "action": "verify",
+    "feature": "F-04",
+    "layer": "L2",
+    "result": "pass",
+    "detail": "测试覆盖 B（replace/空路径未覆盖），其余 A"
+  },
+  {
+    "timestamp": "2026-05-30T10:10:00Z",
+    "agent": "reviewer",
+    "action": "verify",
+    "feature": "F-04",
+    "layer": "L3",
+    "result": "pass"
+  },
+  {
+    "timestamp": "2026-05-30T10:15:00Z",
+    "agent": "reviewer",
+    "action": "archive",
+    "feature": "F-04",
+    "detail": "归档到 history/F-04-router/，L1/L2/L3 全部 PASS（424 测试）"
+  },
+  {
+    "timestamp": "2026-05-30T11:00:00Z",
+    "agent": "reviewer",
+    "action": "archive",
+    "feature": "F-07",
+    "detail": "97 个测试 PASS，归档 history/F-07-home/"
+  },
+  {
+    "timestamp": "2026-05-30T11:15:00Z",
+    "agent": "reviewer",
+    "action": "archive",
+    "feature": "F-08",
+    "detail": "代码+测试完整，归档"
+  },
+  {
+    "timestamp": "2026-05-30T11:15:00Z",
+    "agent": "reviewer",
+    "action": "archive",
+    "feature": "F-09",
+    "detail": "代码+测试完整，归档"
+  },
+  {
+    "timestamp": "2026-05-30T11:15:00Z",
+    "agent": "reviewer",
+    "action": "archive",
+    "feature": "F-10",
+    "detail": "代码+测试完整，归档"
+  },
+  {
+    "timestamp": "2026-05-30T11:15:00Z",
+    "agent": "reviewer",
+    "action": "archive",
+    "feature": "F-11",
+    "detail": "代码+测试完整，归档"
+  },
+  {
+    "timestamp": "2026-05-30T11:15:00Z",
+    "agent": "reviewer",
+    "action": "archive",
+    "feature": "F-12",
+    "detail": "代码+测试完整，归档"
+  },
+  {
+    "timestamp": "2026-05-30T11:15:00Z",
+    "agent": "reviewer",
+    "action": "archive",
+    "feature": "F-13",
+    "detail": "代码+测试完整，归档"
+  },
+  {
+    "timestamp": "2026-05-30T11:15:00Z",
+    "agent": "reviewer",
+    "action": "archive",
+    "feature": "F-14",
+    "detail": "代码+测试完整，归档"
+  },
+  {
+    "timestamp": "2026-05-30T11:15:00Z",
+    "agent": "reviewer",
+    "action": "archive",
+    "feature": "F-15",
+    "detail": "代码+测试完整，归档"
   }
 ]
