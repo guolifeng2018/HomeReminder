@@ -133,10 +133,10 @@
       "F-05",
       "F-07"
     ],
-    "status": "pending_review",
+    "status": "completed",
     "module": "feature/home",
-    "evidence": "WU#1 路由修复: /add 路由从 AddReminderPage → ReminderFormPage，flutter analyze 零 warning; WU#2 首页刷新: home_fab.dart onAdd/onVoice 回调注入，home_page.dart onTap async/await + ref.invalidate，flutter analyze + 97 单元测试全部通过; WU#3 最终验证: 全量静态分析 + 测试零 regression",
-    "completed_date": null
+    "evidence": "L1: flutter analyze 零 warning; L2: flutter test test/unit/home/ 97/97 PASS，四维度评分: 正确性B 架构合规B 测试覆盖B 代码质量B; L3: 端到端场景验证通过，零调试残留。已归档 history/F-08-manual-entry/",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-09",
@@ -148,7 +148,7 @@
     "depends_on": [
       "F-01"
     ],
-    "status": "pending",
+    "status": "in_progress",
     "module": "core/common",
     "evidence": null,
     "completed_date": null

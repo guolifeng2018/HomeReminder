@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-- **状态**：F-00 ~ F-07 已完成；F-08 编码完成，待 reviewer 验证；F-09 ~ F-20 待重跑
-- **最后更新**：2026-05-30（F-08 编码完成，交接 reviewer）
+- **状态**：F-00 ~ F-08 已完成；F-09 ~ F-20 待重跑
+- **最后更新**：2026-05-30（F-08 验证通过，已归档 history/F-08-manual-entry/）
 
 ---
 
@@ -22,6 +22,7 @@
 | F-05 | core/reminder 提醒核心 | 2026-05-30 | 已归档 history/F-05-core-reminder/ |
 | F-06 | core/notification 通知模块 | 2026-05-30 | 已归档 history/F-06-notification/ |
 | F-07 | feature/home 首页 | 2026-05-30 | 已归档 history/F-07-home/ |
+| F-08 | 手动录入流程 | 2026-05-30 | 已归档 history/F-08-manual-entry/ |
 
 ---
 
@@ -29,7 +30,6 @@
 
 | 功能 ID | 名称 | 优先级 | status |
 |---------|------|--------|--------|
-| F-08 | 手动录入流程 | P0 | pending |
 | F-09 | 模型下载管理 | P0 | pending |
 | F-10 | core/voice 录音模块 | P0 | pending |
 | F-11 | core/voice ASR 离线识别 | P0 | pending |
@@ -54,4 +54,4 @@
 
 ## 验证状态
 
-- **下一功能**：F-08（手动录入流程），待 planner 启动
+- **下一功能**：F-09（模型下载管理），待 planner 启动

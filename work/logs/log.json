@@ -1,12 +1,2 @@
-{"timestamp":"2026-05-30T15:56:00Z","agent":"orchestrator","action":"agent_open","role":"planner","feature":"F-08","detail":"启动子 agent"}
-{"timestamp":"2026-05-30T16:00:52Z","agent":"orchestrator","action":"agent_close","role":"planner","feature":"F-08","detail":"子 agent 完成"}
-{"timestamp":"2026-05-30T16:00:52Z","agent":"orchestrator","action":"agent_open","role":"implementer","feature":"F-08","detail":"启动子 agent"}
-{"timestamp":"2026-05-30T16:15:00Z","agent":"planner","action":"select","feature":"F-08","detail":"标记 in_progress，BREAKDOWN+PLAN 已生成：3 个 WU（路由修复→首页刷新→验证）"}
-{"timestamp":"2026-05-30T17:00:00Z","agent":"implementer","action":"read_plan","feature":"F-08","detail":"读取 planner 方案"}
-{"timestamp":"2026-05-30T17:02:00Z","agent":"implementer","action":"unit_code_done","feature":"F-08","unit":"修复 GoRouter /add 路由","module":"feature/home","detail":"将 /add 路由从 placeholder AddReminderPage 替换为 ReminderFormPage"}
-{"timestamp":"2026-05-30T17:03:00Z","agent":"implementer","action":"unit_test_done","feature":"F-08","unit":"修复 GoRouter /add 路由","module":"feature/home","detail":"flutter analyze 零 warning，无需新增独立测试（路由变更为编译期覆盖）"}
-{"timestamp":"2026-05-30T17:08:00Z","agent":"implementer","action":"unit_code_done","feature":"F-08","unit":"首页表单返回后自动刷新","module":"feature/home","detail":"home_fab.dart 增加 onAdd/onVoice 回调参数；home_page.dart onTap await + invalidate + HomeFab onAdd 回调"}
-{"timestamp":"2026-05-30T17:10:00Z","agent":"implementer","action":"unit_test_done","feature":"F-08","unit":"首页表单返回后自动刷新","module":"feature/home","detail":"flutter analyze 零 warning，全部 97 个单元测试通过（含 home_page_test + home_fab_test）"}
-{"timestamp":"2026-05-30T17:15:00Z","agent":"implementer","action":"unit_code_done","feature":"F-08","unit":"最终验证门禁","module":"feature/home","detail":"全量静态分析零 warning + 97 个单元测试全部通过，零 regression"}
-{"timestamp":"2026-05-30T17:15:00Z","agent":"implementer","action":"unit_test_done","feature":"F-08","unit":"最终验证门禁","module":"feature/home","detail":"flutter analyze + flutter test 全部通过"}
-{"timestamp":"2026-05-30T17:20:00Z","agent":"implementer","action":"handoff_to_reviewer","feature":"F-08","detail":"全部单元完成，交给 reviewer"}
+{"timestamp":"2026-05-30T16:12:18Z","agent":"orchestrator","action":"agent_close","role":"reviewer","feature":"F-08","detail":"子 agent 完成，归档验证通过"}
+{"timestamp":"2026-05-30T16:12:18Z","agent":"orchestrator","action":"agent_open","role":"planner","feature":"F-09","detail":"启动子 agent"}

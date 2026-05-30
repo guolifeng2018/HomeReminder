@@ -1,7 +1,0 @@
-flutter test test/e2e/
-Result: 478/478 All tests passed! (no e2e-specific tests exist, .gitkeep only)
-
-L3 checklist:
-- e2e directory: .gitkeep only (no e2e tests yet) → delegated to F-19
-- Resource cleanup: no .part files, no .tmp files, no debug artifacts
-- Clean state: flutter analyze 0 issues, flutter test 478/478 PASS
