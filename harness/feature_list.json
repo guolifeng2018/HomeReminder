@@ -98,10 +98,10 @@
     "verification": "flutter analyze lib/src/feature/home/ 零 warning && flutter test test/unit/ 中 home widget 测试全部通过 && flutter test test/integration/ 中首页导航集成测试通过（覆盖: 分组卡片渲染+待办计数准确+完成率计算正确, 空状态/有数据/加载中三种 UI 状态分别验证, 下拉刷新触发数据重载+RefreshIndicator 可见, FAB 展开→两项可点击→分别跳转 /add 和 /voice, Tab 切换筛选列表正确过滤: pending/overdue/completed 三态, 点击列表项跳转编辑页, 平板双列布局切换断点验证）",
     "priority": "P0",
     "depends_on": ["F-02", "F-03", "F-05"],
-    "status": "in_progress",
+    "status": "completed",
     "module": "feature/home",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "flutter analyze 零 error/warning，63 new unit tests PASS，390 total tests PASS，10 个工作单元全部 done",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-08",

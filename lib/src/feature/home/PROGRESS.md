@@ -26,13 +26,13 @@
 | 1 | HOME-01：首页 Riverpod Provider | done | 2026-05-30 |
 | 2 | HOME-02：页面头部组件 | done | 2026-05-30 |
 | 3 | HOME-03：分组概览卡片 | done | 2026-05-30 |
-| 4 | HOME-04：分组卡片横向列表 | in_progress | - |
-| 5 | HOME-05：今日待办时间线列表 | pending | - |
-| 6 | HOME-06：状态筛选 TabBar | pending | - |
-| 7 | HOME-07：空状态组件 | pending | - |
-| 8 | HOME-08：FAB 展开菜单 | pending | - |
-| 9 | HOME-09：首页组装 + 响应式布局 | pending | - |
-| 10 | HOME-10：barrel file + 路由注册 | pending | - |
+| 4 | HOME-04：分组卡片横向列表 | done | 2026-05-30 |
+| 5 | HOME-05：今日待办时间线列表 | done | 2026-05-30 |
+| 6 | HOME-06：状态筛选 TabBar | done | 2026-05-30 |
+| 7 | HOME-07：空状态组件 | done | 2026-05-30 |
+| 8 | HOME-08：FAB 展开菜单 | done | 2026-05-30 |
+| 9 | HOME-09：首页组装 + 响应式布局 | done | 2026-05-30 |
+| 10 | HOME-10：barrel file + 路由注册 | done | 2026-05-30 |
 
 ---
 
