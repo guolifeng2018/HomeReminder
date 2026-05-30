@@ -154,11 +154,22 @@ class NotificationServiceImpl implements NotificationService {
     }
   }
 
+  /// body 文本最大长度（超出后截断加 …）
+  static const int _maxBodyLength = 200;
+
   /// 构建 body 文本
+  ///
+  /// 拼接 title 和 content，超过 [_maxBodyLength] 字符时截断至
+  /// 199 字符并追加 '…'，确保不超过 [_maxBodyLength]。
   String _buildBodyText(Reminder reminder) {
-    if (reminder.content != null && reminder.content!.isNotEmpty) {
-      return '${reminder.title} — ${reminder.content}';
+    final hasContent = reminder.content != null && reminder.content!.isNotEmpty;
+    final body = hasContent
+        ? '${reminder.title} — ${reminder.content}'
+        : reminder.title;
+
+    if (body.length > _maxBodyLength) {
+      return '${body.substring(0, _maxBodyLength - 1)}…';
     }
-    return reminder.title;
+    return body;
   }
 }

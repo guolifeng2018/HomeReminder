@@ -239,5 +239,118 @@ void main() {
       // Should not throw
       await service.cancelReminderNotification(42);
     });
+
+    // Test 11: body ≤ 200 chars — not truncated
+    test('should not truncate body when ≤ 200 chars', () async {
+      String? capturedBody;
+      when(() => mockPlugin.show(
+            any(),
+            any(),
+            captureAny(),
+            any(),
+            payload: any(named: 'payload'),
+          )).thenAnswer((invocation) async {
+        capturedBody =
+            invocation.positionalArguments[2] as String?;
+      });
+      when(() => mockBadgeManager.updateBadge(any(), any()))
+          .thenAnswer((_) async {});
+
+      final reminder = testReminder.copyWith(
+        title: '短标题',
+        content: '短内容',
+      );
+
+      await service.show(reminder, '组');
+
+      expect(capturedBody, '短标题 — 短内容');
+      expect(capturedBody!.length, lessThanOrEqualTo(200));
+    });
+
+    // Test 12: body > 200 chars — truncated to 200 ending with …
+    test('should truncate body over 200 chars and append …', () async {
+      String? capturedBody;
+      when(() => mockPlugin.show(
+            any(),
+            any(),
+            captureAny(),
+            any(),
+            payload: any(named: 'payload'),
+          )).thenAnswer((invocation) async {
+        capturedBody =
+            invocation.positionalArguments[2] as String?;
+      });
+      when(() => mockBadgeManager.updateBadge(any(), any()))
+          .thenAnswer((_) async {});
+
+      final longContent = 'C' * 250;
+      final reminder = testReminder.copyWith(
+        title: 'T',
+        content: longContent,
+      );
+
+      await service.show(reminder, '组');
+
+      expect(capturedBody!.length, 200);
+      expect(capturedBody!.endsWith('…'), isTrue);
+    });
+
+    // Test 13: body exactly 200 chars — not truncated
+    test('should not truncate body exactly at 200 chars', () async {
+      String? capturedBody;
+      when(() => mockPlugin.show(
+            any(),
+            any(),
+            captureAny(),
+            any(),
+            payload: any(named: 'payload'),
+          )).thenAnswer((invocation) async {
+        capturedBody =
+            invocation.positionalArguments[2] as String?;
+      });
+      when(() => mockBadgeManager.updateBadge(any(), any()))
+          .thenAnswer((_) async {});
+
+      // 'T — ' has length 4, so content needs 196 chars → total 200
+      final exactContent = 'C' * 196;
+      final reminder = testReminder.copyWith(
+        title: 'T',
+        content: exactContent,
+      );
+
+      await service.show(reminder, '组');
+
+      expect(capturedBody!.length, 200);
+      expect(capturedBody!.endsWith('…'), isFalse);
+    });
+
+    // Test 14: title only (no content) over 200 chars — also truncated
+    test('should truncate body when title-only exceeds 200 chars',
+        () async {
+      String? capturedBody;
+      when(() => mockPlugin.show(
+            any(),
+            any(),
+            captureAny(),
+            any(),
+            payload: any(named: 'payload'),
+          )).thenAnswer((invocation) async {
+        capturedBody =
+            invocation.positionalArguments[2] as String?;
+      });
+      when(() => mockBadgeManager.updateBadge(any(), any()))
+          .thenAnswer((_) async {});
+
+      final longTitle = 'T' * 250;
+      final reminder = testReminder.copyWith(
+        title: longTitle,
+        content: null,
+      );
+
+      await service.show(reminder, '组');
+
+      expect(capturedBody!.length, 200);
+      expect(capturedBody!.endsWith('…'), isTrue);
+    });
   });
 }
