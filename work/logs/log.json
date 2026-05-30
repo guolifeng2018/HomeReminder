@@ -13,3 +13,21 @@
 {"timestamp":"2026-05-30T15:05:00+08:00","agent":"orchestrator","action":"agent_open","role":"planner","feature":"F-07","detail":"启动 planner 子 agent（agent_e95c97b2）失败/取消，直接扮演 planner"}
 {"timestamp":"2026-05-30T15:10:00+08:00","agent":"planner","action":"select","feature":"F-07","detail":"标记 in_progress，完成 BREAKDOWN.md（10 个单元）+ PLAN.md（10 个步骤）"}
 {"timestamp":"2026-05-30T15:15:00+08:00","agent":"planner","action":"handoff","feature":"F-07","detail":"方案完成，SESSION-HANDOFF 指向 implementer"}
+{"timestamp":"2026-05-30T15:30:00+08:00","agent":"implementer","action":"read_plan","feature":"F-07","detail":"读取 planner 方案：BREAKDOWN.md（10 个单元）+ PLAN.md（10 个步骤）"}
+{"timestamp":"2026-05-30T15:35:00+08:00","agent":"implementer","action":"create_module","feature":"F-07","module":"feature/home","detail":"创建模块文档 ARCHITECTURE.md / CONSTRAINTS.md / PROGRESS.md，test/unit/home/ 目录"}
+{"timestamp":"2026-05-30T15:40:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-07","unit":"HOME-01","module":"feature/home","detail":"完成 home_providers.dart：groupsProvider + todayRemindersProvider + filterProvider + filteredRemindersProvider"}
+{"timestamp":"2026-05-30T15:45:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-07","unit":"HOME-01","module":"feature/home","detail":"完成 test/unit/home/home_providers_test.dart，10 tests PASS"}
+{"timestamp":"2026-05-30T15:50:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-07","unit":"HOME-02","module":"feature/home","detail":"完成 home_header.dart：日期格式化 + 中文星期映射 + 天气占位"}
+{"timestamp":"2026-05-30T15:55:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-07","unit":"HOME-02","module":"feature/home","detail":"完成 test/unit/home/home_header_test.dart，4 tests PASS"}
+{"timestamp":"2026-05-30T16:00:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-07","unit":"HOME-03","module":"feature/home","detail":"完成 group_overview_card.dart：图标映射 + Badge + CompletionRingPainter"}
+{"timestamp":"2026-05-30T16:05:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-07","unit":"HOME-03","module":"feature/home","detail":"完成 test/unit/home/group_overview_card_test.dart，15 tests PASS"}
+{"timestamp":"2026-05-30T16:10:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-07","unit":"HOME-04","module":"feature/home","detail":"完成 group_overview_bar.dart：水平列表 + loading/empty/error 四态，修复卡片 overflow"}
+{"timestamp":"2026-05-30T16:15:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-07","unit":"HOME-04","module":"feature/home","detail":"完成 test/unit/home/group_overview_bar_test.dart，6 tests PASS"}
+{"timestamp":"2026-05-30T16:20:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-07","unit":"HOME-05","module":"feature/home","detail":"完成 today_timeline.dart：时间轴+色条+onTap，时间纵向排列避免 overflow"}
+{"timestamp":"2026-05-30T16:25:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-07","unit":"HOME-05","module":"feature/home","detail":"完成 test/unit/home/today_timeline_test.dart，8 tests PASS"}
+{"timestamp":"2026-05-30T16:30:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-07","unit":"HOME-06/07/08","module":"feature/home","detail":"完成 status_filter_bar.dart + empty_home_view.dart + home_fab.dart"}
+{"timestamp":"2026-05-30T16:35:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-07","unit":"HOME-06/07/08","module":"feature/home","detail":"完成 3 个测试文件，14 tests PASS（5+4+5）"}
+{"timestamp":"2026-05-30T16:40:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-07","unit":"HOME-09","module":"feature/home","detail":"完成 home_page.dart：ConsumerStatefulWidget 组装 + 响应式布局（600px 断点）"}
+{"timestamp":"2026-05-30T16:45:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-07","unit":"HOME-09","module":"feature/home","detail":"完成 test/unit/home/home_page_test.dart，6 tests PASS"}
+{"timestamp":"2026-05-30T16:50:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-07","unit":"HOME-10","module":"feature/home","detail":"完成 home.dart barrel file + lint warning 修复"}
+{"timestamp":"2026-05-30T16:55:00+08:00","agent":"implementer","action":"handoff_to_reviewer","feature":"F-07","detail":"全部 10 单元完成，390 total tests PASS，flutter analyze 零 error/warning，交给 reviewer"}
