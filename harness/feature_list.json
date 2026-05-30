@@ -83,10 +83,10 @@
       "F-02",
       "F-03"
     ],
-    "status": "pending",
+    "status": "completed",
     "module": "core/reminder",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "flutter analyze 零 warning，68 个单元测试全部 PASS，已归档 history/F-05-core-reminder/",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-06",

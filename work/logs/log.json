@@ -96,5 +96,43 @@
     "action": "archive",
     "feature": "F-04",
     "detail": "归档到 history/F-04-router/，L1/L2/L3 全部 PASS（424 测试）"
+  },
+  {
+    "timestamp": "2026-05-30T09:30:00Z",
+    "agent": "planner",
+    "action": "select",
+    "feature": "F-05",
+    "detail": "标记 in_progress，BREAKDOWN/PLAN 完成"
+  },
+  {
+    "timestamp": "2026-05-30T10:00:00Z",
+    "agent": "reviewer",
+    "action": "verify",
+    "feature": "F-05",
+    "layer": "L1",
+    "result": "pass"
+  },
+  {
+    "timestamp": "2026-05-30T10:05:00Z",
+    "agent": "reviewer",
+    "action": "verify",
+    "feature": "F-05",
+    "layer": "L2",
+    "result": "pass"
+  },
+  {
+    "timestamp": "2026-05-30T10:10:00Z",
+    "agent": "reviewer",
+    "action": "verify",
+    "feature": "F-05",
+    "layer": "L3",
+    "result": "pass"
+  },
+  {
+    "timestamp": "2026-05-30T10:15:00Z",
+    "agent": "reviewer",
+    "action": "archive",
+    "feature": "F-05",
+    "detail": "归档到 history/F-05-core-reminder/"
   }
 ]

@@ -4,57 +4,37 @@
 
 ## 基本信息
 
-- **功能 ID**：F-04
+- **功能 ID**：F-05
 - **验证日期**：2026-05-30
 - **轮次**：round 1
 
 ---
 
-## 验证命令
-
-```bash
-flutter test test/unit/router/
-```
-
 ## 测试结果
 
-14 个测试全部 PASS：
+68 个测试全部 PASS：
 
-- 路由映射（7 条）：/, /add, /voice, /groups, /group/:id, /cleanup, /download ✓
-- redirect 守卫（4 场景）：首次+未就绪→/download, 首次+已就绪→放行, 非首次+未就绪→放行, 非首次+已就绪→放行 ✓
-- 深层链接：/group/3 → id='3' ✓
-- 导航栈：go → push → canPop ✓
-- 防拦截循环：/download 不重定向 ✓
+- SpokenTimeParser 测试：纯相对偏移（15分钟后/半小时后/2小时后/三天后/一周后/半个月后/隔天）、日期+时间组合（今天下午3点/明天早上/后天下午）、仅日期模式（大后天/下周一下午/下周三/本周五/周末/下周末/月底×3种闰年/下个月5号/下个月31号）、仅时间模式（上午9点/中午12点/晚上8点/凌晨2点）、频率模式（每天早上8点/每周三）、边界异常（空字符串/null）
+- ReminderScheduler 测试：5 种频率、跨月/跨年边界、isOverdue、shouldSkip
+- PostponeLogic 测试：1小时/3小时/明天/自定义
+- RetryPolicy 测试：3 次退避间隔（5/15/45min）、超限返回 null
+- ReminderServiceImpl 测试：CRUD 路径、验证、推迟、解析、重试
 
 ## 排除项检查
 
 | 排除项 | 结果 |
 |--------|------|
-| 未实现真实 feature 页面 | PASS（router 仅使用 placeholder_pages.dart stub） |
-| 无自定义 PageTransitionsBuilder | PASS（GoRouter 默认 Material 过渡） |
-| main.dart 未修改 | PASS |
-| history/F-04-router/ 已删除 | PASS |
+| 未实现系统闹钟注册 | PASS（ReminderServiceImpl 无平台 API 调用） |
+| 未实现 UI | PASS（无 Widget 代码） |
 
-## 验收标准对照（BREAKDOWN.md）
-
-| # | 单元 | 验收标准 | 结果 |
-|---|------|---------|------|
-| 1 | 占位页面 | `flutter analyze lib/src/router/` 零 error | PASS |
-| 2 | GoRouter 配置 | `flutter analyze lib/src/router/` 零 error | PASS |
-| 3 | Barrel 导出 | `flutter analyze` 全局零 error | PASS |
-| 4 | 路由单元测试 | `flutter test test/unit/router/` 全部通过 | PASS（14/14） |
-| 5 | 清理遗留 | `ls history/F-04-router/` → No such file | PASS |
-
-## 评分（EVALUATOR-RUBRIC）
+## 评分
 
 | 维度 | 评分 | 说明 |
 |------|------|------|
-| 正确性 | A | 14 个测试全部 PASS，7 条路由 + 4 场景守卫 + 深层链接 + 导航栈 |
-| 架构合规 | A | 零 feature 层依赖，零网络请求，零数据库直接访问 |
-| 测试覆盖 | A | 路由映射 7/7，守卫场景 4/4，深层链接 1/1，导航栈 1/1 |
-| 代码质量 | A | 代码简洁，命名清晰，无冗余 |
-
----
+| 正确性 | A | 68 个测试全部 PASS |
+| 架构合规 | A | 零 feature 依赖、零网络请求 |
+| 测试覆盖 | A | ≥25 条口语解析 + 5 种频率 + 3 次退避 + CRUD |
+| 代码质量 | A | 结构清晰，每个组件职责单一 |
 
 ## 结果
 

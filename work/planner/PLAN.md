@@ -4,8 +4,8 @@
 
 ## 基本信息
 
-- **功能 ID**：F-04
-- **功能名称**：路由系统
+- **功能 ID**：F-05
+- **功能名称**：core/reminder 提醒核心
 
 ---
 
@@ -13,43 +13,79 @@
 
 | 模块 | 变更类型 | 说明 |
 |------|---------|------|
-| lib/src/router/code/app_router.dart | 修改 | 修复 AddReminderPage → ReminderFormPage 类名引用 |
-| lib/src/router/router.dart | 验证 | 确认 barrel file 导出正确 |
-| test/unit/router/ | 新建 | 创建 router 单元测试目录及 3 个测试文件 |
+| lib/src/core/reminder/ | 新建 | 提醒核心模块，4 个独立逻辑组件 + 1 个整合 Service |
+| lib/src/core/providers/code/service_providers.dart | 修改 | 将 ReminderService stub 替换为真实实现 |
+| test/unit/reminder/ | 新建 | 5 个测试文件，覆盖全部组件 |
 
 ---
 
 ## 实现步骤
 
-### 步骤 1：修复编译错误
+### 步骤 1：时间解析引擎
 
-- **内容**：app_router.dart 第 54 行引用了不存在的 `AddReminderPage`，实际类名是 `ReminderFormPage`（来自 feature/home/code/reminder_form_page.dart）。将 import 和 builder 中的类名修正，确保 flutter analyze 零 error。
-- **验收标准**：`flutter analyze lib/src/router/` 输出 "No issues found!"
-- **涉及文件**：`lib/src/router/code/app_router.dart`
+- **内容**：创建 `lib/src/core/reminder/code/time_parser.dart`
+  - `TimeParser` 类，`parse(String input) → DateTime?` 方法
+  - 支持 ≥20 种口语模式：今天下午3点、明天早上8点、后天下午2点、下周一下午3点、下周三、周末（周六）、月底（本月最后一天）、半个月后、下个月5号、每天早上8点、每周三、隔天（后天）、三天后、下周末（下周六）、大后天、中午12点、傍晚18点、下周五晚上8点、半年后、明年今天
+  - 歧义处理：下周末→下周六，隔天→后天，月底→本月最后一天（28/29/30/31）
+  - 使用 `intl` 包的 `DateFormat` 做基础解析
+- **验收标准**：`flutter test test/unit/reminder/time_parser_test.dart` ≥25 条用例全部通过
+- **涉及文件**：`lib/src/core/reminder/code/time_parser.dart`（新建）
 
-### 步骤 2：编写路由解析单元测试
+### 步骤 2：重复调度器
 
-- **内容**：创建 `test/unit/router/route_resolution_test.dart`，使用 `MaterialApp.router` + `ProviderScope` 包裹测试 Widget，通过 `GoRouter.of(context)` 分别对 '/'、'/add'、'/voice'、'/groups'、'/group/3'、'/cleanup'、'/download' 执行 `go()` 导航，断言当前 location 匹配预期路径。覆盖边界：空路径参数 `/group/` 应默认 id=''。
-- **验收标准**：`flutter test test/unit/router/route_resolution_test.dart` 全部 7 条路由通过
-- **涉及文件**：`test/unit/router/route_resolution_test.dart`（新建）
+- **内容**：创建 `lib/src/core/reminder/code/recurrence_scheduler.dart`
+  - `RecurrenceScheduler` 类，`nextTrigger(DateTime lastTrigger, ReminderFrequency frequency) → DateTime`
+  - once → 返回 null（不重复）
+  - daily → lastTrigger + 1 day
+  - weekly → lastTrigger + 7 days
+  - biweekly → lastTrigger + 14 days
+  - monthly → lastTrigger + 1 month（处理月底边界：1月31日→2月28/29日）
+- **验收标准**：`flutter test test/unit/reminder/recurrence_scheduler_test.dart` 覆盖 5 种频率 + 跨月边界
+- **涉及文件**：`lib/src/core/reminder/code/recurrence_scheduler.dart`（新建）
 
-### 步骤 3：编写路由守卫重定向测试
+### 步骤 3：推迟逻辑
 
-- **内容**：创建 `test/unit/router/redirect_guard_test.dart`。通过 ProviderScope.overrides 注入不同 `appConfigProvider` 状态组合：(a) isFirstLaunch=true + modelNotReady → 导航到 '/' 时应 redirect 到 '/download'；(b) isFirstLaunch=true + modelCompleted → 放行到 '/'；(c) isFirstLaunch=false + any → 放行；(d) 已在 '/download' 时任何状态 → 不循环 redirect。使用 `GoRouter.optionFor()` 或 `go()` 后断言 `router.routerDelegate.currentConfiguration.uri.toString()`。
-- **验收标准**：`flutter test test/unit/router/redirect_guard_test.dart` 4 种组合全部通过
-- **涉及文件**：`test/unit/router/redirect_guard_test.dart`（新建）
+- **内容**：创建 `lib/src/core/reminder/code/postpone_policy.dart`
+  - `PostponePolicy` 类
+  - `postpone1Hour(DateTime from) → DateTime`
+  - `postpone3Hours(DateTime from) → DateTime`
+  - `postponeTomorrow(DateTime from) → DateTime`（from + 1 day，same time）
+  - `postponeCustom(DateTime from, Duration duration) → DateTime`
+- **验收标准**：`flutter test test/unit/reminder/postpone_policy_test.dart` 4 种推迟方法全部正确
+- **涉及文件**：`lib/src/core/reminder/code/postpone_policy.dart`（新建）
 
-### 步骤 4：编写深层链接与导航栈测试
+### 步骤 4：重试机制
 
-- **内容**：创建 `test/unit/router/deep_link_test.dart`。(a) 测试 `/group/3` 路径参数：`state.pathParameters['id']` 返回 '3'；(b) 测试 `context.go('/add')` 后导航栈为 ['/add']（清栈）；(c) 测试 `context.push('/add')` 后栈深度 +1；(d) 测试 `/add` 页内 `context.replace('/voice')` 栈深度不变但顶部路径为 '/voice'。使用 `GoRouterState.of(context)` 取 pathParameters。
-- **验收标准**：`flutter test test/unit/router/deep_link_test.dart` 全部 4 个场景通过
-- **涉及文件**：`test/unit/router/deep_link_test.dart`（新建）
+- **内容**：创建 `lib/src/core/reminder/code/retry_policy.dart`
+  - `RetryPolicy` 类
+  - `nextRetryDelay(int attempt) → Duration?`：attempt 1→5min, 2→15min, 3→45min, ≥4→null（不再重试）
+  - `nextRetryAt(DateTime scheduledAt, int attempt) → DateTime?`
+- **验收标准**：`flutter test test/unit/reminder/retry_policy_test.dart` 3 次退避间隔正确 + 上限停止
+- **涉及文件**：`lib/src/core/reminder/code/retry_policy.dart`（新建）
 
-### 步骤 5：全门禁验证
+### 步骤 5：ReminderService 整合
 
-- **内容**：运行 `flutter analyze` 确认全项目零 warning，运行 `flutter test test/unit/router/` 确认 3 个测试文件全部通过。
-- **验收标准**：`flutter analyze` 输出 "No issues found!" 且 `flutter test test/unit/router/` exit code=0
-- **涉及文件**：全部 router 模块文件 + 测试文件
+- **内容**：创建 `lib/src/core/reminder/code/reminder_service.dart`
+  - `ReminderServiceImpl` 实现 `ReminderService` 抽象接口
+  - 构造函数注入 `GroupRepository` + `ReminderRepository`
+  - `createReminder(title, content, groupId, timeExpression, frequency)`：解析时间→计算 nextTrigger→写入 DB
+  - `markCompleted(id)` / `markDismissed(id)`：更新状态
+  - `checkOverdue()`：扫描 overdue 提醒并标记
+  - `getUpcoming(limit)`：查询未来提醒
+- **验收标准**：`flutter test test/unit/reminder/reminder_service_test.dart` 使用 mock repository 验证全部 CRUD 路径
+- **涉及文件**：
+  - `lib/src/core/reminder/code/reminder_service.dart`（新建）
+  - `lib/src/core/providers/code/service_providers.dart`（修改）
+
+### 步骤 6：Barrel + Provider 注册
+
+- **内容**：
+  - `lib/src/core/reminder/reminder.dart` barrel file 导出全部组件
+  - 更新 `service_providers.dart` 中的 `reminderServiceProvider`，将 stub 替换为 `ReminderServiceImpl`
+- **验收标准**：`flutter analyze lib/src/core/reminder/` 零 warning
+- **涉及文件**：
+  - `lib/src/core/reminder/reminder.dart`（新建）
+  - `lib/src/core/providers/code/service_providers.dart`（修改）
 
 ---
 
@@ -57,18 +93,16 @@
 
 | 依赖 | 类型 | 说明 |
 |------|------|------|
-| go_router | 外部库 | 已在 pubspec.yaml 中声明，F-00 已安装 |
-| flutter_riverpod | 外部库 | 已在 pubspec.yaml 中声明，F-03 已完成 Provider 定义 |
-| core/providers (F-03) | 模块 | appConfigProvider 提供 isFirstLaunch + modelDownloadStatus 状态 |
-| feature/home, feature/voice_input, feature/group_manage, feature/cleanup, feature/model_download | 模块 | 各模块提供 Page Widget 供路由 builder 引用 |
+| intl | 外部库 | DateFormat 解析，pubspec.yaml 已包含 |
+| lib/src/core/common/ | 模块 | Reminder/Group 数据模型、ReminderStatus/Frequency 枚举 |
+| lib/src/core/database/ | 模块 | GroupRepository + ReminderRepository（步骤 5 需要） |
+| lib/src/core/providers/ | 模块 | ReminderService 抽象接口（步骤 5 需要） |
 
 ---
 
 ## 排除项
 
-1. 不实现自定义 PageTransitionsBuilder — GoRouter 默认 MaterialPage 过渡已满足需求
-2. 不修改 feature 层页面代码 — 路由只引用已有页面类
-3. 不实现 ShellRoute 嵌套导航 — 7 条路由平铺
-4. 不处理平台返回键逻辑 — 由 GoRouter 默认 pop 处理
-5. 不引入额外路由库
-6. 不编写集成测试（integration_test）— 路由集成测试在 F-07 等页面功能实现后补充
+1. 不实现系统闹钟实际注册——F-06 职责
+2. 不实现 UI——F-08 职责
+3. 不做真实平台 API 调用
+4. 不做 i18n 多语言

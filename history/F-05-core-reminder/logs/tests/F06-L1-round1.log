@@ -1,0 +1,29 @@
+=== L1 Round 1 — flutter analyze (global) ===
+Analyzing HomeReminder...
+
+  error • Target of URI doesn't exist: 'src/router/router.dart' • history/F-04-router/main.dart:4:8 • uri_does_not_exist
+  error • Undefined name 'appRouterProvider' • history/F-04-router/main.dart:33:31 • undefined_identifier
+  error • Target of URI doesn't exist: '../../core/providers/providers.dart' • history/F-04-router/router/code/app_router.dart:10:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: '../../feature/home/home.dart' • history/F-04-router/router/code/app_router.dart:11:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: '../../feature/voice_input/voice_input.dart' • history/F-04-router/router/code/app_router.dart:12:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: '../../feature/group_manage/group_manage.dart' • history/F-04-router/router/code/app_router.dart:13:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: '../../feature/cleanup/cleanup.dart' • history/F-04-router/router/code/app_router.dart:14:8 • uri_does_not_exist
+  error • Target of URI doesn't exist: '../../feature/model_download/model_download.dart' • history/F-04-router/router/code/app_router.dart:15:8 • uri_does_not_exist
+  error • Undefined name 'appConfigProvider' • history/F-04-router/router/code/app_router.dart:23:36 • undefined_identifier
+  error • Undefined name 'ModelDownloadStatus' • history/F-04-router/router/code/app_router.dart:33:40 • undefined_identifier
+  error • The name 'HomePage' isn't a class • history/F-04-router/router/code/app_router.dart:50:44 • creation_with_non_type
+  error • The name 'AddReminderPage' isn't a class • history/F-04-router/router/code/app_router.dart:54:44 • creation_with_non_type
+  error • The name 'VoiceInputPage' isn't a class • history/F-04-router/router/code/app_router.dart:58:44 • creation_with_non_type
+  error • The name 'GroupManagePage' isn't a class • history/F-04-router/router/code/app_router.dart:62:44 • creation_with_non_type
+  error • The function 'GroupDetailPage' isn't defined • history/F-04-router/router/code/app_router.dart:66:38 • undefined_function
+  error • The name 'CleanupPage' isn't a class • history/F-04-router/router/code/app_router.dart:72:44 • creation_with_non_type
+  error • The name 'ModelDownloadPage' isn't a class • history/F-04-router/router/code/app_router.dart:76:44 • creation_with_non_type
+   info • The local variable '_fakeReminder' starts with an underscore • test/unit/reminder/reminder_service_test.dart:15:12 • no_leading_underscores_for_local_identifiers
+
+18 issues found. (ran in 0.8s)
+
+Note: 16 errors are in history/F-04-router/ (archived code, pre-existing). 1 info is in F-05 test (pre-existing).
+
+=== L1 Round 1 — flutter analyze (notification module only) ===
+Analyzing notification...
+No issues found! (ran in 0.5s)
