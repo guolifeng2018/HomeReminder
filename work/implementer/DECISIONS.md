@@ -1,23 +1,24 @@
-# 路由系统 — 实现决策
+# 模块决策记录
 
-<!-- implementer 在开发过程中作出的重要决策，时间倒序 -->
+<!-- 由 implementer 填写，时间倒序（最新的在最上面）。记录模块内部的重大决策。 -->
+<!-- 项目级决策写入 harness/decisions/ -->
 
 ---
 
-## 2026-05-30: 占位页面策略
+## 2026-05-30: 使用占位页面 stub 隔离路由与 feature 层
 
-- **决策**：在 `lib/src/router/code/placeholder_pages.dart` 中为 7 个目标页面创建最小 StatelessWidget stub，解决路由配置对尚未实现的 feature 页面的编译依赖
-- **原因**：F-04 路由系统是框架层，不应依赖尚未开发的 feature 页面。占位页面让路由配置可独立编译和测试，后续 feature 开发时直接替换 import 即可
-- **替代方案**：使用 `Builder` 回调动态创建页面 — 但会增加路由配置复杂度，不利于类型安全
-- **后续影响**：F-07/F-09/F-13/F-14/F-15 开发时需将对应页面的 import 从 placeholder_pages.dart 改回真实 feature 模块
+- **上下文**：app_router.dart 需要引用 7 个 feature 页面（HomePage, AddReminderPage, VoiceInputPage, GroupManagePage, GroupDetailPage, CleanupPage, ModelDownloadPage）。这些 feature 页面分布在 5 个独立的 feature 模块中，部分页面（HomePage, ReminderFormPage）依赖大量 Provider 和数据库，在路由单元测试中难以 mock 全部依赖链。
+- **选项**：
+  - A：app_router.dart 直接 import 5 个 feature 模块的 barrel file，在测试中 mock 所有 Provider 依赖链
+  - B：app_router.dart import 本地的 placeholder_pages.dart，该文件提供 7 个最小 `StatelessWidget` stub（const 构造函数），后续功能完成时替换为真实 import
+- **决策**：选 B。理由：1) 路由测试仅需验证路由匹配和 redirect 逻辑，不依赖页面内部实现；2) 避免路由模块对 feature 层产生硬编译依赖，降低模块耦合；3) 符合 planner 方案（PLAN.md 步骤 1 明确要求创建占位页面）
+- **影响**：router 模块不再 import 任何 feature 层模块；placeholder_pages.dart 成为 router 模块内部文件；后续 feature 页面全部完成时需再次更新 app_router.dart 的 import
 
-## 2026-05-30: GoRouter 平铺路由
+## 2026-05-30: 路由命名：AddReminderPage vs ReminderFormPage
 
-- **决策**：7 条路由平铺在 GoRouter 根级，不使用 ShellRoute 嵌套
-- **原因**：当前页面间无共享导航壳（如 BottomNavigationBar），平铺路由更简洁。后续如需要 Tab 导航，可重构为 ShellRoute
-- **替代方案**：ShellRoute + StatefulShellRoute — 过度设计，当前不需要
-
-## 2026-05-30: 删除 history/F-04-router/ 遗留
-
-- **决策**：删除 `history/F-04-router/` 目录，该目录包含旧版本路由尝试的半成品
-- **原因**：旧文件引用了不存在的模块路径，与新方案不一致，会误导后续开发者
+- **上下文**：placeholder_pages.dart 中定义了 `AddReminderPage` 作为 `/add` 路由的占位页面。feature/home 模块中实际的表单页面名为 `ReminderFormPage`（同时支持新建和编辑两种模式）。两个类名不一致。
+- **选项**：
+  - A：placeholder_pages.dart 中使用 `ReminderFormPage` 与 feature 模块保持一致
+  - B：placeholder_pages.dart 中使用 `AddReminderPage`，语义上更准确描述 `/add` 路由的用途（新建提醒）
+- **决策**：选 B。理由：1) placeholder_pages.dart 是独立的 stub 文件，不需要与 feature 模块的类名保持一致；2) `AddReminderPage` 更直观地表达 `/add` 路由的职责；3) 后续替换为真实页面时只需修改 import 和 builder 中的类名
+- **影响**：仅影响 placeholder_pages.dart 和 app_router.dart 中的类名引用
