@@ -10,4 +10,4 @@ export 'code/status_filter_bar.dart';
 export 'code/empty_home_view.dart';
 export 'code/home_fab.dart';
 export 'code/home_page.dart';
-export 'code/add_reminder_page.dart';
+export 'code/reminder_form_page.dart';

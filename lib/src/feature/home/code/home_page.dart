@@ -16,6 +16,8 @@ import 'today_timeline.dart';
 import 'status_filter_bar.dart';
 import 'empty_home_view.dart';
 import 'home_fab.dart';
+import 'reminder_form_page.dart';
+import '../../../core/providers/providers.dart';
 
 /// 首页
 ///
@@ -56,6 +58,18 @@ class _HomePageState extends ConsumerState<HomePage> {
       }
     }
     return counts;
+  }
+
+  /// 处理删除提醒
+  Future<bool> _onDelete(int reminderId) async {
+    try {
+      final repo = ref.read(reminderRepositoryProvider);
+      await repo.delete(reminderId);
+      ref.invalidate(todayRemindersProvider);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   @override
@@ -178,7 +192,14 @@ class _HomePageState extends ConsumerState<HomePage> {
           TodayTimeline(
             reminders: reminders,
             groupMap: groupMap,
-            onTap: null,
+            onTap: (reminderId) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => ReminderFormPage(reminderId: reminderId),
+                ),
+              );
+            },
+            onDelete: _onDelete,
           ),
         ],
       ),
@@ -227,7 +248,14 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: TodayTimeline(
             reminders: reminders,
             groupMap: groupMap,
-            onTap: null,
+            onTap: (reminderId) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => ReminderFormPage(reminderId: reminderId),
+                ),
+              );
+            },
+            onDelete: _onDelete,
           ),
         ),
       ],
