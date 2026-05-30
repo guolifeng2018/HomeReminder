@@ -6,6 +6,9 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:home_reminder/src/core/common/code/models/enums.dart';
+import 'package:home_reminder/src/core/common/code/models/reminder_model.dart';
+import 'package:home_reminder/src/core/reminder/code/postpone_logic.dart';
 import 'package:home_reminder/src/core/providers/code/service_providers.dart';
 import 'package:home_reminder/src/core/providers/code/reminder_service.dart';
 import 'package:home_reminder/src/core/providers/code/notification_service.dart';
@@ -27,6 +30,31 @@ class MockReminderService implements ReminderService {
     cancelCalled = true;
     lastCancelledId = id;
   }
+
+  @override
+  DateTime? parseTime(String input, {DateTime? referenceDate}) => null;
+
+  @override
+  Future<Reminder> createReminder({
+    required int groupId,
+    required String title,
+    String? content,
+    required DateTime scheduledAt,
+    ReminderStatus status = ReminderStatus.pending,
+    ReminderFrequency frequency = ReminderFrequency.once,
+  }) async {
+    throw UnimplementedError('mock');
+  }
+
+  @override
+  Future<void> postponeReminder(int id, PostponePreset preset,
+      {Duration? custom}) async {}
+
+  @override
+  DateTime? getNextRetryTime(int attemptNumber, DateTime originalTime) => null;
+
+  @override
+  Future<int> checkOverdue() async => 0;
 }
 
 /// Mock NotificationService — 记录方法调用
