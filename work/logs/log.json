@@ -266,6 +266,101 @@
     "agent": "reviewer",
     "action": "archive",
     "feature": "F-15",
-    "detail": "代码+测试完整，归档"
+    "detail": "代码+测试完整，归档（注：2026-05-30 核查发现 F-08~F-15 实际仅有占位符代码，此批 archive 记录失真）"
+  },
+  {
+    "timestamp": "2026-05-30T12:00:00Z",
+    "agent": "planner",
+    "action": "select",
+    "feature": "F-09",
+    "detail": "修正后重新标记 in_progress，BREAKDOWN.md + PLAN.md 完成（9 个单元，涉及 core/common/download/ 新子模块 + feature/model_download UI）"
+  },
+  {
+    "timestamp": "2026-05-30T12:30:00Z",
+    "agent": "implementer",
+    "action": "unit_code_done",
+    "feature": "F-09",
+    "unit": "模型注册表",
+    "module": "core/common",
+    "detail": "DownloadableModel + ModelRegistry（SenseVoice-Tiny 75MB + Qwen-140M 105MB）"
+  },
+  {
+    "timestamp": "2026-05-30T12:35:00Z",
+    "agent": "implementer",
+    "action": "unit_code_done",
+    "feature": "F-09",
+    "unit": "断点续传下载器",
+    "module": "core/common",
+    "detail": "HTTP Range 断点续传 + .part 追加写入 + 暂停/继续/取消"
+  },
+  {
+    "timestamp": "2026-05-30T12:35:00Z",
+    "agent": "implementer",
+    "action": "unit_code_done",
+    "feature": "F-09",
+    "unit": "SHA256 校验器",
+    "module": "core/common",
+    "detail": "SHA256 计算+比对+不匹配删除文件+最多重试 3 次"
+  },
+  {
+    "timestamp": "2026-05-30T12:35:00Z",
+    "agent": "implementer",
+    "action": "unit_code_done",
+    "feature": "F-09",
+    "unit": "存储空间检查器",
+    "module": "core/common",
+    "detail": "df + fallback 检查，要求 ≥ 1.5× 模型大小 + 50MB"
+  },
+  {
+    "timestamp": "2026-05-30T12:35:00Z",
+    "agent": "implementer",
+    "action": "unit_code_done",
+    "feature": "F-09",
+    "unit": "下载状态管理",
+    "module": "core/common",
+    "detail": "DownloadState 5 状态枚举 + DownloadProgress + DownloadStateManager + Stream"
+  },
+  {
+    "timestamp": "2026-05-30T12:40:00Z",
+    "agent": "implementer",
+    "action": "unit_code_done",
+    "feature": "F-09",
+    "unit": "下载编排器",
+    "module": "core/common",
+    "detail": "ModelDownloadService 协调全部组件：存储检查→断点续传→SHA256 校验→重试"
+  },
+  {
+    "timestamp": "2026-05-30T12:45:00Z",
+    "agent": "implementer",
+    "action": "unit_code_done",
+    "feature": "F-09",
+    "unit": "Riverpod Provider",
+    "module": "core/common",
+    "detail": "downloadServiceProvider + modelDownloadProgressProvider + modelListProvider"
+  },
+  {
+    "timestamp": "2026-05-30T12:50:00Z",
+    "agent": "implementer",
+    "action": "unit_code_done",
+    "feature": "F-09",
+    "unit": "模型下载 UI 页",
+    "module": "feature/model_download",
+    "detail": "替换占位符为 ConsumerStatefulWidget：双模型卡片 + 进度条 + 5 状态按钮切换"
+  },
+  {
+    "timestamp": "2026-05-30T12:55:00Z",
+    "agent": "implementer",
+    "action": "unit_code_done",
+    "feature": "F-09",
+    "unit": "barrel 文件导出",
+    "module": "core/common",
+    "detail": "common.dart 导出 download 子模块全部 8 个文件"
+  },
+  {
+    "timestamp": "2026-05-30T13:00:00Z",
+    "agent": "implementer",
+    "action": "handoff_to_reviewer",
+    "feature": "F-09",
+    "detail": "全部 9 单元完成（编码 8 文件 + UI 页），PROGRESS.md / feature_list.json / SESSION-HANDOFF.md / DECISIONS.md 已同步，交给 reviewer"
   }
 ]

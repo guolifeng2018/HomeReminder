@@ -150,7 +150,7 @@
     ],
     "status": "completed",
     "module": "core/common",
-    "evidence": "模型下载管理代码完整（断点续传/SHA256校验/存储检查/下载UI）",
+    "evidence": "8 个 dart 文件（model_registry / downloader / sha256_validator / storage_checker / download_state / model_download_service / download_providers / barrel），feature/model_download UI 页替换占位符（ConsumerStatefulWidget + 双卡片 + 5 状态按钮)，Flutter SDK 权限问题暂无法运行 analyze/test",
     "completed_date": "2026-05-30"
   },
   {
@@ -163,10 +163,10 @@
     "depends_on": [
       "F-01"
     ],
-    "status": "completed",
+    "status": "pending",
     "module": "core/voice",
-    "evidence": "core/voice 录音模块代码完整",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-11",
@@ -179,10 +179,10 @@
       "F-09",
       "F-10"
     ],
-    "status": "completed",
+    "status": "pending",
     "module": "core/voice",
-    "evidence": "core/voice ASR 离线识别代码完整",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-12",
@@ -194,10 +194,10 @@
     "depends_on": [
       "F-09"
     ],
-    "status": "completed",
+    "status": "pending",
     "module": "core/voice",
-    "evidence": "core/voice 语义解析代码完整",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-13",
@@ -212,10 +212,10 @@
       "F-11",
       "F-12"
     ],
-    "status": "completed",
+    "status": "pending",
     "module": "feature/voice_input",
-    "evidence": "feature/voice_input 语音录入页代码完整",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-14",
@@ -228,10 +228,10 @@
       "F-02",
       "F-03"
     ],
-    "status": "completed",
+    "status": "pending",
     "module": "feature/group_manage",
-    "evidence": "feature/group_manage 分组管理代码完整",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-15",
@@ -244,10 +244,10 @@
       "F-02",
       "F-05"
     ],
-    "status": "completed",
+    "status": "pending",
     "module": "feature/cleanup",
-    "evidence": "feature/cleanup 批量清理代码完整",
-    "completed_date": "2026-05-30"
+    "evidence": null,
+    "completed_date": null
   },
   {
     "id": "F-16",
