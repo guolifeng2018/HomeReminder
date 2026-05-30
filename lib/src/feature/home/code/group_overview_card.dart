@@ -76,7 +76,7 @@ class GroupOverviewCard extends StatelessWidget {
               // 图标 + 待办 Badge
               Stack(
                 children: [
-                  Icon(icon, size: 32, color: Theme.of(context).colorScheme.primary),
+                  Icon(icon, size: 28, color: Theme.of(context).colorScheme.primary),
                   if (pendingCount > 0)
                     Positioned(
                       right: 0,
@@ -104,7 +104,7 @@ class GroupOverviewCard extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               // 分组名
               Text(
                 group.name,
@@ -114,11 +114,11 @@ class GroupOverviewCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               // 环形进度
               SizedBox(
-                width: 48,
-                height: 48,
+                width: 40,
+                height: 40,
                 child: CustomPaint(
                   painter: CompletionRingPainter(ratio: ratio),
                   child: Center(
