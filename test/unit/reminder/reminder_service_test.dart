@@ -5,8 +5,6 @@ import 'package:home_reminder/src/core/common/code/models/reminder_model.dart';
 import 'package:home_reminder/src/core/database/code/reminder_repository.dart';
 import 'package:home_reminder/src/core/reminder/code/reminder_service_impl.dart';
 import 'package:home_reminder/src/core/reminder/code/postpone_logic.dart';
-import 'package:home_reminder/src/core/reminder/code/reminder_scheduler.dart';
-import 'package:home_reminder/src/core/reminder/code/retry_policy.dart';
 
 class MockReminderRepository extends Mock implements ReminderRepository {}
 

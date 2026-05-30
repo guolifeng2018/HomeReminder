@@ -194,6 +194,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "flutter_app_badger",
+      "rootUri": "file:///Users/guolifeng/.pub-cache/hosted/pub.dev/flutter_app_badger-1.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_lints",
       "rootUri": "file:///Users/guolifeng/.pub-cache/hosted/pub.dev/flutter_lints-5.0.0",
       "packageUri": "lib/",
@@ -674,7 +680,7 @@
       "languageVersion": "3.6"
     }
   ],
-  "generated": "2026-05-29T16:05:32.270184Z",
+  "generated": "2026-05-30T06:12:28.181708Z",
   "generator": "pub",
   "generatorVersion": "3.6.0",
   "flutterRoot": "file:///Users/guolifeng/main/FlutterProjects/flutter",

@@ -4,10 +4,10 @@
 
 ## 当前状态
 
-- **当前功能**：F-06（core/notification）
-- **状态**：implementer 完成，待 reviewer 审查
-- **当前模块**：core/notification
-- **最后更新**：2026-05-30（implementer 完成全部 6 个工作单元，48 tests PASS）
+- **当前功能**：F-07（feature/home 首页）
+- **状态**：planner 完成 BREAKDOWN + PLAN，待 implementer 实现
+- **下一功能**：F-08（手动录入流程）
+- **最后更新**：2026-05-30（planner 完成 F-07 方案设计，10 个工作单元）
 
 ---
 
@@ -22,6 +22,7 @@
 | F-03 | Riverpod 状态管理 + 依赖注入 | 2026-05-29 |
 | F-04 | 路由系统 | 2026-05-29 |
 | F-05 | core/reminder 提醒核心 | 2026-05-30 |
+| F-06 | core/notification 通知模块 | 2026-05-30 |
 
 ---
 
@@ -29,4 +30,17 @@
 
 | 功能 ID | 名称 | 状态 |
 |---------|------|------|
-| — | — | — |
+| F-07 | feature/home 首页 | planner 完成，待 implementer |
+
+---
+
+## 待开发
+
+| 功能 ID | 名称 | 优先级 |
+|---------|------|--------|
+| F-07 | feature/home 首页 | P0 |
+| F-08 | 手动录入流程 | P0 |
+| F-09 | 模型下载管理 | P0 |
+| F-10 | feature/voice_input 语音录入 | P0 |
+| F-11 | feature/group_manage 分组管理 | P0 |
+| F-12 | feature/cleanup 批量清理 | P0 |

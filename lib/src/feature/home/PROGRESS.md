@@ -23,10 +23,10 @@
 
 | # | 单元名称 | 状态 | 完成日期 |
 |---|---------|------|---------|
-| 1 | HOME-01：首页 Riverpod Provider | in_progress | - |
-| 2 | HOME-02：页面头部组件 | pending | - |
-| 3 | HOME-03：分组概览卡片 | pending | - |
-| 4 | HOME-04：分组卡片横向列表 | pending | - |
+| 1 | HOME-01：首页 Riverpod Provider | done | 2026-05-30 |
+| 2 | HOME-02：页面头部组件 | done | 2026-05-30 |
+| 3 | HOME-03：分组概览卡片 | done | 2026-05-30 |
+| 4 | HOME-04：分组卡片横向列表 | in_progress | - |
 | 5 | HOME-05：今日待办时间线列表 | pending | - |
 | 6 | HOME-06：状态筛选 TabBar | pending | - |
 | 7 | HOME-07：空状态组件 | pending | - |

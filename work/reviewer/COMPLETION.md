@@ -1,66 +1,39 @@
-# 验证完成 — F-04 路由系统
+## 功能 F-06 — 验证通过
 
-- **功能 ID**：F-04
-- **验证日期**：2026-05-29
-- **轮次**：round 2
-
----
-
-## 各层验证结果
-
-| 层 | 判定 | 日期 | 轮次 |
-|----|------|------|------|
-| L1 静态分析 | PASS ✅ | 2026-05-29 | round 2 |
-| L2 运行时验证 | PASS ✅ | 2026-05-29 | round 2 |
-| L3 系统级确认 | PASS ✅ | 2026-05-29 | round 2 |
-
----
-
-## L2 四维度评分
-
-| 维度 | 评分 | 说明 |
-|------|------|------|
-| 正确性 | A | 全部验收标准通过，7 路由 + 4 守卫场景 + 深层链接 + 导航栈 + 防无限重定向全部覆盖 |
-| 架构合规 | A | 路由位于应用胶水层（组合根），ARCHITECTURE.md 正确反映，旧 core/router 已移除，无硬约束违规 |
-| 测试覆盖 | A | 14 条测试，主流程 + 边界 + 异常路径全覆盖 |
-| 代码质量 | A | 命名清晰，结构合理，无重复代码，无反模式 |
-
----
+- **L1 静态分析**：PASS（2026-05-30 round 2）
+- **L2 运行时验证**：PASS（2026-05-30 round 2）
+  - 正确性：A
+  - 架构合规：A
+  - 测试覆盖：A（52 tests，覆盖主流程 + 边界 + 异常）
+  - 代码质量：A
+- **L3 系统级确认**：PASS（2026-05-30 round 2）
 
 ## 模块质量评分
 
 | 模块 | 正确性 | 架构合规 | 测试覆盖 | 代码质量 | 总分 |
 |------|--------|---------|---------|---------|------|
-| router | A | A | A | A | A |
+| core/notification | A | A | A | A | **A** |
 
----
+## 审查历程
 
-## 修复历史
-
-| 轮次 | 问题 | 修复 |
-|------|------|------|
-| round 1 | L1 FAIL：`core/router` import `feature/*` 违反分层依赖 | 迁移 `lib/src/core/router/` → `lib/src/router/`（应用胶水层），更新 ARCHITECTURE.md、main.dart、测试 import |
-
----
+| 轮次 | L1 | L2 | L3 | 说明 |
+|------|-----|-----|-----|------|
+| round 1 | FAIL ❌ | 未进入 | 未进入 | 1 个问题：body 截断缺失 |
+| round 2 | PASS ✅ | PASS ✅ | PASS ✅ | 修复验证通过，可归档 |
 
 ## 已知限制
 
-1. 页面为占位页（仅 Scaffold + Text），业务 UI 待 F-07/F-08/F-09/F-10 实现
-2. 无 ShellRoute / 嵌套路由（当前全部平铺路由）
-3. 无自定义转场动画（全部 go_router 默认 Material 转场）
-4. 无平台深度链接配置（Android intent-filter / iOS universal link）
-5. 模型下载管理器未实现（`/download` 仅占位页）
+1. e2e 测试需在真机/模拟器上验证通知实际触发、点击和角标更新。计划在 F-07 feature/home 完成后补充。
 
----
+## 交付物清单
 
-## 遗留问题
-
-| 问题 | 严重程度 | 备注 |
-|------|---------|------|
-| （无） | — | — |
-
----
-
-## 建议固化为规则
-
-1. **组合根（Glue Layer）作为显式架构概念**：当前 CONSTRAINTS.md §1 仅禁止 core→feature 逆依赖，但未明确提及"组合根"可作为可引用所有层的特殊层。建议在 CONSTRAINTS.md 或 ARCHITECTURE.md 中将"应用胶水层/组合根"固化为显式的第一级架构概念，避免未来类似路由模块的放置困惑。
+| 单元 | 文件 | 测试 |
+|------|------|------|
+| NOT-01 | `notification_initializer.dart` | 7 tests |
+| NOT-02 | `notification_content_builder.dart` | 6 tests |
+| NOT-03 | `notification_payload_handler.dart` | 10 tests |
+| NOT-04 | `badge_manager.dart` | 13 tests |
+| NOT-05 | `notification_service_impl.dart` | 14 tests |
+| NOT-06 | barrel file + 依赖更新 | ✅ |
+| FIX-01 | body 截断修复 | 4 tests |
+| **合计** | **6 个源代码文件 + 1 barrel file** | **52 tests** |
