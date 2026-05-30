@@ -36,3 +36,17 @@
 {"timestamp":"2026-05-30T18:10:00+08:00","agent":"reviewer","action":"verify","feature":"F-07","layer":"L3","result":"pass","detail":"零 print/debugger/TODO，零注释代码，调试残留检查通过"}
 {"timestamp":"2026-05-30T18:15:00+08:00","agent":"reviewer","action":"complete","feature":"F-07","detail":"F-07 L1/L2/L3 全部 PASS，COMPLETION 完成，handoff 至 planner (F-08)"}
 {"timestamp":"2026-05-30T18:30:00+08:00","agent":"planner","action":"select","feature":"F-08","detail":"标记 in_progress，完成 BREAKDOWN.md（7 单元）+ PLAN.md（7 步骤），handoff 至 implementer"}
+{"timestamp":"2026-05-30T19:00:00+08:00","agent":"implementer","action":"read_plan","feature":"F-08","detail":"读取 planner 方案：BREAKDOWN.md + PLAN.md"}
+{"timestamp":"2026-05-30T19:10:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-08","unit":"F-08-01","module":"feature/home","detail":"完成 ReminderFormPage UI：5 表单字段（标题/内容/分组/时间/频率）+ AppBar 模式切换"}
+{"timestamp":"2026-05-30T19:15:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-08","unit":"F-08-01","module":"feature/home","detail":"完成 test/unit/home/reminder_form_page_test.dart，10 tests PASS"}
+{"timestamp":"2026-05-30T19:20:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-08","unit":"F-08-02","module":"feature/home","detail":"完成表单验证：标题非空/分组必选/时间不过去"}
+{"timestamp":"2026-05-30T19:25:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-08","unit":"F-08-02","module":"feature/home","detail":"完成 test/unit/home/reminder_form_validation_test.dart，4 tests PASS"}
+{"timestamp":"2026-05-30T19:30:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-08","unit":"F-08-03","module":"feature/home","detail":"完成新建提交：ReminderRepository.insert + Navigator.pop(true)"}
+{"timestamp":"2026-05-30T19:35:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-08","unit":"F-08-03","module":"feature/home","detail":"完成 test/unit/home/reminder_form_submit_test.dart，4 tests PASS"}
+{"timestamp":"2026-05-30T19:40:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-08","unit":"F-08-04","module":"feature/home","detail":"完成编辑流程：initState 预填充 5 字段 + update 提交"}
+{"timestamp":"2026-05-30T19:45:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-08","unit":"F-08-04","module":"feature/home","detail":"完成 test/unit/home/reminder_form_edit_test.dart，6 tests PASS"}
+{"timestamp":"2026-05-30T19:50:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-08","unit":"F-08-05","module":"feature/home","detail":"完成删除流程：Dismissible + AlertDialog + onDelete 回调"}
+{"timestamp":"2026-05-30T19:55:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-08","unit":"F-08-05","module":"feature/home","detail":"完成 test/unit/home/today_timeline_delete_test.dart，5 tests PASS"}
+{"timestamp":"2026-05-30T20:00:00+08:00","agent":"implementer","action":"unit_test_done","feature":"F-08","unit":"F-08-06","module":"feature/home","detail":"完成 test/unit/home/reminder_frequency_test.dart，5 tests PASS"}
+{"timestamp":"2026-05-30T20:05:00+08:00","agent":"implementer","action":"unit_code_done","feature":"F-08","unit":"F-08-07","module":"feature/home","detail":"完成 barrel file 更新 + home_page 布线 + 删除旧 stub"}
+{"timestamp":"2026-05-30T20:10:00+08:00","agent":"implementer","action":"handoff_to_reviewer","feature":"F-08","detail":"全部 7 单元完成，97 home tests PASS，flutter analyze 零 warning，交给 reviewer"}
