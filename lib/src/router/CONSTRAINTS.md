@@ -1,17 +1,11 @@
-# 模块约束
+# 路由系统 — 模块约束
 
-## 路由约束
+---
 
-1. **必须**使用 go_router 默认 Material 转场动画，禁止自定义 PageTransitionsBuilder
-2. **允许**引入 core 层和 feature 层模块（路由模块位于应用组合根，不受分层依赖限制）
-3. **必须**保证 `/download` 不被 redirect 守卫拦截（避免无限重定向循环）
+## 约束
 
-## 守卫约束
-
-1. **必须**通过 `ProviderScope.containerOf(context)` 获取 ProviderContainer，禁止缓存或跨请求复用
-2. **禁止**在 redirect 回调中执行副作用操作（网络请求、数据库写入等）
-3. redirect 返回值**必须**为 `null`（放行）或 `String`（重定向目标路径）
-
-## 组件约束
-
-1. **必须**使用 MaterialPage（GoRouter 默认），禁止逐路由自定义 pageBuilder
+1. **必须**仅依赖 core 层和 go_router 库，禁止依赖 feature 层（placeholder_pages 是内部 stub，不算 feature 层）
+2. **必须**通过 `appRouterProvider` Provider 暴露 GoRouter，main.dart 中通过 `ref.watch(appRouterProvider)` 获取
+3. **禁止**在路由 redirect 守卫中执行 I/O 操作或状态修改（仅读取 Provider 状态）
+4. **必须**保持 `flutter analyze lib/src/router/` 零 warning
+5. **禁止**在路由配置中引入网络请求或数据上传

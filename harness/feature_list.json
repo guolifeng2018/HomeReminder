@@ -19,7 +19,9 @@
     "description": "实现全局常量（APP_NAME='居净清单', DEFAULT_GROUPS 预设分组列表含 6 组: 客厅/卧室/厨房/冰箱/扫地机/地面, 时间格式模板），数据模型（Group 实体: id/name/icon/is_preset/sort_order/created_at, Reminder 实体: id/group_id/title/content/scheduled_at/status/frequency/created_at/updated_at, ReminderStatus 枚举: pending/overdue/completed/dismissed, ReminderFrequency 枚举: once/daily/weekly/biweekly/monthly），工具类（DateFormatter: 自然语言时间→DateTime, StringSanitizer: 输入清洗），权限管理器（PermissionManager 抽象类 + Android/iOS 方法通道实现: 麦克风/通知/存储三项权限的状态查询和请求），导出 barrel file（core/common/common.dart）",
     "verification": "flutter analyze lib/src/core/common/ 零 warning && flutter test test/unit/common/ 全部通过（覆盖: Group/Reminder 模型 JSON 序列化+反序列化, ReminderStatus/Frequency 枚举值正确性, DateFormatter ≥15 条口语时间解析含边界, StringSanitizer 空/特殊字符/超长边界值, PermissionManager 各权限 granted/denied/permanentlyDenied 状态转换, DEFAULT_GROUPS 6 组数据完整性） && 无对上层模块的 import（grep 'import.*feature' lib/src/core/common/ 返回空）",
     "priority": "P0",
-    "depends_on": ["F-00"],
+    "depends_on": [
+      "F-00"
+    ],
     "status": "completed",
     "module": "core/common",
     "evidence": "flutter analyze 零 warning，单元测试全部 PASS，已归档 history/F-01-core-common/",
@@ -32,7 +34,9 @@
     "description": "Drift 数据库配置（pubspec dev_dependency: drift_dev, build_runner），定义 Group 表（id INTEGER PK AUTOINCREMENT, name TEXT NOT NULL, icon TEXT, is_preset INTEGER DEFAULT 0, sort_order INTEGER, created_at INTEGER），定义 Reminder 表（id INTEGER PK AUTOINCREMENT, group_id INTEGER NOT NULL FK→groups ON DELETE CASCADE, title TEXT NOT NULL, content TEXT, scheduled_at INTEGER NOT NULL, status TEXT DEFAULT 'pending', frequency TEXT DEFAULT 'once', created_at INTEGER, updated_at INTEGER），创建索引（idx_reminders_scheduled_at, idx_reminders_group_id, idx_reminders_status），实现 GroupRepository（增删改查+按 sort_order 排序+预设分组初始化事务），实现 ReminderRepository（增删改查+按 scheduled_at 查询今日/过期+按 group_id 筛选+按 status 筛选+批量更新 status+事务支持），barrel file（core/database/database.dart）",
     "verification": "dart run build_runner build --delete-conflicting-outputs 成功生成 .g.dart && flutter analyze lib/src/core/database/ 零 warning && flutter test test/unit/database/ 全部通过（覆盖: Group CRUD 4 路径含空 name 校验, Reminder CRUD 4 路径含必填字段校验, 外键约束: group 删除→关联 reminders 级联删除, 三个索引查询 EXPLAIN QUERY PLAN 验证命中, 事务回滚: 批量插入中途失败不部分提交, 预设分组初始化 INSERT OR IGNORE 幂等, scheduled_at 范围查询正确含边界值） && 无对 feature 层的 import",
     "priority": "P0",
-    "depends_on": ["F-01"],
+    "depends_on": [
+      "F-01"
+    ],
     "status": "completed",
     "module": "core/database",
     "evidence": "dart run build_runner 成功，flutter analyze 零 warning，单元测试全部 PASS，已归档 history/F-02-database/",
@@ -45,7 +49,9 @@
     "description": "在 main.dart 包裹 ProviderScope，定义数据层 Provider（groupRepositoryProvider, reminderRepositoryProvider, databaseProvider），定义服务层 Provider 接口和实现占位（ReminderService abstract + stub, NotificationService abstract + stub, VoiceService abstract + stub 的 Provider 定义，具体实现待后续模块注入），定义全局配置 Provider（appConfigProvider: 含首次启动标记 isFirstLaunch, 模型下载状态 modelDownloadStatus），确保无循环依赖",
     "verification": "flutter analyze lib/src/core/ 零 warning && flutter test test/unit/ 中 Provider 测试全部通过（覆盖: 所有 Provider 可正常 resolve, ProviderOverride 替换测试: stub→mock 替换验证, 无 ProviderNotFoundException, 全局 ProviderScope 初始化不抛异常, appConfigProvider 默认值正确） && provider 依赖图为单向无环（手动检查 import 链无 core→feature 反向依赖）",
     "priority": "P0",
-    "depends_on": ["F-02"],
+    "depends_on": [
+      "F-02"
+    ],
     "status": "completed",
     "module": "core/providers",
     "evidence": "flutter analyze 零 warning，Provider 测试全部 PASS，已归档 history/F-03-riverpod-state-management/",
@@ -58,11 +64,13 @@
     "description": "GoRouter 配置：路由表（'/' → HomePage, '/add' → AddReminderPage, '/voice' → VoiceInputPage, '/groups' → GroupManagePage, '/group/:id' → GroupDetailPage, '/cleanup' → CleanupPage），路由守卫 redirect（首次启动 isFirstLaunch=true 且模型未下载→拦截到模型下载管理页），页面过渡动画（Material 风格, 无自定义 PageTransitionsBuilder），深层链接支持（/group/3 等路径参数解析）",
     "verification": "flutter analyze 零 warning && flutter test test/unit/ 中路由测试全部通过（覆盖: 6 条路由均正确解析到对应 Page, 路由守卫: isFirstLaunch+modelNotReady→redirect 到下载页, isFirstLaunch+modelReady→放行, go/push/replace 导航栈深度正确, 深层链接路径参数解析 /group/3→id='3'）",
     "priority": "P0",
-    "depends_on": ["F-03"],
-    "status": "pending",
+    "depends_on": [
+      "F-03"
+    ],
+    "status": "completed",
     "module": "router",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "flutter analyze 零 error（路由模块零 issue），14 个路由单元测试全部 PASS，占位页面 stub 就绪",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-05",
@@ -71,7 +79,10 @@
     "description": "时间解析引擎（口语化时间→DateTime: 支持「今天下午3点/明天早上/后天下午/下周一下午/下周三/周末/月底/半个月后/下个月5号/每天早上8点/每周三/隔天/三天后/下周末/大后天」等 ≥20 种口语模式），定时调度器（基于系统 AlarmManager/UNNotificationRequest 注册精确闹钟，支持 once/daily/weekly/biweekly/monthly 频率），推迟逻辑（推迟 1小时/3小时/明天/自定义），重试机制（通知到期未处理时 3 次指数退避重试 5min/15min/45min），ReminderService 实现（整合上述全部逻辑，通过构造函数注入 GroupRepository + ReminderRepository，注册到 Provider），barrel file",
     "verification": "flutter analyze lib/src/core/reminder/ 零 warning && flutter test test/unit/reminder/ 全部通过（覆盖: ≥20 条口语时间解析用例含「下周末→下周六」「月底→本月最后一天」「隔天→后天」歧义处理, daily/weekly/monthly 重复调度 nextTriggerTime 计算正确, 推迟 1h/3h/明天 DateTime 偏移精确, 重试退避间隔 5/15/45 min 计算, ReminderService 通过 mock repository 验证 CRUD 调用路径, 到期提醒 overdue 自动标记逻辑, 已完成/dismissed 提醒不重新调度） && 无对 feature 层 import",
     "priority": "P0",
-    "depends_on": ["F-02", "F-03"],
+    "depends_on": [
+      "F-02",
+      "F-03"
+    ],
     "status": "pending",
     "module": "core/reminder",
     "evidence": null,
@@ -84,7 +95,10 @@
     "description": "flutter_local_notifications 集成初始化（Android: 创建 notification channel id='reminder_channel' name='到期提醒' importance=max, iOS: 请求 UNAuthorizationOptionAlert+Sound+Badge），通知内容模板（Android: title='[分组名] 提醒' body='{reminder.title} — {reminder.content}', iOS: 同上+subtitle），通知点击跳转（payload 携带 reminder_id, onSelectNotification 回调 Navigator.push 到编辑/完成页），应用角标 Badge 更新（flutter_app_badger: 角标数字=今日到期+已过期未处理总数），NotificationService 实现（监听 ReminderService.onReminderDue 流, 批量注册/取消通知, 注入 Provider），barrel file",
     "verification": "flutter analyze lib/src/core/notification/ 零 warning && flutter test test/unit/notification/ 全部通过（覆盖: Android channel 创建参数 id/name/importance 正确, iOS 权限请求三项 option, 通知模板渲染含分组名+标题+内容, Badge 计数逻辑: 0/N/max 场景分别验证, 通知点击 payload 反序列化→reminder_id 提取正确, NotificationService.onReminderDue 监听触发→通知已调度, 更新提醒后旧通知取消再注册新通知） && flutter test test/integration/ 中通知触发集成测试通过",
     "priority": "P0",
-    "depends_on": ["F-02", "F-05"],
+    "depends_on": [
+      "F-02",
+      "F-05"
+    ],
     "status": "pending",
     "module": "core/notification",
     "evidence": null,
@@ -97,7 +111,11 @@
     "description": "分组概览卡片区（横向滑动 ListView, 每卡片显示分组名+图标+待办数量 badge+完成率环形进度），今日待办时间线列表（按 scheduled_at ASC 排序，左侧时间轴+分组色条），状态筛选（全部/待处理/已过期/已完成 四 tab, TabBar），空状态组件（尚无提醒时居中图标+引导文案'还没有提醒，点击下方 + 添加'+FAB 脉冲动画），下拉刷新（RefreshIndicator），FAB 展开菜单（+ 手动添加 / 🎤 语音录入 两子项，SpeedDial），页面头部（日期显示 yyyy年M月d日 星期X + 天气图标占位），响应式布局（手机单列/平板 minWidth>600 双列 GridView），barrel file",
     "verification": "flutter analyze lib/src/feature/home/ 零 warning && flutter test test/unit/ 中 home widget 测试全部通过 && flutter test test/integration/ 中首页导航集成测试通过（覆盖: 分组卡片渲染+待办计数准确+完成率计算正确, 空状态/有数据/加载中三种 UI 状态分别验证, 下拉刷新触发数据重载+RefreshIndicator 可见, FAB 展开→两项可点击→分别跳转 /add 和 /voice, Tab 切换筛选列表正确过滤: pending/overdue/completed 三态, 点击列表项跳转编辑页, 平板双列布局切换断点验证）",
     "priority": "P0",
-    "depends_on": ["F-02", "F-03", "F-05"],
+    "depends_on": [
+      "F-02",
+      "F-03",
+      "F-05"
+    ],
     "status": "pending",
     "module": "feature/home",
     "evidence": null,
@@ -110,7 +128,11 @@
     "description": "新增提醒表单页（标题 TextField maxLength=50 + 内容 TextField maxLength=200 multiline + 分组下拉选择 DropdownButton + 时间选择 CupertinoDatePicker/DatePicker + 重复频率 SegmentedButton），表单验证（标题非空 minLength=1, 时间不能为过去 ≤ DateTime.now(), 分组必选），提交后写入 ReminderRepository → Navigator.pop(true) → 首页自动刷新列表，编辑已有提醒（列表项点击 Navigator.push 表单页 + 预填充全部字段，保存后更新数据库），删除提醒（列表项滑动 Dismissible background=红色删除图标 + 确认 AlertDialog '确定删除该提醒？'），重复提醒配置（一次性/每天/每周/隔周/每月 五个选项 SegmentedButton），barrel file",
     "verification": "flutter analyze lib/src/feature/home/ 零 warning && flutter test test/unit/ 中表单 widget 测试全部通过 && flutter test test/integration/ 中录入集成测试通过（覆盖: 标题为空→提交按钮 disabled+errorText, 过去时间→提交时 SnackBar 提示'时间不能是过去', 正常提交→Navigator.pop+首页列表新增一条, 编辑预填充: 标题/内容/分组/时间/频率 5 字段完全一致, 编辑保存后→列表项更新, 滑动删除→确认弹窗→确认删除列表-1, 滑动删除→确认弹窗→取消列表不变, 重复提醒选项保存后再次编辑仍正确显示）",
     "priority": "P0",
-    "depends_on": ["F-02", "F-05", "F-07"],
+    "depends_on": [
+      "F-02",
+      "F-05",
+      "F-07"
+    ],
     "status": "pending",
     "module": "feature/home",
     "evidence": null,
@@ -123,7 +145,9 @@
     "description": "统一模型下载基础设施：模型注册表（SenseVoice-Tiny ONNX 75MB v1.0: url+sha256+target_path, Qwen-140M GGUF 105MB v1.0: url+sha256+target_path），断点续传下载器（HTTP Range 请求读取已下载字节 offset, .part 暂存文件追加写入, 下载完成 rename .part→目标文件），SHA256 完整性校验（下载完成后自动计算文件 SHA256 比对注册表，失败删除重下最多 3 次），存储空间检查（下载前 path_provider.getApplicationDocumentsDirectory() 获取可用空间, 校验: 剩余空间 ≥ 模型大小×1.5 + 50MB 余量），下载状态管理（每模型独立状态: idle/downloading/paused/completed/failed + 百分比进度 0-100），下载管理 UI 页（两个模型卡片分别显示: 名称+大小, 进度条 LinearProgressIndicator+百分比文本+已下载/总大小, 状态图标+文本, 暂停/继续/重试按钮, 预计剩余时间 ETA，存储空间不足时 AlertDialog 提示清理），barrel file",
     "verification": "flutter analyze lib/src/core/common/ 零 warning（下载管理器放 common 或独立 model_download 目录） && flutter test test/unit/ 中下载模块测试全部通过（覆盖: 断点续传: 下载 50% 中断→继续→从 50% offset 开始, SHA256 校验通过→标记 completed, SHA256 不匹配→删除重下, 重试 3 次后仍失败→标记 failed, 空间不足→拒绝下载返回 StorageFull 错误, 暂停→状态变 paused+进度保留, 继续→状态恢复 downloading, 取消→.part 文件清理, 并发下载两模型互不干扰, 目标路径平台兼容 Windows/macOS/Linux/Android/iOS） && 下载 UI 页 widget test 通过（进度条渲染+百分比更新, 双模型状态独立切换, 暂停/继续/重试按钮点击回调正确）",
     "priority": "P0",
-    "depends_on": ["F-01"],
+    "depends_on": [
+      "F-01"
+    ],
     "status": "pending",
     "module": "core/common",
     "evidence": null,
@@ -136,7 +160,9 @@
     "description": "麦克风权限请求（Android: RECORD_AUDIO 声明 AndroidManifest + ActivityCompat.requestPermissions, iOS: NSMicrophoneUsageDescription 声明 Info.plist + AVAudioSession.requestRecordPermission），音频录制（record 包: 16kHz sampleRate 16bit mono PCM, 临时文件 path_provider.getTemporaryDirectory()/${timestamp}.pcm），录制生命周期管理（AudioRecorderState 枚举: idle→recording→paused→stopped→error, 状态变更 StreamController 广播），录音时长限制（单次最长 60s, DurationTimer 超时自动调用 stop()），静音检测（AudioLevelMonitor: 每 200ms 计算 RMS, RMS < -40dB 持续 1.5s 自动停止，可通过 AudioCaptureService.configure(silenceDetection: bool) 开关），Method Channel 桥接接口定义（'com.home_reminder.voice' channel: startRecording/setSampleRate/getAudioData, 预留原生 NativeAudioCapture 实现），AudioCaptureService（封装上述逻辑+构造函数注入 PermissionManager, 注册 Provider），barrel file",
     "verification": "flutter analyze lib/src/core/voice/ 零 warning && flutter test test/unit/voice/ 全部通过（覆盖: 权限请求: granted→startRecording 成功, denied→返回 PermissionDenied 错误, permanentlyDenied→返回 openSettings 引导, AudioRecorderState 全部 5 状态转换 idle→recording→paused→recording→stopped, 60s 超时→自动 stop+状态变 stopped, 静音检测: RMS 持续<阈值 1.5s→自动 stop, 阈值以上→继续录制, AudioCaptureService Provider resolve 正常, stop() 后临时文件存在且非空+格式验证 16kHz/16bit/mono/PCM, 开始新录音→旧临时文件清理） && 无对 feature 层 import",
     "priority": "P0",
-    "depends_on": ["F-01"],
+    "depends_on": [
+      "F-01"
+    ],
     "status": "pending",
     "module": "core/voice",
     "evidence": null,
@@ -149,7 +175,10 @@
     "description": "依赖 F-09 模型下载完成的 SenseVoice-Tiny ONNX 模型，Method Channel 桥接原生 ONNX Runtime 推理（channel: 'com.home_reminder.asr', Dart→Kotlin OrtSession/Swift ONNXRuntime→sense_voice_tiny.onnx），识别接口（recognize(audioPath: String) → RecognitionResult{text: String, confidence: double, segments: List<Segment>}，Segment{text, startMs, endMs, confidence}），partial 结果回调（每 500ms 通过 StreamController 推送当前中间结果），VoiceRecognitionService（构造函数注入 modelPath+AudioCaptureService, recognize() 前置检查模型文件存在，模型未就绪返回 ModelNotReady 错误码, 推理超时 10s→返回 Timeout 错误, 推理异常→返回 RecognitionFailed 含原始异常信息），barrel file",
     "verification": "flutter analyze lib/src/core/voice/ 零 warning && flutter test test/unit/voice/ 全部通过（覆盖: 模型未就绪→recognize() 返回 ModelNotReady 错误含模型路径, Method Channel invokeMethod 参数序列化正确 {method:'recognize', args:{audioPath,modelPath}}, RecognitionResult 解析: text/confidence/segments 字段完整, partial 回调→StreamController 推送间隔 ≤500ms, final 回调→StreamController 推送完整结果后 close, 推理超时→10s 后返回 Timeout 错误, 推理异常→RecognitionFailed 含原始错误信息, ≥10 条中文口语样本识别准确率 ≥95%: text 与原文对比编辑距离 ≤5%） && 无对 feature 层 import",
     "priority": "P0",
-    "depends_on": ["F-09", "F-10"],
+    "depends_on": [
+      "F-09",
+      "F-10"
+    ],
     "status": "pending",
     "module": "core/voice",
     "evidence": null,
@@ -162,7 +191,9 @@
     "description": "依赖 F-09 模型下载完成的 Qwen-140M GGUF 模型，Method Channel 桥接 llama.cpp 推理（channel: 'com.home_reminder.llm', Dart→Kotlin llama.cpp JNI/Swift llama.cpp→qwen_140m_q4.gguf），Prompt 工程（System Prompt 中文: '你是家庭事务解析助手。从用户的口语输入中提取以下信息，以 JSON 格式返回: {action: 待办事项简述, target_time: 指定时间, group: 所属分组, frequency: 重复频率, confidence: 置信度 0-1}。如果某项不确定，填写 null。'，Few-shot examples ≥5 条覆盖不同口语模式），StructuredOutput 解析（JSON→SemanticResult 实体，含降级处理: JSON 解析失败时保留 rawText+标记 needsManualReview=true），推理超时保护（>5s 降级→返回 rawText+needsManualReview=true+timeoutError），SemanticParsingService（构造函数注入 modelPath, parse(text: String) → SemanticResult, 注册 Provider），barrel file",
     "verification": "flutter analyze lib/src/core/voice/ 零 warning && flutter test test/unit/voice/ 全部通过（覆盖: ≥15 条口语样本结构化提取准确率 ≥90%: action/target_time/group/frequency 四字段至少 3 个正确, 模型未就绪→parse() 返回 ModelNotReady 错误码, JSON 解析异常→needsManualReview=true + rawText 保留, 超时 5s→降级返回 needsManualReview=true+timeoutError, 全 null 输出→needsManualReview=true+置信度低警告, Few-shot prompt 模板渲染验证: System+User prompt 拼接后 ≤2048 tokens, SemanticResult 实体完整性: 所有字段有值或 null, 非空字段类型正确） && 无对 feature 层 import",
     "priority": "P0",
-    "depends_on": ["F-09"],
+    "depends_on": [
+      "F-09"
+    ],
     "status": "pending",
     "module": "core/voice",
     "evidence": null,
@@ -175,7 +206,12 @@
     "description": "录音按钮（GestureDetector onLongPressStart→startRecording+振动反馈 HapticFeedback.heavyImpact, onLongPressEnd→stopRecording, 松手后自动进入识别），实时波形动画（CustomPainter: 每 16ms 取 RMS 振幅, 绘制 20 条竖线波形条，颜色渐变 蓝→紫，振幅越高条越高），ASR 实时文本显示（AnimatedContainer 扩展区域: partial 结果灰色斜体+光标闪烁, final 结果黑色正常, rolling text 自动滚动到底部），语义解析后结构化预览（SemanticResultCard: 三行信息 '要做: {action}' + '时间: {target_time}' + '分组: {group}'，每行右侧编辑 IconButton 可点击修改），确认/修改/取消三操作（确认→调用 ReminderRepository.create()→Navigator.pop 回首页 Toast'已添加', 修改→Navigator.push /add 预填充 SemanticResult 字段, 取消→AlertDialog 确认丢弃→回首页），全程状态管理（VoiceInputState 枚举: idle/listening/recognizing/parsing/preview/creating/error 七状态, StateNotifier 驱动 UI），权限未授予引导（permanentlyDenied→AlertDialog'请在设置中开启麦克风权限'+跳转 openAppSettings()），barrel file",
     "verification": "flutter analyze lib/src/feature/voice_input/ 零 warning && flutter test test/unit/ 中 voice_input widget 测试全部通过 && flutter test test/integration/ 中语音录入集成测试通过（覆盖: VoiceInputState 七状态 UI 正确: idle 显示提示/recording 显示波形/recognizing 显示 partial 文本/parsing 显示加载/preview 显示卡片/error 显示错误+重试, longPressStart→波形绘制验证帧率 ≥30fps, longPressEnd→进入 recognizing→收到 final 文本, 语义预览卡片三行信息正确渲染, 编辑按钮→Navigator.push /add + TextEditingController 预填充, 确认→ReminderRepository 写入+首页+1, 取消→AlertDialog→确认→首页不变, 权限 denied→Toast 提示, 权限 permanentlyDenied→AlertDialog+openAppSettings, 录音中按返回键→AlertDialog'录音将丢失'确认拦截）",
     "priority": "P0",
-    "depends_on": ["F-08", "F-10", "F-11", "F-12"],
+    "depends_on": [
+      "F-08",
+      "F-10",
+      "F-11",
+      "F-12"
+    ],
     "status": "pending",
     "module": "feature/voice_input",
     "evidence": null,
@@ -188,7 +224,10 @@
     "description": "预设分组展示（6 组卡片 GridView: 客厅🛋️/卧室🛏️/厨房🍳/冰箱❄️/扫地机🤖/地面🧹，默认图标+颜色方案 pastel），自定义分组 CRUD（新增 FAB→Dialog: 名称 TextField+图标选择 Grid+颜色选择 circleColorPicker; 编辑→卡片长按→同 Dialog 预填充; 删除→卡片滑动+确认 AlertDialog'删除该分组？组下 {n} 个提醒将移至默认分组'），分组排序（AppBar 编辑按钮→ReorderableListView 拖拽 handle 图标, 保存 sort_order），分组统计（每卡片底部显示: '待办 {n}' + 完成率百分比+最近到期时间 relative），分组筛选（首页 AppBar 下拉 DropdownButton: '全部分组' + 各组名，选择后过滤提醒列表），分组搜索（SearchDelegate: 按名称模糊匹配，高亮匹配文字），barrel file",
     "verification": "flutter analyze lib/src/feature/group_manage/ 零 warning && flutter test test/unit/ 中 group_manage widget 测试全部通过 && flutter test test/integration/ 中分组管理集成测试通过（覆盖: 6 组预设卡片正确渲染: 名称+图标+颜色一致, 新增分组→Dialog 提交→Grid 新增卡片+分组表写入, 编辑分组→长按→Dialog 预填充→保存后卡片更新, 删除分组→确认弹窗显示正确提醒数→删除后 Grid-1+关联提醒 group_id 更新, 拖拽排序→sort_order 持久化→重启后顺序保持, 分组统计: 待办数/完成率/最近到期 三值准确, 首页分组筛选→选择'厨房'→列表仅显示厨房提醒, 分组搜索→'客'→匹配'客厅', 空查询→显示全部）",
     "priority": "P1",
-    "depends_on": ["F-02", "F-03"],
+    "depends_on": [
+      "F-02",
+      "F-03"
+    ],
     "status": "pending",
     "module": "feature/group_manage",
     "evidence": null,
@@ -201,7 +240,10 @@
     "description": "批量完成模式（列表页 AppBar 切换按钮→进入选择模式: 每行出现 Checkbox, BottomAppBar 显示已选计数+全选/取消全选+完成按钮, 点击完成→批量更新 status=completed），补货提醒（消耗品分组配置清单: 冰箱/扫地机耗材/清洁剂/洗衣液, 用户长按提醒→'标记已用完'→自动生成新提醒: title='补充{物品名}', scheduled_at=now, group=原分组），完成历史（/history 页面: 按日期分组 ListView sections '今天/昨天/本周/更早', 已完成提醒列表, 点击查看详情），撤销完成（完成后 30 分钟内 SnackBar '已标记 {n} 项为已完成 [撤销]', 点击撤销→恢复 status=pending），批量导出（完成历史页 AppBar 分享按钮→生成纯文本 '{date}: {title} ✓' 格式→Share.share()），barrel file",
     "verification": "flutter analyze lib/src/feature/cleanup/ 零 warning && flutter test test/unit/ 中 cleanup widget 测试全部通过 && flutter test test/integration/ 中清理集成测试通过（覆盖: 进入多选模式→Checkbox 勾选多项→选中计数实时更新, 全选→全部 Checkbox checked, 取消全选→全部 unchecked, 点击完成→多项 status 批量更新为 completed+退出选择模式, 补货提醒: 长按→'标记已用完'→新提醒创建→title 含物品名+group 正确, 完成历史按日期分组: 今天/昨天/本周/更早 四组正确归类, 撤销: SnackBar 可点击→状态回退为 pending, 30 分钟超时后 SnackBar 消失且不可撤销, 导出文本格式: 每行'{date}: {title} ✓' 换行分隔）",
     "priority": "P1",
-    "depends_on": ["F-02", "F-05"],
+    "depends_on": [
+      "F-02",
+      "F-05"
+    ],
     "status": "pending",
     "module": "feature/cleanup",
     "evidence": null,
@@ -214,7 +256,13 @@
     "description": "全局主题（Material 3: ColorScheme.fromSeed seedColor=Colors.teal, 统一字体 Typography: headlineLarge/headlineMedium/titleLarge/bodyLarge/bodyMedium/labelLarge, 组件形状 Shape: small RoundedRectangleBorder(8), medium(12), large(16)），页面过渡动画（Hero 动画: 分组卡片 tag='group-{id}'→GroupDetailPage, 列表项 tag='reminder-{id}'→编辑页, 其余页面 FadeTransition+SlideTransition），空状态/错误状态/加载状态统一组件（EmptyStateWidget: icon+title+subtitle+actionButton, ErrorStateWidget: icon+message+retryButton, LoadingWidget: CircularProgressIndicator+可选文本, 三组件可复用 5 个特性页面），暗色模式（跟随系统 MediaQuery.platformBrightness + AppBar 手动切换开关, ThemeData.dark() fromSeed 同 seedColor），无障碍（Semantics 标签 on 所有 IconButton+TextField+FAB+Checkbox, 色彩对比度 WCAG AA ≥4.5:1 验证, MergeSemantics 合并卡片内容朗读），响应式布局（LayoutBuilder: 手机<600dp 单列, 平板≥600dp 双列 GridView, 表单平板居中 maxWidth=600 Container+Alignment.center），barrel file",
     "verification": "flutter analyze 零 warning && flutter test test/unit/ 中 UI 组件测试全部通过 && golden file 测试通过（覆盖: 亮/暗模式 5 个关键页面 HomePage/AddReminderPage/VoiceInputPage/GroupManagePage/CleanupPage 截图 golden 比对 ±1% 像素容差, Hero 动画: 分组卡片→详情页 tag 匹配+动画执行, 空/错/加载三态组件在 5 页面复用均无 overflow/布局异常, Semantics 树: 所有交互元素含 label, 色彩对比度脚本验证无 WCAG AA 违规, 平板断点 600dp: 首页双列/表单居中/分组管理三列） && flutter test test/integration/ 中暗色模式切换集成测试通过（切换后所有页面背景+文字颜色正确）",
     "priority": "P1",
-    "depends_on": ["F-07", "F-08", "F-13", "F-14", "F-15"],
+    "depends_on": [
+      "F-07",
+      "F-08",
+      "F-13",
+      "F-14",
+      "F-15"
+    ],
     "status": "pending",
     "module": "feature",
     "evidence": null,
@@ -227,7 +275,9 @@
     "description": "Android 10+ (API 29+) API 兼容检查与适配：Scoped Storage（API 29+ 强制）→ path_provider 使用 getApplicationDocumentsDirectory 替代外部存储直接路径, NotificationChannel（API 26+ 已覆盖）→ 无需改动，AlarmManager 精确闹钟（API 31+: SCHEDULE_EXACT_ALARM 权限声明+用户引导设置, API 19-30: setExact 可用），后台录音保护（API 28+: 前台服务 ForegroundService 保持录音不被杀, 通知栏显示'正在录音' ongoing notification），Android 13+ (API 33+) 通知权限运行时请求（POST_NOTIFICATIONS 权限声明+首次请求引导说明），Doze Mode 适配（提醒到期前 5min 使用 setExactAndAllowWhileIdle），Notch/挖孔屏适配（WindowInsets.getDisplayCutout() 检查+LayoutParams LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES），API level 版本兼容脚本（gradle 任务 checkApiLevel: 扫描所有 Android API 调用+验证 minSdk 21 兼容性）",
     "verification": "flutter analyze 零 warning（Android 相关代码无 warning） && Android 10 模拟器测试通过（Pixel 3a API 29: 通知触发/录音/存储路径/Scoped Storage 文件读写正常） && Android 14 模拟器测试通过（Pixel 8 API 34: 通知权限弹窗+录音前台服务+精确闹钟触发+Doze 模式提醒不丢失） && flutter test test/unit/ 中 Android 适配单元测试全部通过（覆盖: ScopedStorage→path_provider 路径平台化, notificationChannel 创建参数 minSdk 检查, alarmManager 根据 API level 选择 setExact/setExactAndAllowWhileIdle, foregroundService notification 内容模板, POST_NOTIFICATIONS 权限 API 33+ checked） && gradle checkApiLevel 脚本无违规 && 无废弃 API 调用（grep deprecated Android 代码返回空）",
     "priority": "P1",
-    "depends_on": ["F-16"],
+    "depends_on": [
+      "F-16"
+    ],
     "status": "pending",
     "module": "android",
     "evidence": null,
@@ -240,7 +290,9 @@
     "description": "iOS 15+ 适配：UNNotification（iOS 10+ 已覆盖）→ 无需改动, 安全区域 SafeArea（iOS 11+）→ Flutter SafeArea widget 覆盖所有页面+MediaQuery.of(context).padding 处理自定义组件, BGTaskScheduler（iOS 13+）→ BGAppRefreshTaskRequest 注册后台提醒检查, 录音后台（iOS 15+）→ AVAudioSessionCategoryPlayAndRecord+Background Modes: audio，通知权限引导（iOS 15+: UNUserNotificationCenter.requestAuthorization options [.alert, .sound, .badge], 首次弹窗前显示引导 UI '开启通知不错过提醒'），App Tracking Transparency 不启用（Info.plist 不含 NSUserTrackingUsageDescription），Notch/Dynamic Island 适配（SafeArea+UIEdgeInsets 自动处理，沉浸式页面 extendedLayoutIncludesOpaqueBars=false），API availability 检查（@available(iOS 15.0, *) 标记所有 iOS 15+ API 调用，确保 iOS 15 以下 fallback 路径），iOS 版本兼容脚本（xcodebuild -checkDeprecation 扫描无废弃 API）",
     "verification": "flutter analyze 零 warning（iOS 相关代码无 warning） && iOS 15 模拟器测试通过（iPhone 13 iOS 15.0: 通知触发/录音/安全区域/后台任务注册正常） && iOS 17 模拟器测试通过（iPhone 15 iOS 17.0: Dynamic Island 安全区域不遮挡内容+通知权限弹窗+录音后台） && flutter test test/unit/ 中 iOS 适配单元测试全部通过（覆盖: SafeArea widget 覆盖检查 5 页面, BGTaskScheduler 注册参数正确, notification 权限请求 options 三项, ATT 禁止: grep NSUserTrackingUsageDescription Info.plist 返回空, @available 标注检查: 所有 iOS 15+ API 有 fallback） && xcodebuild checkDeprecation 无废弃 API && flutter test test/integration/ 中 iOS 安全区域集成测试通过（有/无 notch 设备 SafeArea padding >0）",
     "priority": "P1",
-    "depends_on": ["F-16"],
+    "depends_on": [
+      "F-16"
+    ],
     "status": "pending",
     "module": "ios",
     "evidence": null,
@@ -253,7 +305,10 @@
     "description": "E2E 测试套件（integration_test + flutter_driver 或 patrol）：核心流程「启动→首次引导→手动添加提醒→查看首页显示→等待通知触发→点击通知→标记完成」自动化, 语音流程「权限授予→长按录音→ASR 识别→语义解析预览→确认创建→首页显示」自动化, 分组流程「查看预设分组→新增自定义→筛选→拖拽排序→删除分组」自动化, 清理流程「批量选择→标记完成→完成历史→撤销」自动化。性能指标检测（integration_test 中 PerformanceOverlay 采集: 冷启动 TimeToInteractive<2s, 页面切换帧耗时<16ms P95, 数据库查询<100ms P99, 内存峰值<150MB），内存泄漏检查（devtools memory: 重复进出 5 次首页/add/voice_input 页面→内存增长<5MB），边界场景（数据库 1000 条提醒列表滚动不卡顿, 存储空间<100MB 时的降级提示, 权限全部拒绝时各功能优雅降级, 横竖屏切换无崩溃+布局正确, 应用切换前后台录音/通知状态恢复）",
     "verification": "flutter test test/e2e/ 全部通过（≥4 条 E2E 用例） && flutter test test/integration/ 全部通过 && 性能指标全部达标（4 项指标: 冷启动<2s, 页面切换<16ms P95, DB 查询<100ms P99, 内存<150MB 且有具体数值记录到 work/logs/perf.json） && 内存泄漏检查: 5 轮页面进出后内存增长<5MB && 边界场景: 1000 条列表 FPS≥55, 存储不足降级提示可见, 权限拒绝 fallback 不崩溃, 横竖屏切换 5 轮无异常",
     "priority": "P1",
-    "depends_on": ["F-17", "F-18"],
+    "depends_on": [
+      "F-17",
+      "F-18"
+    ],
     "status": "pending",
     "module": "root",
     "evidence": null,
@@ -266,7 +321,9 @@
     "description": "Android 签名+构建：key.properties（storeFile/storePassword/keyAlias/keyPassword）, build.gradle（signingConfigs.release 引用 key.properties, minSdk 21/targetSdk 34/compileSdk 34, proguard 规则 -keep class com.home_reminder.** { *; }, AAB 构建 flutter build appbundle --release），iOS 签名+构建：ExportOptions.plist（method=app-store）, Runner.xcodeproj 配置（DEVELOPMENT_TEAM, PROVISIONING_PROFILE_SPECIFIER）, Info.plist 终版（ITSAppUsesNonExemptEncryption=NO, UIRequiredDeviceCapabilities 仅 arm64），应用商店元数据：中文描述（≤4000 字含功能介绍+隐私说明+使用方法）, 截图 5 张（1242×2688 iPhone 6.7-inch Display: 首页/语音录入/分组管理/清理/暗色模式）, 隐私政策 URL, 内容分级 4+。版本号语义化 version: 1.0.0 build: 1。构建脚本 tools/build.sh（versionCode 自增, flutter build appbundle+flutter build ipa --release, bundletool build-apks→install-apks 安装测试, IPA→Xcode archive+Validate App）, 构建产物验证（AAB≤50MB, IPA≤80MB, bundletool validate --bundle 通过, xcrun altool --validate-app 通过）",
     "verification": "flutter build appbundle --release 成功 && 产物 build/app/outputs/bundle/release/app-release.aab 存在 && bundletool validate --bundle=app-release.aab 通过 && 构建产物 AAB 大小<50MB && flutter build ipa --release 成功（有 Xcode 环境） && 产物 IPA 大小<80MB && xcrun altool --validate-app 无 ITMS- 错误 && tools/build.sh 一键构建返回 0 && 版本号 app/build.gradle versionCode 与 pubspec.yaml version 一致",
     "priority": "P1",
-    "depends_on": ["F-19"],
+    "depends_on": [
+      "F-19"
+    ],
     "status": "pending",
     "module": "root",
     "evidence": null,

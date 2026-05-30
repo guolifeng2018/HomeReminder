@@ -8,11 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/providers/providers.dart';
-import '../../feature/home/home.dart';
-import '../../feature/voice_input/voice_input.dart';
-import '../../feature/group_manage/group_manage.dart';
-import '../../feature/cleanup/cleanup.dart';
-import '../../feature/model_download/model_download.dart';
+import 'placeholder_pages.dart';
 
 /// 路由 redirect 守卫
 ///
