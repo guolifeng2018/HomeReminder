@@ -67,6 +67,12 @@ class _ReminderFormPageState extends ConsumerState<ReminderFormPage> {
               decoration: const InputDecoration(
                 labelText: '标题',
               ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return '标题不能为空';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 16),
 
@@ -126,6 +132,12 @@ class _ReminderFormPageState extends ConsumerState<ReminderFormPage> {
           decoration: const InputDecoration(
             labelText: '分组',
           ),
+          validator: (value) {
+            if (value == null) {
+              return '请选择分组';
+            }
+            return null;
+          },
         );
       },
     );
@@ -190,8 +202,21 @@ class _ReminderFormPageState extends ConsumerState<ReminderFormPage> {
     );
   }
 
-  /// 提交处理（占位，后续单元实现完整逻辑）
+  /// 提交处理：表单验证 + 时间校验
   void _onSubmit() {
-    // TODO: 实现表单验证 + 数据库写入
+    // 1. 表单字段校验
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    // 2. 时间校验
+    if (_selectedDateTime.isBefore(DateTime.now())) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('时间不能是过去')),
+      );
+      return;
+    }
+
+    // TODO: 数据库写入（后续单元实现）
   }
 }
