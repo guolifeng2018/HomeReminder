@@ -79,7 +79,17 @@ class _HomePageState extends ConsumerState<HomePage> {
     final filter = ref.watch(filterProvider);
 
     return Scaffold(
-      floatingActionButton: const HomeFab(),
+      floatingActionButton: HomeFab(
+        onAdd: () async {
+          final result = await Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const ReminderFormPage()),
+          );
+          if (result == true) {
+            ref.invalidate(todayRemindersProvider);
+            ref.invalidate(groupsProvider);
+          }
+        },
+      ),
       body: _buildBody(groupsAsync, remindersAsync, filter),
     );
   }
@@ -192,12 +202,16 @@ class _HomePageState extends ConsumerState<HomePage> {
           TodayTimeline(
             reminders: reminders,
             groupMap: groupMap,
-            onTap: (reminderId) {
-              Navigator.of(context).push(
+            onTap: (reminderId) async {
+              final result = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => ReminderFormPage(reminderId: reminderId),
                 ),
               );
+              if (result == true) {
+                ref.invalidate(todayRemindersProvider);
+                ref.invalidate(groupsProvider);
+              }
             },
             onDelete: _onDelete,
           ),
@@ -248,12 +262,16 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: TodayTimeline(
             reminders: reminders,
             groupMap: groupMap,
-            onTap: (reminderId) {
-              Navigator.of(context).push(
+            onTap: (reminderId) async {
+              final result = await Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => ReminderFormPage(reminderId: reminderId),
                 ),
               );
+              if (result == true) {
+                ref.invalidate(todayRemindersProvider);
+                ref.invalidate(groupsProvider);
+              }
             },
             onDelete: _onDelete,
           ),

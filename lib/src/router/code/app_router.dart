@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/providers/providers.dart';
+import '../../feature/home/code/reminder_form_page.dart';
 import 'placeholder_pages.dart';
 
 /// 路由 redirect 守卫
@@ -47,7 +48,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/add',
-        builder: (context, state) => const AddReminderPage(),
+        builder: (context, state) => const ReminderFormPage(),
       ),
       GoRoute(
         path: '/voice',

@@ -10,16 +10,24 @@ import 'package:flutter/material.dart';
 ///
 /// StatefulWidget，管理展开/收起状态和动画。
 class HomeFab extends StatefulWidget {
-  /// 手动添加路由
+  /// 手动添加路由（fallback）
   final String addRoute;
 
-  /// 语音录入路由
+  /// 语音录入路由（fallback）
   final String voiceRoute;
+
+  /// 手动添加回调（优先于 [addRoute]）
+  final VoidCallback? onAdd;
+
+  /// 语音录入回调（优先于 [voiceRoute]）
+  final VoidCallback? onVoice;
 
   const HomeFab({
     super.key,
     this.addRoute = '/add',
     this.voiceRoute = '/voice',
+    this.onAdd,
+    this.onVoice,
   });
 
   @override
@@ -60,7 +68,14 @@ class _HomeFabState extends State<HomeFab>
   void _navigate(String route) {
     // 收起菜单再导航
     _toggle();
-    Navigator.of(context).pushNamed(route);
+    // 优先使用回调
+    if (route == widget.addRoute && widget.onAdd != null) {
+      widget.onAdd!();
+    } else if (route == widget.voiceRoute && widget.onVoice != null) {
+      widget.onVoice!();
+    } else {
+      Navigator.of(context).pushNamed(route);
+    }
   }
 
   @override
