@@ -12,7 +12,7 @@ void main() {
   late MockReminderRepository mockRepo;
   late ReminderServiceImpl service;
 
-  Reminder _fakeReminder({
+  Reminder fakeReminder({
     int id = 1,
     int groupId = 1,
     String title = '测试提醒',
@@ -36,13 +36,13 @@ void main() {
   setUp(() {
     mockRepo = MockReminderRepository();
     service = ReminderServiceImpl(reminderRepo: mockRepo);
-    registerFallbackValue(_fakeReminder());
+    registerFallbackValue(fakeReminder());
   });
 
   group('ReminderServiceImpl — createReminder', () {
     test('正常创建 → 调用 repo.insert', () async {
       when(() => mockRepo.insert(any())).thenAnswer(
-          (_) async => _fakeReminder(id: 42));
+          (_) async => fakeReminder(id: 42));
 
       final result = await service.createReminder(
         groupId: 1,
@@ -78,7 +78,7 @@ void main() {
 
     test('内容为空字符串时正常创建', () async {
       when(() => mockRepo.insert(any())).thenAnswer(
-          (_) async => _fakeReminder());
+          (_) async => fakeReminder());
 
       final result = await service.createReminder(
         groupId: 1,
@@ -93,7 +93,7 @@ void main() {
 
   group('ReminderServiceImpl — postponeReminder', () {
     test('推迟到明天 → 调用 getById + update', () async {
-      final reminder = _fakeReminder();
+      final reminder = fakeReminder();
       when(() => mockRepo.getById(1)).thenAnswer((_) async => reminder);
       when(() => mockRepo.update(any())).thenAnswer((_) async {});
 
@@ -116,7 +116,7 @@ void main() {
   group('ReminderServiceImpl — checkOverdue', () {
     test('委托 scheduler.findOverdue', () async {
       when(() => mockRepo.getOverdue()).thenAnswer((_) async => [
-            _fakeReminder(id: 1),
+            fakeReminder(id: 1),
           ]);
       when(() => mockRepo.update(any())).thenAnswer((_) async {});
 
@@ -139,7 +139,7 @@ void main() {
 
   group('ReminderServiceImpl — cancelReminder', () {
     test('取消 → 状态变 dismissed', () async {
-      final reminder = _fakeReminder(status: ReminderStatus.pending);
+      final reminder = fakeReminder(status: ReminderStatus.pending);
       when(() => mockRepo.getById(1)).thenAnswer((_) async => reminder);
       when(() => mockRepo.update(any())).thenAnswer((_) async {});
 

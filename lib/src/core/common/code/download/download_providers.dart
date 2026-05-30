@@ -31,18 +31,12 @@ final modelDownloadProgressProvider =
 
 /// 所有模型进度的 StreamProvider
 ///
-/// 返回全部模型的 DownloadProgress 列表。
+/// 返回全部模型的 DownloadProgress Map。
+/// 每次任一模型进度变更时自动推送全量快照。
 final allModelsProgressProvider =
-    StreamProvider<List<DownloadProgress>>((ref) async* {
+    StreamProvider<Map<String, DownloadProgress>>((ref) {
   final service = ref.watch(downloadServiceProvider);
-  // 等待服务初始化
-  await Future.delayed(Duration.zero);
-  yield service.allProgress.values.toList();
-  // 每次有模型进度变更时重新 yield 全量
-  final subscription = service.progressStream.listen((_) {
-    // 使用 ref 无法直接在 callback 中更新，简化为首次快照
-  });
-  ref.onDispose(() => subscription.cancel());
+  return service.progressStream.map((_) => service.allProgress);
 });
 
 /// 模型列表 Provider（静态数据）

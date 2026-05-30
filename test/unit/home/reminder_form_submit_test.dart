@@ -13,7 +13,6 @@ import 'package:home_reminder/src/core/database/code/group_repository.dart';
 import 'package:home_reminder/src/core/database/code/reminder_repository.dart';
 import 'package:home_reminder/src/core/database/code/database.dart';
 import 'package:home_reminder/src/core/common/code/models/group_model.dart';
-import 'package:home_reminder/src/core/common/code/models/reminder_model.dart';
 import 'package:home_reminder/src/core/common/code/models/enums.dart';
 import 'package:drift/native.dart';
 
@@ -49,25 +48,6 @@ void main() {
         home: ReminderFormPage(reminderId: reminderId),
       ),
     );
-  }
-
-  /// Helper: fill form and save, returns the pop result
-  Future<bool?> submitForm(WidgetTester tester) async {
-    // Fill title
-    await tester.enterText(find.byType(TextFormField).first, '测试标题');
-
-    // Select group
-    await tester.tap(find.byType(DropdownButtonFormField<Group>));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('客厅').last);
-    await tester.pumpAndSettle();
-
-    // Tap save
-    await tester.tap(find.text('保存'));
-    await tester.pumpAndSettle();
-
-    // Check if pop happened
-    return null; // Navigation result handled in each test
   }
 
   group('ReminderFormPage submit (create)', () {

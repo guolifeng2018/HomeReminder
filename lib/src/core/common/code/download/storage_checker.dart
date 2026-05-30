@@ -95,18 +95,12 @@ class StorageChecker {
     DownloadableModel model,
   ) async {
     try {
-      final stat = await dir.stat();
-      // stat 无法直接获取可用空间，使用粗略估算
-      // 实际项目中可接入平台特定 API
-      final requiredBytes =
-          (model.fileSize * _safetyFactor).ceil() + _marginBytes;
-
-      // 简单假设：如果目录存在且有写入权限，尝试创建测试文件估算
+      // 保守策略：尝试目录写入测试，可写入即通过
+      // 真实精确空间检查依赖平台 API（df 命令或 iOS NSFileSystemFreeSize）
       final testFile = File('${dir.path}/.storage_test');
       await testFile.writeAsString('test');
       await testFile.delete();
 
-      // 保守策略：目录可写入即通过（真实检查依赖平台 API）
       return StorageCheckResult.ok;
     } catch (e) {
       return StorageCheckResult.error;

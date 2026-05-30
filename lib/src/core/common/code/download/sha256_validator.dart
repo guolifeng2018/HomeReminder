@@ -4,8 +4,9 @@
 /// 校验失败时删除文件，支持重试。
 library;
 
-import 'dart:convert';
 import 'dart:io';
+
+import 'package:crypto/crypto.dart';
 
 /// SHA256 校验结果
 class Sha256Result {

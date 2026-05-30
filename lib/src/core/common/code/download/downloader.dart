@@ -52,7 +52,6 @@ class DownloadException implements Exception {
 /// 断点续传下载器
 class Downloader {
   HttpClient? _client;
-  StreamController<DownloadProgressEvent>? _controller;
   bool _isPaused = false;
   bool _isCancelled = false;
   int _downloadedBytes = 0;
@@ -63,7 +62,6 @@ class Downloader {
   Stream<DownloadProgressEvent> startDownload(DownloadableModel model) async* {
     _isPaused = false;
     _isCancelled = false;
-    _controller = StreamController<DownloadProgressEvent>.broadcast();
 
     try {
       _client = HttpClient();
@@ -184,13 +182,6 @@ class Downloader {
   /// 暂停下载
   void pause() {
     _isPaused = true;
-    _controller?.add(DownloadProgressEvent(
-      modelId: '',
-      downloadedBytes: _downloadedBytes,
-      totalBytes: 0,
-      progress: 0,
-      type: DownloadEventType.paused,
-    ));
   }
 
   /// 继续下载（通过重新调用 startDownload 实现）
@@ -216,8 +207,6 @@ class Downloader {
 
   /// 资源释放
   void dispose() {
-    _controller?.close();
-    _controller = null;
     _client?.close();
     _client = null;
   }

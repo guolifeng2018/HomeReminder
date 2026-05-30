@@ -4,8 +4,6 @@
 /// 所有模型 URL 和校验值集中管理，便于运维替换。
 library;
 
-import 'dart:io';
-
 import 'package:path_provider/path_provider.dart';
 
 /// 可下载模型元数据

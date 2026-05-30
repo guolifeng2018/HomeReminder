@@ -1,0 +1,30 @@
+# HomeReminder 项目 overlay — 合并到 ~/.codewhale/config.toml
+# 禁止在此文件设置 api_key / base_url / provider / mcp_config_path
+
+allow_shell = true
+approval_policy = "never"
+sandbox_mode = "workspace-write"
+auto_approve = true
+trust_level = "trusted"
+
+auto_allow = [
+  "flutter",
+  "dart",
+  "git",
+  "dart run",
+]
+
+[sandbox_workspace_write]
+writable_roots = [
+  "/Users/guolifeng/main/FlutterProjects/flutter",
+]
+network_access = true
+
+[subagents]
+max_concurrent = 1
+api_timeout_secs = 1800
+
+[features]
+shell_tool = true
+exec_policy = true
+subagents = true

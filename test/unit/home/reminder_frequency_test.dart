@@ -65,9 +65,6 @@ void main() {
     });
 
     testWidgets('default frequency is once in create mode', (tester) async {
-      final now = DateTime.now();
-      final futureTime = DateTime(now.year, now.month, now.day, 23, 59);
-
       await tester.pumpWidget(buildTestApp());
       await tester.pumpAndSettle();
 
@@ -87,8 +84,6 @@ void main() {
     });
 
     testWidgets('saves selected frequency correctly', (tester) async {
-      final now = DateTime.now();
-
       await tester.pumpWidget(buildTestApp());
       await tester.pumpAndSettle();
 

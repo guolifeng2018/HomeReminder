@@ -7,10 +7,9 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/common/code/download/download_providers.dart';
-import '../../core/common/code/download/model_registry.dart';
-import '../../core/common/code/download/model_download_service.dart';
-import '../../core/common/code/download/download_state.dart';
+import '../../../core/common/code/download/download_providers.dart';
+import '../../../core/common/code/download/model_registry.dart';
+import '../../../core/common/code/download/download_state.dart';
 
 /// 模型下载管理页
 class ModelDownloadPage extends ConsumerStatefulWidget {
@@ -198,35 +197,31 @@ class _ModelCard extends StatelessWidget {
 
   /// 状态图标
   Widget _buildStateIcon(DownloadState state) {
-    switch (state) {
-      case DownloadState.idle:
-        return const Icon(Icons.cloud_download_outlined,
-            color: Colors.grey, size: 32);
-      case DownloadState.downloading:
-        return const Icon(Icons.downloading, color: Colors.blue, size: 32);
-      case DownloadState.paused:
-        return const Icon(Icons.pause_circle, color: Colors.orange, size: 32);
-      case DownloadState.completed:
-        return const Icon(Icons.check_circle, color: Colors.green, size: 32);
-      case DownloadState.failed:
-        return const Icon(Icons.error, color: Colors.red, size: 32);
-    }
+    return switch (state) {
+      DownloadState.idle => const Icon(Icons.cloud_download_outlined,
+          color: Colors.grey, size: 32),
+      DownloadState.downloading => const Icon(Icons.downloading,
+          color: Colors.blue, size: 32),
+      DownloadState.paused => const Icon(Icons.pause_circle,
+          color: Colors.orange, size: 32),
+      DownloadState.completed => const Icon(Icons.check_circle,
+          color: Colors.green, size: 32),
+      DownloadState.failed =>
+        const Icon(Icons.error, color: Colors.red, size: 32),
+    };
   }
 
   /// 根据状态构建操作按钮
   List<Widget> _buildActions(DownloadState state) {
-    switch (state) {
-      case DownloadState.idle:
-        return [
+    return switch (state) {
+      DownloadState.idle => [
           FilledButton.icon(
             onPressed: onDownload,
             icon: const Icon(Icons.download, size: 18),
             label: const Text('下载'),
           ),
-        ];
-
-      case DownloadState.downloading:
-        return [
+        ],
+      DownloadState.downloading => [
           OutlinedButton.icon(
             onPressed: onPause,
             icon: const Icon(Icons.pause, size: 18),
@@ -241,10 +236,8 @@ class _ModelCard extends StatelessWidget {
               foregroundColor: Colors.red,
             ),
           ),
-        ];
-
-      case DownloadState.paused:
-        return [
+        ],
+      DownloadState.paused => [
           FilledButton.icon(
             onPressed: onResume,
             icon: const Icon(Icons.play_arrow, size: 18),
@@ -259,25 +252,21 @@ class _ModelCard extends StatelessWidget {
               foregroundColor: Colors.red,
             ),
           ),
-        ];
-
-      case DownloadState.completed:
-        return [
+        ],
+      DownloadState.completed => [
           Chip(
             avatar: const Icon(Icons.check, size: 16),
             label: const Text('已完成'),
             backgroundColor: Colors.green.shade50,
           ),
-        ];
-
-      case DownloadState.failed:
-        return [
+        ],
+      DownloadState.failed => [
           OutlinedButton.icon(
             onPressed: onDownload,
             icon: const Icon(Icons.refresh, size: 18),
             label: const Text('重试'),
           ),
-        ];
-    }
+        ],
+    };
   }
 }

@@ -182,7 +182,7 @@ void main() {
       final updated = await reminderRepo.getById(1);
       expect(updated, isNotNull);
       expect(updated!.title, '新标题');
-      expect(updated!.frequency, ReminderFrequency.weekly);
+      expect(updated.frequency, ReminderFrequency.weekly);
     });
 
     testWidgets('non-existent reminder in edit mode shows nothing special',
