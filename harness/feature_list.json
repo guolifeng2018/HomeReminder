@@ -111,10 +111,10 @@
     "verification": "flutter analyze lib/src/feature/home/ 零 warning && flutter test test/unit/ 中表单 widget 测试全部通过 && flutter test test/integration/ 中录入集成测试通过（覆盖: 标题为空→提交按钮 disabled+errorText, 过去时间→提交时 SnackBar 提示'时间不能是过去', 正常提交→Navigator.pop+首页列表新增一条, 编辑预填充: 标题/内容/分组/时间/频率 5 字段完全一致, 编辑保存后→列表项更新, 滑动删除→确认弹窗→确认删除列表-1, 滑动删除→确认弹窗→取消列表不变, 重复提醒选项保存后再次编辑仍正确显示）",
     "priority": "P0",
     "depends_on": ["F-02", "F-05", "F-07"],
-    "status": "in_progress",
+    "status": "completed",
     "module": "feature/home",
-    "evidence": null,
-    "completed_date": null
+    "evidence": "flutter analyze lib/src/feature/home/ 零 warning；97 unit tests PASS；7 工作单元全部 done；ReminderFormPage 完整表单+验证+新建/编辑提交+删除 Dismissible+频率 SegmentedButton；barrel file 已更新",
+    "completed_date": "2026-05-30"
   },
   {
     "id": "F-09",
