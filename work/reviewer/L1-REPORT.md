@@ -1,78 +1,86 @@
-# L1 静态分析 — F-06 第二轮
+# L1 静态分析报告
+
+- **功能**：F-07（feature/home 首页）
+- **日期**：2026-05-30
+- **结果**：**PASS**
 
 ---
 
-## 基本信息
+## 1. 全量 lint 检查
 
-- **功能 ID**：F-06（core/notification）
-- **审查轮次**：round 2
-- **审查日期**：2026-05-30
-- **结果**：**PASS** ✅
+**命令**：`flutter analyze`
 
----
+**输出摘要**：
 
-## 1. `flutter analyze` 全量
-
-```bash
-flutter analyze
 ```
+Analyzing HomeReminder...
+
+   info • The local variable '_fakeReminder' starts with an underscore •
+   test/unit/reminder/reminder_service_test.dart:15:12 •
+   no_leading_underscores_for_local_identifiers
+
+1 issue found. (ran in 0.8s)
+```
+
+**判定**：1 个 info 级别提示，位于 `test/unit/reminder/reminder_service_test.dart:15`，**预存在**、非 F-07 引入、非 error/warning。CONSTRAINTS.md 要求「零报错 + 禁止 warnings 遗留」，此 info 不构成 warning，不阻塞通过。
+
+---
+
+## 2. 模块 lint 检查
+
+**命令**：`flutter analyze lib/src/feature/home/`
 
 **输出**：
 
 ```
-Analyzing HomeReminder...                                       
-   info • The local variable '_fakeReminder' starts with an underscore •
-   test/unit/reminder/reminder_service_test.dart:15:12 •
-   no_leading_underscores_for_local_identifiers
-1 issue found. (ran in 0.8s)
+Analyzing home...
+No issues found! (ran in 0.7s)
 ```
 
-**判定**：唯一发现是 `info` 级别 lint 提示（`no_leading_underscores_for_local_identifiers`），位于 `test/unit/reminder/reminder_service_test.dart:15`，属于 F-05 模块，非 F-06。无 error 或 warning。CONSTRAINTS.md 工具链约束 2 禁止 warnings 遗留，info 级别不在此列。**本轮新增 F-06 代码零 error、零 warning**。
+**判定**：模块代码零问题。
 
 ---
 
-## 2. 全局约束检查
+## 3. 全局 CONSTRAINTS 检查
 
-对照 `harness/CONSTRAINTS.md` 逐条检查：
-
-| # | 约束 | 检查结果 | 证据 |
-|---|------|---------|------|
-| 1 | 禁止网络请求、数据上传、日志上报 | PASS | grep `http` → 空（模块内无网络调用） |
-| 2 | 按需申请权限 | PASS | iOS 仅请求 Alert+Sound+Badge，无多余权限声明 |
-| 3 | Android 10+ / iOS 15+ 平台兼容 | PASS | NotificationInitializer 使用 Platform.isAndroid/isIOS 分支 |
-| 4 | 分层依赖 feature → core 不可逆 | PASS | grep `import.*feature` → 空 |
-| 5 | Riverpod 状态管理 | PASS | 实现 NotificationService 接口，由 providers 层注入 |
-| 6 | 禁止 Widget 直接访问 Drift | PASS | notification 模块无数据库访问 |
-| 7 | flutter analyze 零报错 | PASS | F-06 模块零 error/warning |
-| 8 | 禁止调试代码提交 | PASS | debugPrint 仅用于异常捕获日志，非调试输出 |
-
----
-
-## 3. 模块约束检查
-
-对照 `lib/src/core/notification/CONSTRAINTS.md` 逐条检查：
-
-| # | 约束 | 检查结果 | 证据 |
-|---|------|---------|------|
-| 数据-1 | title 为空时降级「未命名提醒」 | PASS | `NotificationContentBuilder._buildTitle` 返回 `fallbackTitle` |
-| 数据-2 | body > 200 字符截断加 … | PASS | `_buildBodyText` 新增截断逻辑（本轮修复） |
-| 数据-3 | payload 反序列化失败返回 null | PASS | `NotificationPayloadHandler.decodePayload` 多级容错 |
-| 接口-1 | 实现 NotificationService 全部方法 | PASS | showNotification、cancelAll 均已实现 |
-| 接口-2 | 不直接访问数据库 | PASS | 参数由上层传入，无 Drift import |
-| 接口-3 | 平台 API 兼容检查 | PASS | Platform.isAndroid/isIOS 分支 |
-| 性能-1 | 初始化失败降级 no-op | PASS | `initFailed` flag + try-catch 包围 |
-| 性能-2 | 不在主线程执行耗时操作 | PASS | 所有通知操作为 async |
-
----
-
-## 4. FIX-QUEUE 问题复查
-
-| # | 问题 | 状态 |
+| # | 约束 | 结论 |
 |---|------|------|
-| 1 | `_buildBodyText` body 截断缺失 | ✅ 已修复 — 新增 200 字符截断逻辑，4 个测试覆盖 |
+| 1 | 依赖方向 feature → core 不可逆，下层禁止 import 上层 | ✅ 通过 — `grep 'import.*feature' lib/src/core/` 零命中 |
+| 2 | 必须使用 Riverpod，禁止 BLoC/GetX 等 | ✅ 通过 — 仅 `flutter_riverpod` import，无 bloc/getx |
+| 3 | 禁止 Widget 直接访问 Drift | ✅ 通过 — `grep 'import.*drift\|database' lib/src/feature/home/` 零命中 |
+| 4 | ASR/LLM 必须通过 Method Channel | ✅ N/A — F-07 不涉及 ASR/LLM |
+| 5 | 禁止网络请求、数据上传 | ✅ 通过 — 无 http/dio import |
+| 6 | 按需申请权限 | ✅ N/A — F-07 不涉及权限 |
+| 7 | Android 10+ / iOS 15+ 兼容 | ✅ N/A — F-07 不涉及平台 API |
+| 10 | flutter analyze 零报错 | ✅ 通过 — 模块零问题，全量仅 1 预存 info |
 
 ---
 
-## 附注
+## 4. 模块 CONSTRAINTS 检查
 
-- `test/unit/reminder/reminder_service_test.dart:15` 存在 1 个 info 级别 lint（`_fakeReminder` 下划线前缀），建议在下轮 F-05 迭代时修复，非 F-06 阻塞项。
+| # | 约束 | 结论 |
+|---|------|------|
+| 1 | 禁止 Widget 直接访问 Drift，必须通过 Repository/Provider | ✅ 通过 — 数据访问全部通过 `home_providers.dart` 中的 Riverpod Provider |
+| 2 | 必须使用 groupsProvider / todayRemindersProvider / filterProvider / filteredRemindersProvider | ✅ 通过 — 四个 Provider 均已定义并使用 |
+| 3 | 所有 Widget 支持空状态渲染 | ✅ 通过 — HomePage（EmptyHomeView）、GroupOverviewBar（'暂无分组'）、TodayTimeline（'今日暂无待办'）均有空态 |
+| 4 | 禁止业务逻辑写在 build() 中 | ✅ 通过 — 数据查询在 Provider 层，过滤在 filteredRemindersProvider |
+| 5 | 分组卡片 ListView.builder 懒加载 | ✅ 通过 — `ListView.builder(scrollDirection: Axis.horizontal)` |
+| 6 | 今日待办 ListView.builder 懒加载 | ✅ 通过 — `ListView.builder(shrinkWrap: true, NeverScrollableScrollPhysics)` |
+
+---
+
+## 5. 文件清单
+
+| 文件 | 行数 | 状态 |
+|------|------|------|
+| `lib/src/feature/home/home.dart` | 12 | ✅ barrel file |
+| `lib/src/feature/home/code/home_providers.dart` | 55 | ✅ 4 个 Provider |
+| `lib/src/feature/home/code/home_header.dart` | 80 | ✅ 日期 + 天气占位 |
+| `lib/src/feature/home/code/group_overview_card.dart` | 196 | ✅ 卡片 + CustomPainter |
+| `lib/src/feature/home/code/group_overview_bar.dart` | 130 | ✅ 横向列表 |
+| `lib/src/feature/home/code/today_timeline.dart` | 216 | ✅ 时间线列表 |
+| `lib/src/feature/home/code/status_filter_bar.dart` | 66 | ✅ 4 tab ChoiceChip |
+| `lib/src/feature/home/code/empty_home_view.dart` | 49 | ✅ 空状态组件 |
+| `lib/src/feature/home/code/home_fab.dart` | 170 | ✅ FAB 展开菜单 |
+| `lib/src/feature/home/code/home_page.dart` | 236 | ✅ 组装 + 响应式 |
+| `lib/src/feature/home/code/add_reminder_page.dart` | 17 | ✅ F-08 占位页 |

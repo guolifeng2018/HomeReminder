@@ -6,9 +6,19 @@
 
 ## 基本信息
 
-- **功能 ID**：F-07
-- **功能名称**：feature/home 首页
-- **涉及模块**：feature/home（新建）、router（修改路由注册）
+- **功能 ID**：F-08
+- **功能名称**：手动录入流程
+- **涉及模块**：feature/home（修改），core/common（依赖模型+枚举），core/database（依赖 ReminderRepository + GroupRepository），core/providers（依赖 Provider）
+
+---
+
+## 前置依赖（全部已完成）
+
+| 依赖 ID | 名称 | 提供内容 |
+|---------|------|---------|
+| F-02 | core/database | `ReminderRepository.insert/update/delete/getById/getAll`，`GroupRepository.getAll/getById` |
+| F-05 | core/reminder | `ReminderServiceImpl.createReminder`（含参数校验） |
+| F-07 | feature/home | `HomePage`、`TodayTimeline`、`HomeFab`、`home_providers.dart`、`add_reminder_page.dart`（stub） |
 
 ---
 
@@ -18,38 +28,33 @@
 
 | # | 单元名称 | 描述 | 验证命令 | 依赖 | 状态 |
 |---|---------|------|---------|------|------|
-| 1 | HOME-01：首页 Riverpod Provider | 创建 `home_providers.dart`：`groupsProvider`（FutureProvider 从 GroupRepository 获取分组列表，按 sort_order ASC），`todayRemindersProvider`（FutureProvider 从 ReminderRepository 获取今日待办，按 scheduled_at ASC），`filterProvider`（StateProvider<ReminderStatus?>，null=全部，否则按 status 筛选），`filteredRemindersProvider`（派生 provider，根据 filterProvider 过滤 todayRemindersProvider） | `flutter analyze lib/src/feature/home/` 零 warning | F-02, F-03 | pending |
-| 2 | HOME-02：页面头部组件 | 创建 `home_header.dart`：StatelessWidget，显示当前日期（intl DateFormat 'yyyy年M月d日' + 中文星期映射 '星期X'），右侧天气图标占位（Icon+文字 '--°'），使用 `Padding + Row` 布局 | `flutter test test/unit/home/home_header_test.dart` | 无 | pending |
-| 3 | HOME-03：分组概览卡片 | 创建 `group_overview_card.dart`：StatelessWidget，接收 Group + pendingCount + completedCount，卡片内显示分组名+图标（Icons 映射）+ 待办数量 Badge + 完成率环形进度（CustomPainter 画圆弧，半径 24，完成率 = completedCount / total > 0 ? completedCount / total : 0），卡片宽度 140，使用 `Card + Column` | `flutter test test/unit/home/group_overview_card_test.dart` | HOME-01 | pending |
-| 4 | HOME-04：分组卡片横向列表 | 创建 `group_overview_bar.dart`：StatelessWidget，接收 `AsyncValue<List<Group>>`，使用 `SizedBox(height: 130, child: ListView.builder(scrollDirection: Axis.horizontal))`，每个卡片调用 `GroupOverviewCard`，如果分组列表为空则显示占位卡片 '暂无分组' | `flutter test test/unit/home/group_overview_bar_test.dart` | HOME-01, HOME-03 | pending |
-| 5 | HOME-05：今日待办时间线列表 | 创建 `today_timeline.dart`：StatelessWidget，接收 `List<Reminder> + Map<int, Group>`（groupId → Group 映射），使用 `ListView.builder`，每项左边时间轴（竖线+圆点，按 scheduled_at 提取 HH:mm）+ 右边卡片（标题+分组色条，色条颜色根据 groupId hash 取 hue），点击回调 `onTap(reminderId)` | `flutter test test/unit/home/today_timeline_test.dart` | HOME-01 | pending |
-| 6 | HOME-06：状态筛选 TabBar | 创建 `status_filter_bar.dart`：StatelessWidget，接收当前 `ReminderStatus?` 和 `onChanged` 回调，4 个 `ChoiceChip`（全部/待处理/已过期/已完成），横向排列，选中态蓝色高亮 | `flutter test test/unit/home/status_filter_bar_test.dart` | 无 | pending |
-| 7 | HOME-07：空状态组件 | 创建 `empty_home_view.dart`：StatelessWidget，居中显示 Icon(house, size: 64, color: grey)、文本 '还没有提醒'、副文本 '点击下方 + 添加'，底部留出 FAB 空间（SizedBox height: 80） | `flutter test test/unit/home/empty_home_view_test.dart` | 无 | pending |
-| 8 | HOME-08：FAB 展开菜单 | 创建 `home_fab.dart`：StatefulWidget，使用 `Scaffold.floatingActionButton` 集成，主按钮点击展开/收起两个子项（Icons.add → '/add', Icons.mic → '/voice'），展开时主按钮旋转 45° 动画，使用 `AnimatedContainer + Transform.rotate` | `flutter test test/unit/home/home_fab_test.dart` | 无 | pending |
-| 9 | HOME-09：首页组装 + 响应式布局 | 创建 `home_page.dart`：ConsumerStatefulWidget，组合 HOME-02~08 所有子组件，使用 `RefreshIndicator` 包裹整体（onRefresh 触发 provider invalidate），`LayoutBuilder` 判断 `maxWidth > 600` → 平板双列（左侧分组卡片+筛选，右侧时间线），否则手机单列（垂直排列分组卡片→筛选→时间线），loading 态显示 `CircularProgressIndicator`，error 态显示错误文本+重试按钮 | `flutter test test/unit/home/home_page_test.dart` | HOME-02~08 | pending |
-| 10 | HOME-10：barrel file + 路由注册 | 创建 `lib/src/feature/home/home.dart` barrel file（导出 HOME-01~09 公开 API）；在 `lib/src/router/app_router.dart` 中注册首页路由（`GoRoute(path: '/', builder: (_, __) => const HomePage())`），确保首页为默认路由 | `flutter analyze lib/src/feature/home/` 零 warning && `flutter test test/unit/router/` 首页路由测试通过 | HOME-09 | pending |
+| 1 | ReminderFormPage UI | 替换 `add_reminder_page.dart` stub：完整表单 UI（标题 TextField maxLength=50、内容 multiline maxLength=200、分组 DropdownButton、日期时间选择器 DatePicker+TimePicker、频率 SegmentedButton 五个选项），接收可选 `reminderId` 参数区分新建/编辑模式，AppBar 标题根据模式显示"添加提醒"/"编辑提醒" | `flutter analyze lib/src/feature/home/code/reminder_form_page.dart` 零 warning；widget 测试验证 5 个表单字段正确渲染 | 无 | pending |
+| 2 | 表单验证逻辑 | 标题非空校验（minLength=1→errorText），时间校验（scheduledAt ≤ DateTime.now() → SnackBar 提示"时间不能是过去"），分组必选校验（未选择→提交按钮 disabled + errorText），提交按钮在所有校验通过后才可点击 | `flutter test test/unit/home/reminder_form_validation_test.dart` — 覆盖 4 场景：空标题提交拦截、过去时间拦截、未选分组拦截、全部合法提交通过 | #1 | pending |
+| 3 | 新建提交流程 | 表单验证通过后调用 `ReminderRepository.insert`（通过 `reminderRepositoryProvider`），成功后 `Navigator.pop(context, true)`，失败显示 SnackBar 错误信息；pop 后首页 `HomePage` 的 `groupsProvider`/`todayRemindersProvider` 通过 autoDispose 自动刷新 | `flutter test test/unit/home/reminder_form_submit_test.dart` — 模拟 repository 验证 insert 调用参数正确、pop 返回 true | #1, #2 | pending |
+| 4 | 编辑流程 | 表单页接收可选 `reminderId`，编辑模式下从 `ReminderRepository.getById` 加载已有提醒预填充全部字段（title/content/groupId/scheduledAt/frequency），提交时调用 `ReminderRepository.update` 覆盖全部字段，pop(true)，字段预填充完全一致 | `flutter test test/unit/home/reminder_form_edit_test.dart` — 验证 5 字段预填充值与数据库记录完全一致，保存后调用 update 且字段正确 | #1, #2, #3 | pending |
+| 5 | 删除流程 | `TodayTimeline` 每个列表项包裹 `Dismissible`：background=红色+删除图标，onDismissed 前弹出 `AlertDialog`（标题"确定删除该提醒？"，取消/确认两按钮），确认后调用 `ReminderRepository.delete` → 列表自动刷新 | `flutter test test/unit/home/today_timeline_delete_test.dart` — 4 场景：Dismissible 渲染正确、确认删除→repository.delete 调用、取消→列表不变、删除后列表-1 | #3 | pending |
+| 6 | 重复提醒配置 | 表单页 SegmentedButton 五个选项（一次性/每天/每周/隔周/每月），映射 `ReminderFrequency` 枚举值，新建和编辑均正确保存和回显 | `flutter test test/unit/home/reminder_frequency_test.dart` — 验证 5 个选项渲染、选中值映射枚举正确、编辑回显正确 | #1 | pending |
+| 7 | Barrel file 更新 | 更新 `home.dart` 导出 `reminder_form_page.dart`（替换旧的 `add_reminder_page.dart`），确保 `home_page.dart` 中 `TodayTimeline` 的 `onTap` 从 `null` 改为导航到编辑表单页 | `flutter analyze lib/src/feature/home/` 零 warning；`dart run build_runner build --delete-conflicting-outputs` 成功 | #4, #5 | pending |
 
 ---
 
 ## 依赖拓扑
 
 ```
-HOME-02（页面头部）────────────┐
-HOME-03（分组卡片）────┐       │
-HOME-04（卡片列表）←──┘       │
-HOME-05（时间线列表）          │
-HOME-06（状态筛选）            ├──→ HOME-09（首页组装）──→ HOME-10（barrel + 路由）
-HOME-07（空状态组件）          │
-HOME-08（FAB 展开菜单）────────┘
-HOME-01（Provider）──── 数据源 ┘
-```
+#1 ──→ #2 ──→ #3 ──→ #4 ──→ #7
+  │                        │
+  └──→ #6 ────────────────┘
+                #5 ────────┘
 
-- HOME-02/06/07/08 可并行开发（无相互依赖）
-- HOME-03 可独立开发（接收参数即可测试）
-- HOME-04 依赖 HOME-01 + HOME-03
-- HOME-05 依赖 HOME-01
-- HOME-09 需等 HOME-02~08 全部完成
-- HOME-10 需等 HOME-09 完成
+说明：
+- #1（UI）是所有后续单元的基础
+- #2（验证）依赖 #1 的表单结构
+- #3（新建提交）依赖 #1+#2
+- #4（编辑流程）依赖 #1+#2+#3（编辑复用表单+验证+提交逻辑，仅数据源不同）
+- #5（删除流程）独立于表单，仅依赖 #3（需要理解 repository API）
+- #6（频率配置）依赖 #1，与 #2-#4 并行
+- #7（barrel+布线）依赖 #4+#5 完成
+```
 
 ---
 
@@ -57,10 +62,9 @@ HOME-01（Provider）──── 数据源 ┘
 
 <!-- 本次明确不做的内容，防止 implementer overreach -->
 
-1. **不实现天气真实数据**：天气图标为静态占位（Icon cloud + 文字 '--°'），不接入天气 API
-2. **不实现 FAB 脉冲动画**：首次实现用简单展开/收起动画，脉冲动画（连续放大缩小）留给后续优化
-3. **不实现分组图标自定义**：图标使用 Material Icons 预设映射表（按 group.icon 字段映射），不做图标选择器
-4. **不实现完成率动画**：环形进度条为静态渲染，不做数字变化动画
-5. **不实现列表项滑动操作**：滑动删除/完成留给 F-08（手动录入流程）统一处理
-6. **不实现深层链接通知跳转**：通知点击跳转编辑页的逻辑由 F-06 的 `onSelectNotification` + router 处理，不在 F-07 范围
-7. **不实现暗黑模式**：F-07 仅实现 Material 默认主题，暗黑模式适配留给后续
+1. **不做** CupertinoDatePicker 的 iOS/Android 自适应切换——统一使用 Material `DatePicker` + `TimePicker`（`showDatePicker` + `showTimePicker`），`ThemeData.platform` 自适应已由 Flutter 处理
+2. **不做** 表单页的平板自适应布局——表单页保持手机单列布局，平板双列仅限首页
+3. **不做** 分组下拉中创建新分组——新分组创建属于 F-11（feature/group_manage）范围
+4. **不做** 语音录入跳转——FAB "语音录入"子项路由 `/voice` 由 F-10（feature/voice_input）负责
+5. **不做** 删除提醒后的 Undo SnackBar——需求未提及，不画蛇添足
+6. **不做** 重复提醒自动生成下一条——频率仅存储，自动调度由 F-05 ReminderScheduler 处理，不在表单层

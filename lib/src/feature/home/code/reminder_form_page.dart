@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/common/code/models/group_model.dart';
+import '../../../core/common/code/models/reminder_model.dart';
 import '../../../core/common/code/models/enums.dart';
 import '../../../core/providers/providers.dart';
 
@@ -217,6 +218,61 @@ class _ReminderFormPageState extends ConsumerState<ReminderFormPage> {
       return;
     }
 
-    // TODO: 数据库写入（后续单元实现）
+    _doSubmit();
+  }
+
+  /// 执行数据库写入
+  Future<void> _doSubmit() async {
+    final repo = ref.read(reminderRepositoryProvider);
+    final now = DateTime.now();
+
+    try {
+      if (_isEditMode) {
+        // 编辑模式：update（后续单元完善加载逻辑）
+        final existing = await repo.getById(widget.reminderId!);
+        if (existing == null) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('提醒不存在')),
+            );
+          }
+          return;
+        }
+        await repo.update(existing.copyWith(
+          groupId: _selectedGroup!.id,
+          title: _titleController.text.trim(),
+          content: _contentController.text.trim().isEmpty
+              ? null
+              : _contentController.text.trim(),
+          scheduledAt: _selectedDateTime,
+          frequency: _selectedFrequency,
+          updatedAt: now,
+          clearContent: _contentController.text.trim().isEmpty,
+        ));
+      } else {
+        // 新建模式：insert
+        await repo.insert(Reminder(
+          groupId: _selectedGroup!.id,
+          title: _titleController.text.trim(),
+          content: _contentController.text.trim().isEmpty
+              ? null
+              : _contentController.text.trim(),
+          scheduledAt: _selectedDateTime,
+          frequency: _selectedFrequency,
+          status: ReminderStatus.pending,
+          createdAt: now,
+        ));
+      }
+
+      if (mounted) {
+        Navigator.of(context).pop(true);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('保存失败: $e')),
+        );
+      }
+    }
   }
 }

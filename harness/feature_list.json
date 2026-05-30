@@ -100,7 +100,7 @@
     "depends_on": ["F-02", "F-03", "F-05"],
     "status": "completed",
     "module": "feature/home",
-    "evidence": "flutter analyze 零 error/warning，63 new unit tests PASS，390 total tests PASS，10 个工作单元全部 done",
+    "evidence": "reviewer L1/L2/L3 全部 PASS：flutter analyze 模块零问题，63 new unit tests PASS，390 total tests PASS，四维度评分 正确性A 架构合规A 测试覆盖B 代码质量A，10 个工作单元全部 done",
     "completed_date": "2026-05-30"
   },
   {
@@ -111,7 +111,7 @@
     "verification": "flutter analyze lib/src/feature/home/ 零 warning && flutter test test/unit/ 中表单 widget 测试全部通过 && flutter test test/integration/ 中录入集成测试通过（覆盖: 标题为空→提交按钮 disabled+errorText, 过去时间→提交时 SnackBar 提示'时间不能是过去', 正常提交→Navigator.pop+首页列表新增一条, 编辑预填充: 标题/内容/分组/时间/频率 5 字段完全一致, 编辑保存后→列表项更新, 滑动删除→确认弹窗→确认删除列表-1, 滑动删除→确认弹窗→取消列表不变, 重复提醒选项保存后再次编辑仍正确显示）",
     "priority": "P0",
     "depends_on": ["F-02", "F-05", "F-07"],
-    "status": "pending",
+    "status": "in_progress",
     "module": "feature/home",
     "evidence": null,
     "completed_date": null
