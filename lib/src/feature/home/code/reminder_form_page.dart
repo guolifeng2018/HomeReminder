@@ -41,6 +41,17 @@ class _ReminderFormPageState extends ConsumerState<ReminderFormPage> {
 
   bool get _isEditMode => widget.reminderId != null;
 
+  /// 是否正在从数据库加载编辑数据
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isEditMode) {
+      _loadExistingReminder();
+    }
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -48,9 +59,39 @@ class _ReminderFormPageState extends ConsumerState<ReminderFormPage> {
     super.dispose();
   }
 
+  /// 加载已有提醒数据预填充表单
+  Future<void> _loadExistingReminder() async {
+    setState(() => _isLoading = true);
+    try {
+      final repo = ref.read(reminderRepositoryProvider);
+      final reminder = await repo.getById(widget.reminderId!);
+      if (reminder == null || !mounted) return;
+
+      final groups = await ref.read(groupRepositoryProvider).getAll();
+      final matchedGroup = groups.where((g) => g.id == reminder.groupId).firstOrNull;
+
+      setState(() {
+        _titleController.text = reminder.title;
+        _contentController.text = reminder.content ?? '';
+        _selectedDateTime = reminder.scheduledAt;
+        _selectedFrequency = reminder.frequency;
+        _selectedGroup = matchedGroup;
+      });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isEdit = _isEditMode;
+
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(title: Text(isEdit ? '编辑提醒' : '添加提醒')),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
