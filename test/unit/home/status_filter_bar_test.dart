@@ -12,13 +12,11 @@ import 'package:home_reminder/src/core/common/code/models/enums.dart';
 void main() {
   group('StatusFilterBar', () {
     testWidgets('renders all 4 filter options', (tester) async {
-      ReminderStatus? selectedValue;
-
       await tester.pumpWidget(MaterialApp(
         home: Scaffold(
           body: StatusFilterBar(
             selected: null,
-            onChanged: (v) => selectedValue = v,
+            onChanged: (_) {},
           ),
         ),
       ));

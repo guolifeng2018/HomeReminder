@@ -8,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:home_reminder/src/feature/home/code/home_page.dart';
-import 'package:home_reminder/src/feature/home/code/home_providers.dart';
 import 'package:home_reminder/src/core/providers/providers.dart';
 import 'package:home_reminder/src/core/common/code/models/group_model.dart';
 import 'package:home_reminder/src/core/common/code/models/reminder_model.dart';
